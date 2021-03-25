@@ -1,15 +1,15 @@
 const fs = require('fs')
 const path = require('path')
-const { getImgData, folderDir } = require('./folder_lister')
+const { getImgData, dirSync } = require('./folder_lister')
 
 const JSONList = {
-   list: folderDir,
-   manga: folderDir.map(folder => {
+   list: dirSync(),
+   manga: dirSync().map(folder => {
       return getImgData(folder.id)
    }),
 }
 
-module.exports = () => {
+const write = () => {
    fs.writeFileSync(
       path.resolve(__dirname, '../../Data.json'),
       JSON.stringify(JSONList),
@@ -17,3 +17,7 @@ module.exports = () => {
    )
    return 'Written'
 }
+
+write()
+
+module.exports = write

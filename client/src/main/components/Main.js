@@ -48,7 +48,7 @@ const Main = () => {
   }
 
   useEffect(() => {
-    !data && fetchData()
+    fetchData()
   }, [])
 
   return (

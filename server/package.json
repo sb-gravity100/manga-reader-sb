@@ -55,7 +55,6 @@
     "transpile": "babel ./src --out-dir ./dist --minified --no-comments",
     "prepare": "npm-run-all clean transpile",
     "start": "pm2 start ecosystem.config.js",
-    "prestart": "npm run write",
     "restart": "pm2 reload readerapp",
     "deploy": "npm-run-all clean transpile start"
   },

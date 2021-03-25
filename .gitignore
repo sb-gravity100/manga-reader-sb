@@ -4,5 +4,5 @@ DJ/
 *.sublime-project
 *.sublime-workspace
 N/
-session.json
-Data.json
+server/session.json
+server/Data.json
