@@ -6,6 +6,7 @@ import createError from 'http-errors'
 import cors from 'cors'
 import indexRouter from './routes/index'
 import { nanoid } from 'nanoid'
+import write from './lib/writer'
 const JsonStore = require('express-session-json')(session)
 
 require('dotenv').config()
@@ -56,6 +57,11 @@ app.use(express.static(buildPath))
 app.use('/assets', express.static(assetsPath))
 app.use('/api/static/manga', express.static(DJPath, { index: false }))
 app.use('/api', indexRouter)
+app.use('/api/rewrite', (_req, res) => {
+  const msg = write()
+  readerLog(msg)
+  res.redirect('/')
+})
 
 app.get('(/*)?', async (_req, res) => {
   res.sendFile(path.join(buildPath, 'index.html'))

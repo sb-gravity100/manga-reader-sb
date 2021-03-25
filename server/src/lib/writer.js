@@ -9,12 +9,11 @@ const JSONList = {
    }),
 }
 
-fs.writeFile(
-   path.resolve(__dirname, '../../Data.json'),
-   JSON.stringify(JSONList),
-   { encoding: 'utf-8' },
-   err => {
-      if (err) throw err
-      console.log('Written')
-   }
-)
+module.exports = () => {
+   fs.writeFileSync(
+      path.resolve(__dirname, '../../Data.json'),
+      JSON.stringify(JSONList),
+      { encoding: 'utf-8' }
+   )
+   return 'Written'
+}
