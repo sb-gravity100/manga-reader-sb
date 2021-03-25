@@ -1,0 +1,93 @@
+.search-bar {
+  border: none;
+  width: 100%;
+  padding: $x-xs * 1.5;
+  font-size: 1rem;
+  font-style: italic;
+  font-family: 'Space Mono', monospace;
+
+  &::-webkit-search-cancel-button {
+    border-radius: 50%;
+    background: #223;
+    width: 10px;
+    height: 10px;
+    stroke-width: 10px;
+    appearance: none;
+  }
+}
+
+table.list {
+  background: #ccf;
+  table-layout: fixed;
+  border-collapse: collapse;
+  padding: 0 0.3rem;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #224;
+
+  thead {
+    tr {
+      background: transparent;
+      border-collapse: collapse;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken(#ccf, 10);
+        text-shadow: 0 0 3px #235;
+      }
+      th {
+        padding: 0.5rem 0
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      background: transparent;
+      border-collapse: collapse;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken(#ccf, 10);
+        text-shadow: 0 0 3px #235;
+      }
+      td {
+        a {
+          display: block;
+          padding: 0.5rem;
+          color: #335;
+        }
+
+        &:not(.name) {
+          text-align: center;
+        }
+
+        &:hover {
+          color: #334;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  .name {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 30%;
+    a {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .size {
+    width: 50px;
+    a {
+      text-align: center;
+    }
+  }
+
+  .createdAt {
+    width: 120px;
+  }
+}

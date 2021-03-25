@@ -1,0 +1,12 @@
+@import "partials/vars";
+@import "partials/mixins";
+
+@import "partials/main";
+@import "partials/viewer";
+@import "partials/classes";
+
+@media screen and (max-width: $b-lg) {
+  .size {
+    display: none;
+  }
+}

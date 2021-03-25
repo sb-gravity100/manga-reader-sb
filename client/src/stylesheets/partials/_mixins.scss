@@ -1,0 +1,26 @@
+@function stextcolor($bg) {
+   @if (lightness($bg) > 60) {
+      @return $x-dark;
+   } @else {
+      @return $x-light;
+   }
+}
+
+@mixin bgtext($bgcolor) {
+   background-color: $bgcolor;
+   color: stextcolor($bgcolor);
+}
+
+@mixin hoverColor($color, $bgcolor: transparent) {
+   &:hover {
+      color: $color;
+      background: $bgcolor;
+   }
+}
+
+@mixin flex($ai: center, $jc: start, $fd: row) {
+   display: flex;
+   flex-direction: $fd;
+   align-items: $ai;
+   justify-content: $jc;
+}

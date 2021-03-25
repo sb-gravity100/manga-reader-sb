@@ -1,0 +1,63 @@
+.reader-logo {
+  &-enter {
+    opacity: 0;
+    transition: opacity 0.4s;
+
+    &-done {
+      opacity: 1;
+      transition: opacity 0.4s;
+    }
+
+    &-active {
+      opacity: 1;
+      transition: opacity 0.4s;
+    }
+  }
+
+  &-exit {
+    opacity: 1;
+    transition: opacity 0.4s;
+
+    &-done {
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    &-active {
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+  }
+}
+
+.load-page {
+  &-enter {
+    opacity: 0;
+    transition: opacity 0.7s;
+
+    &-done {
+      opacity: 1;
+      transition: opacity 0.7s;
+    }
+
+    &-active {
+      opacity: 1;
+      transition: opacity 0.7s;
+    }
+  }
+
+  &-exit {
+    opacity: 1;
+    transition: opacity 0.7s;
+
+    &-done {
+      opacity: 0;
+      transition: opacity 0.7s;
+    }
+
+    &-active {
+      opacity: 0;
+      transition: opacity 0.7s;
+    }
+  }
+}
