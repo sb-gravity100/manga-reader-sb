@@ -1,0 +1,47 @@
+@import '../../stylesheets/partials/_vars';
+
+.loading_style {
+   flex-grow: 1;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: white;
+
+   * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:first-child {
+      margin-right: $x-xs;
+    }
+   }
+}
+.header_flex {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+.refresh_btn {
+   background-color: transparent;
+   &:hover {
+      color: #449;
+   }
+}
+.search_bar {
+   border: none;
+   width: 100%;
+   padding: $x-xs * 1.5;
+   font-size: 1rem;
+   font-style: italic;
+   font-family: 'Space Mono', monospace;
+
+   &::-webkit-search-cancel-button {
+      border-radius: 50%;
+      background: #223;
+      width: 10px;
+      height: 10px;
+      stroke-width: 10px;
+      appearance: none;
+   }
+}

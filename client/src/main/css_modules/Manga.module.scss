@@ -1,0 +1,28 @@
+@import "../../stylesheets/partials/_mixins.scss";
+@import "../../stylesheets/partials/_vars.scss";
+
+%btn {
+  $bgcolor: #334;
+   font-family: 'Jetbrains Mono', monospace;
+   color: white;
+   @include bgtext($bgcolor);
+   border: none;
+   border-radius: 0;
+   padding: 0.5rem;
+   transition: 0.2s;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   &:hover {
+      color: #dde;
+   }
+   &:focus {
+      box-shadow: 0 0 5px #333;
+   }
+}
+
+.scroll_btn {
+  @extend %btn;
+}
