@@ -1,108 +1,111 @@
-import { Helmet } from 'react-helmet'
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { useSessionStorage } from 'react-use'
-import { css, StyleSheet } from 'aphrodite'
-import { Route, useLocation } from 'react-router-dom'
-import { ProgressBar } from 'scrolling-based-progressbar'
-import MangaView from './MangaView'
-import MangaHeader from './MangaHeader'
-import ErrorBlock from './sub-components/ErrorBlock'
+import { useState, useEffect } from 'react';
+import { css, StyleSheet } from 'aphrodite';
+import { useLocation } from 'react-router-dom';
+import { ProgressBar } from 'scrolling-based-progressbar';
+import { useQuery } from '@apollo/client';
+import MangaView from './MangaView';
+import { useSpring, animated as anim } from 'react-spring';
+import * as Scroll from 'react-scroll';
+import MangaHeader from './MangaHeader';
+import ErrorBlock from './sub-components/ErrorBlock';
+import { GET_MANGA } from '../data/queries';
+import styles from '../css_modules/main.module.scss';
+
+const scroll = Scroll.animateScroll;
+const ScrollEvents = Scroll.Events;
 
 const Manga = () => {
-  const [manga, setManga] = useSessionStorage('mangaData')
-  const [errors, setErrors] = useState({
-    hasErrors: false,
-    error: null,
-  })
-  const [retry, setRetry] = useState({
-    Again: () => getMangaData(),
-    isRetrying: false,
-  })
-  const [zoomValue, setZoomVal] = useState(5)
-  const [brightVal, setBright] = useState(100)
-  const location = useLocation()
-  const source = axios.CancelToken.source()
-  const viewerStyles = StyleSheet.create({
-    brightnessAdjust: {
-      filter: `brightness(${brightVal}%)`,
-    },
-    widthAdjust: {
-      maxWidth: `${(zoomValue / 10 + 0.5) * 700}px`,
-      transition: '0.3s',
-    },
-  })
+   const [zoomValue, setZoomVal] = useState(5);
+   const [brightVal, setBright] = useState(100);
+   const loading_props = {
+      text: useSpring({
+         from: {
+            opacity: 1,
+         },
+         opacity: 0,
+         loop: { reverse: true },
+      }),
+   };
+   const location = useLocation();
+   const mangaID = new URLSearchParams(location.search).get('id');
+   const { loading, data, error, refetch } = useQuery(GET_MANGA, {
+      variables: {
+         id: mangaID,
+      },
+   });
+   const scrollDown = () => {
+      scroll.scrollToBottom({
+         duration: d => {
+            return d * 200;
+         },
+         delay: 500,
+         smooth: 'linear'
+      });
+   };
+   const viewerStyles = StyleSheet.create({
+      brightnessAdjust: {
+         filter: `brightness(${brightVal}%)`,
+      },
+      widthAdjust: {
+         maxWidth: `${(zoomValue / 10 + 0.5) * 700}px`,
+         transition: '0.3s',
+      },
+   });
 
-  const getMangaData = async () => {
-    try {
-      setErrors({
-        hasErrors: false,
-        error: null,
-      })
-      setRetry({
-        ...retry,
-        isRetrying: true,
-      })
-      setManga(null)
-      const { data } = await axios.get(location.pathname, {
-        baseURL: '/api',
-        responseType: 'json',
-      })
-      setManga(data)
-    } catch (e) {
-      setRetry({
-        ...retry,
-        isRetrying: false,
-      })
-      setErrors({
-        hasErrors: true,
-        error: e,
-      })
-    }
-  }
+   useEffect(() => {
+      ScrollEvents.scrollEvent.register('begin', (to, el) => {
+         console.log('begin', to, el);
+      });
+      ScrollEvents.scrollEvent.register('end', (to, el) => {
+         console.log('end', to, el);
+      });
+      scroll.scrollToTop();
+   });
 
-  useEffect(() => {
-    getMangaData()
-  }, [])
-
-  return (
-    <div>
-      <Helmet defer={false}>
-        <title>{manga && manga.name}</title>
-        <meta name="description" content={manga && manga.name} />
-      </Helmet>
-      <Route path="/:id">
-        <ErrorBlock
-          errors={errors.error}
-          hasErrors={errors.hasErrors}
-          retry={retry}
-        >
-          <ProgressBar height="3px" top="30px" color="#546" bgColor="#aae" />
-          <div className="wrapper">
-            <MangaHeader
-              manga={manga}
-              zoomValue={zoomValue}
-              brightVal={brightVal}
-              setBright={setBright}
-              setZoomVal={setZoomVal}
-            />
-            <div
-              className={css(
-                viewerStyles.brightnessAdjust,
-                viewerStyles.widthAdjust,
-              )}
-              id="viewer"
-            >
-              {manga &&
-                manga.data.map(panel => (
-                  <MangaView key={parseInt(panel.name)} panelImg={panel} />
-                ))}
+   return (
+      <div>
+         <ErrorBlock hasErrors={error && true} errors={error} retry={refetch}>
+            <div className="wrapper">
+               <ProgressBar
+                  height="3px"
+                  top="30px"
+                  color="#546"
+                  bgColor="#aae"
+               />
+               <MangaHeader
+                  manga={!loading && data.manga}
+                  zoomValue={zoomValue}
+                  brightVal={brightVal}
+                  setBright={setBright}
+                  setZoomVal={setZoomVal}
+                  scrollDown={scrollDown}
+               />
+               <div
+                  className={css(
+                     viewerStyles.brightnessAdjust,
+                     viewerStyles.widthAdjust
+                  )}
+                  id="viewer">
+                  {loading ? (
+                     <div
+                        style={{ flexGrow: 1 }}
+                        className={styles.loading_style}>
+                        <h3>
+                           <anim.span style={loading_props.text}>
+                              Loading...
+                           </anim.span>
+                        </h3>
+                     </div>
+                  ) : (
+                     data.manga.data.map((d, k) => (
+                        <MangaView key={k} panelImg={d} />
+                     ))
+                  )}
+               </div>
             </div>
-          </div>
-        </ErrorBlock>
-      </Route>
-    </div>
-  )
-}
+         </ErrorBlock>
+      </div>
+   );
+};
 
-export default Manga
+export default Manga;

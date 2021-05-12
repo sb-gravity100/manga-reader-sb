@@ -169,6 +169,9 @@
   margin-top: 35px;
   z-index: 1;
   transition: 0.3s;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
 
   .panel {
     margin-bottom: 2px;

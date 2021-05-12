@@ -3,80 +3,50 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "directories": {
-    "lib": "lib"
-  },
   "dependencies": {
-    "axios": "^0.21.1",
+    "apollo-server-express": "^2.24.0",
     "bcryptjs": "^2.4.3",
-    "bson-objectid": "^2.0.1",
     "chalk": "^4.1.0",
-    "connect-flash": "^0.1.1",
-    "connect-mysql": "^4.0.0",
+    "compression": "^1.7.4",
     "cors": "^2.8.5",
-    "crud-object-diff": "^2.2.3",
     "debug": "^4.3.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-async-handler": "^1.1.4",
-    "express-mysql-session": "^2.1.5",
-    "express-session": "^1.17.1",
-    "express-session-json": "0.0.8",
-    "express-validator": "^6.10.0",
-    "helmet": "^4.4.1",
+    "graphql": "^15.5.0",
+    "graphql-scalars": "^1.9.3",
     "http-errors": "^1.8.0",
-    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "lodash-id": "^0.14.0",
     "lowdb": "^1.0.0",
     "morgan": "^1.10.0",
-    "mysql": "^2.18.1",
     "nanoid": "^3.1.20",
     "nodejs-fs-utils": "^1.2.5",
-    "passport": "^0.4.1",
-    "passport-local": "^1.0.0",
-    "serve-favicon": "^2.5.0",
     "url-join": "^4.0.1"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.13.10",
-    "@babel/core": "^7.13.10",
-    "@babel/node": "^7.13.10",
-    "@babel/plugin-transform-runtime": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
-    "@babel/runtime": "^7.13.10",
-    "eslint": "^7.22.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-switch-error-warn": "^1.0.0"
-  },
   "scripts": {
-    "serve": "nodemon src/server.js",
-    "clean": "rimraf ./dist",
-    "write": "node ./src/lib/writer",
-    "transpile": "babel ./src --out-dir ./dist --minified --no-comments",
-    "prepare": "npm-run-all clean transpile",
-    "start": "pm2 start ecosystem.config.js",
-    "restart": "pm2 reload readerapp",
-    "deploy": "npm-run-all clean transpile start"
+    "start": "nodemon server.js",
+    "prod": "SET NODE_ENV=production & node server.js",
+    "deploy": "pm2 start ecosystem.config.js",
+    "restart": "pm2 reload readerapp"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "nodemonConfig": {
     "ignore": [
-      "package-lock.json",
+      "package.json",
       "node_modules/",
       "package-lock.json",
-      "views/",
-      "lib/",
-      "Data.json",
-      "session.json"
+      "DATA.json",
+      "session.json",
+      "test.js"
     ],
     "env": {
       "NODE_ENV": "development",
-      "DEBUG": "reader*"
+      "DEBUG": "RD*"
     },
     "execMap": {
-      "js": "babel-node --harmony --trace-warnings --trace-deprecation"
+      "js": "node --harmony"
     }
   }
 }

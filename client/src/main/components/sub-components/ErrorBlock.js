@@ -1,48 +1,22 @@
-import { StyleSheet, css } from 'aphrodite'
 import { useState } from 'react'
-
-const styles = StyleSheet.create({
-  errorMsg: {
-    padding: '5px 10px',
-    backgroundColor: '#f88',
-    color: '#d33',
-    borderRadius: '10px',
-  },
-  errorBlock: {
-    width: '100vw',
-    height: '70vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-  retryBtn: {
-    padding: '5px',
-    textAlign: 'center',
-    background: 'transparent',
-    border: 'none',
-  },
-})
+import styles from '../../css_modules/ErrorBlock.module.scss'
 
 const ErrorBlock = ({
- children, hasErrors, errors, retry,
+ children, hasErrors, errors, retry, loading, status
 }) => {
   if (hasErrors) {
-    console.log(errors)
-    if (errors.message === 499) {
-      return children
-    }
+    console.log(hasErrors)
     return (
-      <div className={css(styles.errorBlock)}>
+      <div className={styles.errorBlock}>
         <h3>Something went wrong...</h3>
         <button
-          className={css(styles.retryBtn)}
-          onClick={retry.Again}
-          style={{ cursor: retry.isRetrying ? 'progress' : 'pointer' }}
+          className={styles.retryBtn}
+          onClick={() => retry()}
+          style={{ cursor: status === 4 ? 'progress' : 'pointer' }}
         >
-          {retry.isRetrying ? 'Retrying...' : 'Retry?'}
+          {status === 4 ? 'Retrying...' : 'Retry?'}
         </button>
-        <code className={css(styles.errorMsg)}>{errors.message}</code>
+        <code className={styles.errorMsg}>{errors.message}</code>
       </div>
     )
   }

@@ -2,10 +2,10 @@ module.exports = {
   apps: [
     {
       name: 'readerapp',
-      script: './dist/server.js',
+      script: './server.js',
       watch: false,
       env: {
-        PORT: 7801,
+        PORT: 7800,
         NODE_ENV: 'production',
       },
     },
