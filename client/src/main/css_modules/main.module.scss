@@ -1,21 +1,16 @@
 @import '../../stylesheets/partials/_vars';
 
 .loading_style {
-   flex-grow: 1;
    display: flex;
    align-items: center;
    justify-content: center;
    color: white;
-
-   * {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:first-child {
-      margin-right: $x-xs;
-    }
-   }
+   top: 0;
+   left: 0;
+   position: absolute;
+   height: 100vh;
+   width: 100%;
+   z-index: 9999;
 }
 .header_flex {
    display: flex;

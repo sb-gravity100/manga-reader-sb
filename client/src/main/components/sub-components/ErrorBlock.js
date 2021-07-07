@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import styles from '../../css_modules/ErrorBlock.module.scss'
 
 const ErrorBlock = ({

@@ -1,26 +1,22 @@
 import { gql } from '@apollo/client'
 
 export const GET_MANGAS = gql`
-query AllMangas($all: Boolean = false) {
-  list: mangas {
+query AllMangas($refresh: Boolean) {
+  list: mangas(refresh: $refresh) {
     id
     name
-    pathname @include(if: $all)
+    pathname
     createdAt
     size
-    data @include(if: $all) {
-      name
-      path
-    }
   }
 }
 `
 export const GET_MANGA = gql`
-query getManga($id: ID!, $all: Boolean = false) {
+query getManga($id: ID!) {
    manga(id: $id) {
       id
       name
-      pathname @include(if: $all)
+      pathname
       createdAt
       size
       data {
@@ -28,5 +24,14 @@ query getManga($id: ID!, $all: Boolean = false) {
          path
       }
    }
+}
+`
+
+export const SEARCH_MANGA = gql`
+query SearchManga($s: String){
+  search(term: $s) {
+    id
+    name
+  }
 }
 `

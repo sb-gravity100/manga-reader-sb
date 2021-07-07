@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "proxy": "http://localhost:7801",
+  "proxy": "http://localhost:7800",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.16",
@@ -23,6 +23,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-scroll": "^1.8.2",
+    "react-select": "^4.3.1",
     "react-spring": "^9.1.2",
     "react-table": "^7.7.0",
     "react-use": "^17.2.4",

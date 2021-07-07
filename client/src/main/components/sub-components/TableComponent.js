@@ -1,8 +1,7 @@
 import { FaAngleDown } from 'react-icons/fa';
-import { useMemo, useEffect } from 'react';
-import { useTable, useFilters, useSortBy } from 'react-table';
-import { Link } from 'react-router-dom';
-import _ from 'lodash';
+import { useMemo } from 'react';
+import { useTable, useSortBy } from 'react-table';
+import { Link, generatePath } from 'react-router-dom';
 import classNames from 'classnames';
 import styles from '../../css_modules/reader.module.scss';
 
@@ -30,19 +29,19 @@ const TableComponents = props => {
       ],
       []
    );
-   const data = useMemo(() => props.data, []);
+   const data = useMemo(() => props.data, [props.data]);
 
-   const tableInstance = useTable({ columns, data }, useFilters, useSortBy);
+   const tableInstance = useTable({ columns, data }, useSortBy);
    const {
       getTableProps,
       getTableBodyProps,
       headerGroups,
       rows,
       prepareRow,
-      setFilter,
+      
    } = tableInstance;
 
-   const mapHeaders = hGs =>
+   const mapHeaders = (hGs = []) =>
       hGs.map(headerGroup => (
          <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -72,7 +71,7 @@ const TableComponents = props => {
             ))}
          </tr>
       ));
-   const mapRows = _rows =>
+   const mapRows = (_rows = []) =>
       _rows.map(row => {
          prepareRow(row);
          return (
@@ -86,7 +85,10 @@ const TableComponents = props => {
                      }
                      className={cell.column.id}
                      {...cell.getCellProps()}>
-                     <Link to={`/manga?id=${cell.row.original.id}`}>
+                     <Link
+                        to={generatePath('/manga?id=:id', {
+                           id: cell.row.original.id,
+                        })}>
                         <span>{cell.render('Cell')}</span>
                      </Link>
                   </td>
@@ -94,10 +96,6 @@ const TableComponents = props => {
             </tr>
          );
       });
-
-   useEffect(() => {
-      setFilter('name', props.filterValue);
-   }, [props.filterValue, setFilter]);
 
    return (
       <table className="list" {...getTableProps()}>

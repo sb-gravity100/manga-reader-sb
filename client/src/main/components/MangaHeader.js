@@ -1,5 +1,5 @@
-import { FaPlus, FaMinus, FaAngleDown } from 'react-icons/fa';
-import styles from '../css_modules/Manga.module.scss';
+import { FaPlus, FaMinus } from 'react-icons/fa';
+// import styles from '../css_modules/Manga.module.scss';
 
 const MangaHeader = ({
    manga,
@@ -7,16 +7,10 @@ const MangaHeader = ({
    brightVal,
    setBright,
    setZoomVal,
-   scrollDown
 }) => (
    <header>
       <h2 className="logo">{manga ? manga.name : '...'}</h2>
       <nav>
-         <div>
-            <button onClick={scrollDown} className={styles.scroll_btn}>
-               <FaAngleDown />
-            </button>
-         </div>
          <div className="bright-control">
             <span>{brightVal}</span>
             <input

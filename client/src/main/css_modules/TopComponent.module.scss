@@ -1,0 +1,14 @@
+.TopComponent {
+  position: fixed;
+  bottom: 3rem;
+  right: 1rem;
+  padding: 1rem;
+  background: #eee;
+  color: #000;
+  z-index: 1000;
+  opacity: 0.4;
+  &:hover {
+    color: #000;
+    opacity: 0.9;
+  }
+}
