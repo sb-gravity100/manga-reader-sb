@@ -1,92 +1,36 @@
-table.list {
-   background: #ccf;
-   border-collapse: collapse;
-   width: 100%;
-   color: #224;
+.main-reader {
+   padding: 0 1rem;
 
-   colgroup {
-      .col {
-         &-name {
-            width: 70%;
-         }
-         &-size {
-            width: auto;
-         }
-         &-createdAt {
-            width: auto;
-         }
-      }
-   }
+   &-flex {
+      display: grid;
+      grid-gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
-   thead {
-      padding: 0.5rem;
-      tr {
-         background: transparent;
-         border-collapse: collapse;
-         cursor: pointer;
+      .flex-item {
+         max-width: 200px;
+         background: #667;
+         border-radius: 10px;
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
 
-         &:hover {
-            background-color: darken(#ccf, 10);
-            text-shadow: 0 0 3px #235;
-         }
-         th {
-            padding: 0.5rem 0;
-         }
-      }
-   }
+         .bg-img {
+            height: 300px;
 
-   tbody {
-      padding: 0.5rem;
-      tr {
-         background: transparent;
-         border-collapse: collapse;
-         cursor: pointer;
-
-         &:hover {
-            background-color: darken(#ccf, 10);
-            text-shadow: 0 0 3px #235;
-         }
-         td {
-            a {
-               display: block;
-               padding: 0.5rem;
-               color: #335;
-            }
-
-            &:not(.name) {
-               text-align: center;
-            }
-
-            &:hover {
-               color: #334;
-               font-weight: 500;
+            .background {
+               
             }
          }
-      }
-   }
-   .name {
-      display: block;
-      a {
-         display: block;
-         span {
-            display: block;
-            // white-space: nowrap;
+
+         .description {
+            padding: 0.5rem;
+            margin-top: 10px;
+            text-align: center;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            line-clamp: 1;
+            font-size: 15px;
          }
       }
-   }
-
-   .size {
-      text-align: right;
-      overflow-x: hidden;
-      a {
-         text-align: right;
-         transform: translateX(-$x-lg);
-      }
-   }
-
-   .createdAt {
    }
 }

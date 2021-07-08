@@ -8,6 +8,7 @@ query AllMangas($refresh: Boolean) {
     pathname
     createdAt
     size
+    cover
   }
 }
 `
