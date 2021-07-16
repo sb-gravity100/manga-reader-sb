@@ -18,9 +18,11 @@ schema {
 }
 
 type Query {
-   mangas(sort: String = "createAt asc", limit: Int, refresh: Boolean = false): [Manga!]
+   mangas(sort: String = "createAt asc", limit: Int, cursor: Int = 0, refresh: Boolean = false): [Manga!]
    manga(id: ID!): Manga
    search(term: String): [Manga!]
+   total: Int!
+   update: Boolean
 }
 
 type Manga {
@@ -28,9 +30,9 @@ type Manga {
    name: String!
    pathname: String!
    createdAt: DateTime!
-   cover: String
    size: Int!
    data: [MangaData!]
+   cover: String
 }
 
 type MangaData {

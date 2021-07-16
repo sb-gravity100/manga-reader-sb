@@ -1,17 +1,14 @@
+import 'intersection-observer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import { FaChevronUp } from 'react-icons/fa';
 import App from './main/App';
 import styles from './main/css_modules/TopComponent.module.scss'
 import './stylesheets/index.scss';
 import Footer from './main/Footer';
-
-const apollo_client = new ApolloClient({
-  uri: '/api/ql',
-  cache: new InMemoryCache(),
-});
+import client from './apollo_client'
 
 const ToTopComponent = () => {
   return (
@@ -28,7 +25,7 @@ const ToTopComponent = () => {
 ReactDOM.render(
   <>
     <Router>
-      <ApolloProvider client={apollo_client}>
+      <ApolloProvider client={client}>
         <App />
       </ApolloProvider>
     </Router>

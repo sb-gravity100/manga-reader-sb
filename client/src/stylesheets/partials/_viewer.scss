@@ -35,18 +35,6 @@
       &:hover {
         max-width: 60%;
       }
-
-      .tooltip {
-        display: none;
-        transition: 0.5s;
-        padding: 0.5rem;
-        background: #556;
-        border-radius: 7px;
-        position: absolute;
-        top: 1.5rem;
-        left: 0.5rem;
-        opacity: 0;
-      }
     }
 
     nav {

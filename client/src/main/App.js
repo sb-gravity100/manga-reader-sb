@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import Manga from './components/Manga'
 import Main from './components/Main'
+import Manga from './components/Manga'
 import NotFound from './components/sub-components/404'
 import '../stylesheets/App.scss'
 

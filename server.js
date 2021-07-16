@@ -3,11 +3,12 @@ const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
 const logger = require('morgan');
 const createError = require('http-errors');
-const chalk = require('chalk');
 const cors = require('cors');
 const { promisify } = require('util');
 const compression = require('compression');
 const { resolvers, typeDefs } = require('./graphql');
+const Jimp = require('jimp');
+// const { mangaData } = require('./lib/folder_lister');
 require('dotenv').config();
 
 const { NODE_ENV, PORT } = process.env;
@@ -15,7 +16,7 @@ const DJ_PATH = path.normalize(path.join(__dirname, 'DJ/'));
 const port = PORT;
 const Join = (...dir) => path.normalize(path.join(__dirname, ...dir));
 const ASSETS_PATH = Join('public/');
-const debug = require('debug')('RD');
+const debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
 
 const startApollo = async () => {
@@ -33,7 +34,7 @@ const startApollo = async () => {
          }
       } */,
       introspection: NODE_ENV === 'development',
-      tracing: true
+      tracing: true,
    });
    await apollo.start();
    apollo.applyMiddleware({ app, path: '/api/ql' });
@@ -54,15 +55,9 @@ startApollo().then(({ app }) => {
    );
    app.use(compression());
    app.use(cors());
-   if (NODE_ENV === 'development') {
-      app.use('/api/_apollo', express.static(Join('_apollo/'), {
-         index: true
-      }))
-      debug('API Playground at /api/playground');
-   }
    app.use('/cdn/manga', express.static(DJ_PATH));
    app.use('/static', express.static(ASSETS_PATH + '/static'));
-   app.get('(/*)?', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
+   app.get('/(*/)?', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
 
    app.use((_req, _res, next) => {
       next(createError(404));

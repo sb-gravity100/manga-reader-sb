@@ -1,21 +1,22 @@
 @import '../../stylesheets/partials/_vars';
 
 .loading_style {
+   position: fixed;
+   top: 0;
+   left: 0;
    display: flex;
    align-items: center;
    justify-content: center;
    color: white;
-   top: 0;
-   left: 0;
-   position: absolute;
    height: 100vh;
-   width: 100%;
+   width: 100vw;
    z-index: 9999;
 }
 .header_flex {
    display: flex;
    align-items: center;
    justify-content: space-between;
+   padding: .4rem 1rem;
 }
 .refresh_btn {
    background-color: transparent;

@@ -43,12 +43,13 @@ html {
 }
 
 body {
-   font-family: 'Jetbrains Mono', monospace;
+   font-family: $font;
    line-height: 1.3;
    width: 100%;
    color: white;
    background: #223;
    overflow-y: scroll;
+   overflow-x: hidden;
 }
 
 a {
@@ -64,7 +65,7 @@ button {
    $bgcolor: #334;
    font-family: 'Jetbrains Mono', monospace;
    color: white;
-   @include bgtext(#334);
+   @include bgtext($bgcolor);
    border: none;
    border-radius: 0;
    padding: 0.5rem;
@@ -76,9 +77,6 @@ button {
 
    &:hover {
       color: #dde;
-   }
-   &:focus {
-      box-shadow: 0 0 5px #333;
    }
 }
 
@@ -99,11 +97,12 @@ button {
 }
 
 footer {
-   padding: 0.5rem;
+   padding: 0.3rem;
    margin-top: auto;
    p {
       display: flex;
       align-items: center;
+      font-size: 0.8rem;
       svg {
          margin-left: 10px;
       }

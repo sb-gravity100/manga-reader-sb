@@ -1,22 +1,5 @@
 @import '../../stylesheets/partials/_vars';
 
-.sort_logo {
-   transition: 0.3s;
-
-   .sort_down {
-      transform: rotate(0deg);
-      transition: 0.3s;
-   }
-   .sort_up {
-      transform: rotate(180deg);
-      transition: 0.3s;
-   }
-   .sort_none {
-      width: 0;
-      transition: 0.3s;
-   }
-}
-
 .center {
    display: inline-flex;
    align-items: flex-end;

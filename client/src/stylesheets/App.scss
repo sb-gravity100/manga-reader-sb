@@ -5,8 +5,7 @@
 @import "partials/viewer";
 @import "partials/classes";
 
-@media screen and (max-width: $b-lg) {
-  .size {
-    display: none;
-  }
+.btn-flex {
+  display: flex;
+  flex-direction: row;
 }

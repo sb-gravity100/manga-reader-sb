@@ -1,10 +1,10 @@
-import { useSpring, animated as anim } from 'react-spring';
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { MdRefresh } from 'react-icons/md';
 import Reader from './Reader';
 import ErrorBlock from './sub-components/ErrorBlock';
-import { GET_MANGAS } from '../data/queries';
+import { GET_MANGAS, SEARCH_MANGA, UPDATE_COVERS } from '../data/queries';
+import { useState, useEffect } from 'react';
 import styles from '../css_modules/main.module.scss';
 
 const Main = () => {
@@ -12,16 +12,39 @@ const Main = () => {
     partialRefetch: true,
     notifyOnNetworkStatusChange: true,
   });
-  const loading_props = {
-    text: useSpring({
-      from: {
-        opacity: 1,
+  const [searchList, setSearchList] = useState({
+    isSearched: false,
+    data: null,
+  });
+  const [REFRESH_COVERS] = useLazyQuery(UPDATE_COVERS)
+  const [GET_SEARCH, search] = useLazyQuery(SEARCH_MANGA, {
+    variables: {
+      s: '',
+    },
+  });
+
+  const handleSearchChange = e => {
+    if (!e.target.value) {
+      return setSearchList({
+        isSearched: false,
+        data: null,
+      });
+    }
+    GET_SEARCH({
+      variables: {
+        s: e.target.value,
       },
-      opacity: 0,
-      loop: { reverse: true },
-      reset: true,
-    }),
+    });
   };
+
+  useEffect(() => {
+    if (search.called && !search.loading && search.data && search.data.search) {
+      setSearchList({
+        isSearched: true,
+        data: search.data.search,
+      });
+    }
+  }, [search.called, search.loading, search.data]);
 
   return (
     <div id="main">
@@ -31,19 +54,52 @@ const Main = () => {
             <div>Reader</div>
           </Link>
         </h1>
-        <div>
+        <div className="btn-flex" >
           <button
             onClick={() => mangas.refetch({ refresh: true })}
             className={styles.refresh_btn}>
             <MdRefresh fontSize="1.2rem" />
             <span>Refresh</span>
           </button>
+          <button
+            onClick={() => REFRESH_COVERS()}
+            className={styles.refresh_btn}>
+            <MdRefresh fontSize="1.2rem" />
+            <span>Covers</span>
+          </button>
         </div>
       </div>
-      <div>
-        {/* !mangas.loading && mangas.data && (
-          <AsyncSelect components={props => <div><Link to ></Link></div>} />
-        ) */}
+      <div className="search-bar">
+        <input
+          type="text"
+          name="search"
+          placeholder="Search..."
+          onChange={handleSearchChange}
+          onBlur={() => setSearchList({ isSearched: false, data: null })}
+        />
+        {searchList.isSearched && (
+          <div className="search-list">
+            {searchList.data &&
+              searchList.data.map(item => (
+                <Link
+                  to={`/manga?id=${item.id}`}
+                  className="search-item"
+                  title={item.name}>
+                  <div
+                    className="cover-img"
+                    style={{
+                      backgroundImage: `url('${item.cover}')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      minWidth: '3rem',
+                      height: '4rem',
+                      backgroundColor: '#444',
+                    }}></div>
+                  <div className="name">{item.name}</div>
+                </Link>
+              ))}
+          </div>
+        )}
       </div>
       <ErrorBlock
         status={mangas.networkStatus}
@@ -51,15 +107,12 @@ const Main = () => {
         retry={mangas.refetch}
         hasErrors={mangas.error && true}
         errors={mangas.error}>
-        {!mangas.loading && mangas.data ? (
-          <Reader data={mangas.data.list} />
-        ) : (
-          <div className={styles.loading_style}>
-            <h3>
-              <anim.span style={loading_props.text}>Loading...</anim.span>
-            </h3>
-          </div>
-        )}
+        <Reader
+          total={!mangas.loading && mangas.data && mangas.data.total}
+          data={!mangas.loading && mangas.data && mangas.data.list}
+          loading={mangas.loading}
+          refetch={mangas.refetch}
+        />
       </ErrorBlock>
     </div>
   );
