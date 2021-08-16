@@ -10,7 +10,7 @@ import './stylesheets/index.scss';
 import Footer from './main/Footer';
 import client from './apollo_client'
 
-const ToTopComponent = () => {
+const ToTopComponent: React.FC = () => {
   return (
     <button className={styles.TopComponent} onClick={() => window.scroll({
       behavior: 'smooth',

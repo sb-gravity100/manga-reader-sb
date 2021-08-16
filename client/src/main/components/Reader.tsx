@@ -4,15 +4,20 @@
 import ReaderItem from './sub-components/ReaderItem';
 import { useSpring, animated as anim } from 'react-spring';
 import classname from 'classnames';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { useLocation, Link } from 'react-router-dom';
-import * as qs from 'querystring';
+import {
+   FaAngleLeft,
+   FaAngleRight,
+   FaAngleDoubleLeft,
+   FaAngleDoubleRight,
+} from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
-// import { useState, useEffect } from 'react'
+import qs from 'qs'
+ import { FC } from 'react'
 import styles from '../css_modules/main.module.scss';
 
-const Reader = props => {
-   const params = qs.parse(useLocation().search.slice(1));
+const Reader: FC = props => {
+   const params = qs.parse(window.location.search.slice(1));
    const chunks = _.chunk(props.data, 10);
    const loading_props = {
       text: useSpring({
@@ -24,6 +29,7 @@ const Reader = props => {
          reset: true,
       }),
    };
+
    const isCurrent = i => {
       if (params.p_index) {
          if (
@@ -49,36 +55,70 @@ const Reader = props => {
       <div className="main-reader">
          <div className="nav">
             {params.p_index && Number(params.p_index) !== 0 ? (
-               <Link to={`/?p_index=${Number(params.p_index) - 1}`}>
-                  <button disabled={isCurrent(0)} className="prev">
-                     <FaChevronLeft />
-                  </button>
-               </Link>
+               <>
+                  <Link to={`/?p_index=0`}>
+                     <button disabled={isCurrent(0)} className="prev">
+                        <FaAngleDoubleLeft />
+                     </button>
+                  </Link>
+                  <Link to={`/?p_index=${Number(params.p_index) - 1}`}>
+                     <button disabled={isCurrent(0)} className="prev">
+                        <FaAngleLeft />
+                     </button>
+                  </Link>
+               </>
             ) : (
-               <button disabled={true} className="prev">
-                  <FaChevronLeft />
-               </button>
+               <>
+                  <button disabled={isCurrent(0)} className="prev">
+                     <FaAngleDoubleLeft />
+                  </button>
+                  <button disabled={true} className="prev">
+                     <FaAngleLeft />
+                  </button>
+               </>
             )}
             {Number(params.p_index || 0) !== chunks.length - 1 ? (
-               <Link to={`/?p_index=${Number(params.p_index || 0) + 1}`}>
+               <>
+                  <Link to={`/?p_index=${Number(params.p_index || 0) + 1}`}>
+                     <button
+                        disabled={
+                           params.p_index &&
+                           Number(params.p_index) === chunks.length - 1
+                        }
+                        className="next">
+                        <FaAngleRight />
+                     </button>
+                  </Link>
+                  <Link to={`/?p_index=${chunks.length - 1}`}>
+                     <button
+                        disabled={
+                           params.p_index &&
+                           Number(params.p_index) === chunks.length - 1
+                        }
+                        className="next">
+                        <FaAngleDoubleRight />
+                     </button>
+                  </Link>
+               </>
+            ) : (
+               <>
                   <button
                      disabled={
                         params.p_index &&
                         Number(params.p_index) === chunks.length - 1
                      }
                      className="next">
-                     <FaChevronRight />
+                     <FaAngleRight />
                   </button>
-               </Link>
-            ) : (
-               <button
-                  disabled={
-                     params.p_index &&
-                     Number(params.p_index) === chunks.length - 1
-                  }
-                  className="next">
-                  <FaChevronRight />
-               </button>
+                  <button
+                     disabled={
+                        params.p_index &&
+                        Number(params.p_index) === chunks.length - 1
+                     }
+                     className="next">
+                     <FaAngleDoubleRight />
+                  </button>
+               </>
             )}
          </div>
          <div className="main-reader-box">
