@@ -1,17 +1,18 @@
-const path = require('path');
-const fs = require('fs');
-const fs2 = require('nodejs-fs-utils');
-const urljoin = require('url-join');
-const _ = require('lodash');
-const Jimp = require('jimp');
+import path from 'path';
+import fs from 'fs';
+import fs2 from 'nodejs-fs-utils';
+import urljoin from 'url-join';
+import _ from 'lodash';
+import Jimp from 'jimp';
+import { Manga } from '../types';
 
-const DJ_PATH = path.normalize(path.join(__dirname, '../DJ/'));
+const DJ_PATH = path.normalize(path.join(__dirname, '../../DJ/'));
 
-module.exports.dirSync = () => {
+export function dirSync() {
    const dir = fs.readdirSync(DJ_PATH, {
       withFileTypes: true,
    });
-   const db = [];
+   const db: Manga[] = [];
 
    const DIRS = dir.map(folder => {
       if (folder.isDirectory()) {
@@ -36,9 +37,9 @@ module.exports.dirSync = () => {
       db.push({ id: `M${i + 1}`, ...d })
    );
    return db.map(e => ({ /* cover: urljoin('cdn/covers', e.id), */ ...e }));
-};
+}
 
-module.exports.mangaData = manga => {
+export function mangaData(manga: Manga) {
    const mangaPath = manga.pathname.replace(
       '%DJ_PATH%',
       path.normalize(DJ_PATH)
@@ -64,9 +65,9 @@ module.exports.mangaData = manga => {
       })
       .filter(_.isObjectLike);
    return data;
-};
+}
 
-module.exports.updateCovers = async () => {
+export async function updateCovers() {
    const dirs = await fs.promises.readdir(DJ_PATH);
    const coverdirs = [];
    for (let i = 0; i < dirs.length; i++) {
@@ -85,4 +86,4 @@ module.exports.updateCovers = async () => {
       await image.cover(200, 270).quality(30).writeAsync(cover_file);
    }
    return;
-};
+}

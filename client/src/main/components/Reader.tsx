@@ -12,12 +12,14 @@ import {
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import qs from 'qs'
- import { FC } from 'react'
+import qs from 'qs';
+import { FC } from 'react';
 import styles from '../css_modules/main.module.scss';
+import { useSearchParam } from 'react-use';
+import { ReaderProps } from './props';
 
-const Reader: FC = props => {
-   const params = qs.parse(window.location.search.slice(1));
+const Reader: FC<ReaderProps> = props => {
+   const p_index = useSearchParam('p_index');
    const chunks = _.chunk(props.data, 10);
    const loading_props = {
       text: useSpring({
@@ -30,18 +32,15 @@ const Reader: FC = props => {
       }),
    };
 
-   const isCurrent = i => {
-      if (params.p_index) {
-         if (
-            Number(params.p_index) < chunks.length &&
-            i === Number(params.p_index)
-         ) {
+   const isCurrent = (i: number) => {
+      if (typeof p_index === 'string') {
+         if (Number(p_index) < chunks.length && i === Number(p_index)) {
             return true;
          }
-         if (params.p_index.match(/last/i) && i === chunks.length - 1) {
+         if (p_index.match(/last/i) && i === chunks.length - 1) {
             return true;
          }
-         if (params.p_index.match(/first/i) && i === 0) {
+         if (p_index.match(/first/i) && i === 0) {
             return true;
          }
       } else {
@@ -54,14 +53,14 @@ const Reader: FC = props => {
    return (
       <div className="main-reader">
          <div className="nav">
-            {params.p_index && Number(params.p_index) !== 0 ? (
+            {p_index && Number(p_index) !== 0 ? (
                <>
                   <Link to={`/?p_index=0`}>
                      <button disabled={isCurrent(0)} className="prev">
                         <FaAngleDoubleLeft />
                      </button>
                   </Link>
-                  <Link to={`/?p_index=${Number(params.p_index) - 1}`}>
+                  <Link to={`/?p_index=${Number(p_index) - 1}`}>
                      <button disabled={isCurrent(0)} className="prev">
                         <FaAngleLeft />
                      </button>
@@ -77,13 +76,14 @@ const Reader: FC = props => {
                   </button>
                </>
             )}
-            {Number(params.p_index || 0) !== chunks.length - 1 ? (
+            {Number(p_index || 0) !== chunks.length - 1 ? (
                <>
-                  <Link to={`/?p_index=${Number(params.p_index || 0) + 1}`}>
+                  <Link to={`/?p_index=${Number(p_index || 0) + 1}`}>
                      <button
                         disabled={
-                           params.p_index &&
-                           Number(params.p_index) === chunks.length - 1
+                           p_index
+                              ? Number(p_index) === chunks.length - 1
+                              : undefined
                         }
                         className="next">
                         <FaAngleRight />
@@ -92,8 +92,9 @@ const Reader: FC = props => {
                   <Link to={`/?p_index=${chunks.length - 1}`}>
                      <button
                         disabled={
-                           params.p_index &&
-                           Number(params.p_index) === chunks.length - 1
+                           p_index
+                              ? Number(p_index) === chunks.length - 1
+                              : undefined
                         }
                         className="next">
                         <FaAngleDoubleRight />
@@ -104,16 +105,18 @@ const Reader: FC = props => {
                <>
                   <button
                      disabled={
-                        params.p_index &&
-                        Number(params.p_index) === chunks.length - 1
+                        p_index
+                           ? Number(p_index) === chunks.length - 1
+                           : undefined
                      }
                      className="next">
                      <FaAngleRight />
                   </button>
                   <button
                      disabled={
-                        params.p_index &&
-                        Number(params.p_index) === chunks.length - 1
+                        p_index
+                           ? Number(p_index) === chunks.length - 1
+                           : undefined
                      }
                      className="next">
                      <FaAngleDoubleRight />
@@ -124,11 +127,9 @@ const Reader: FC = props => {
          <div className="main-reader-box">
             {!props.loading && props.data ? (
                <div className={classname('main-reader-flex', 'current')}>
-                  {chunks[params.p_index ? Number(params.p_index) : 0].map(
-                     item => (
-                        <ReaderItem key={item.id} item={item} />
-                     )
-                  )}
+                  {chunks[p_index ? Number(p_index) : 0].map(item => (
+                     <ReaderItem key={item.id} item={item} />
+                  ))}
                </div>
             ) : (
                <div className={styles.loading_style}>

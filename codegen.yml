@@ -1,0 +1,15 @@
+overwrite: true
+schema: './schema.graphql'
+documents: './docs.graphql'
+generates:
+   ./src/types.ts:
+      config:
+         constEnums: true
+         skipTypename: true
+      plugins:
+         - 'typescript'
+         - 'typescript-resolvers'
+   ./client/src/types.tsx:
+      plugins:
+         - 'typescript-operations'
+         - 'typescript-react-apollo'

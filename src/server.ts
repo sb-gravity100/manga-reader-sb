@@ -1,20 +1,20 @@
-const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
-const path = require('path');
-const logger = require('morgan');
-const createError = require('http-errors');
-const cors = require('cors');
-const { promisify } = require('util');
-const compression = require('compression');
-const { resolvers, typeDefs } = require('./graphql');
-const Jimp = require('jimp');
+import express, { static } from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import { normalize, join } from 'path';
+import logger from 'morgan';
+import createError from 'http-errors';
+import cors from 'cors';
+import { promisify } from 'util';
+import compression from 'compression';
+import { resolvers, typeDefs } from './graphql';
+import Jimp from 'jimp';
 // const { mangaData } = require('./lib/folder_lister');
 require('dotenv').config();
 
 const { NODE_ENV, PORT } = process.env;
-const DJ_PATH = path.normalize(path.join(__dirname, 'DJ/'));
+const DJ_PATH = normalize(join(__dirname, 'DJ/'));
 const port = PORT;
-const Join = (...dir) => path.normalize(path.join(__dirname, ...dir));
+const Join = (...dir) => normalize(join(__dirname, ...dir));
 const ASSETS_PATH = Join('public/');
 const debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
@@ -55,10 +55,10 @@ startApollo().then(({ app }) => {
    );
    app.use(compression());
    app.use(cors());
-   app.use('/cdn/manga', express.static(DJ_PATH));
-   app.use(express.static(ASSETS_PATH));
+   app.use('/cdn/manga', static(DJ_PATH));
+   app.use(static(ASSETS_PATH));
    app.get('/(*/)?', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
-    app.get('/manga', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
+   app.get('/manga', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
 
    app.use((_req, _res, next) => {
       next(createError(404));

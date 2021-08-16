@@ -22,8 +22,8 @@ const Manga = () => {
          id: mangaID,
       },
    });
-   const [zoomValue, setZoomVal] = useLocalStorage('zoomValue', 5);
-   const [brightVal, setBright] = useLocalStorage('brightValue', 100);
+   const [zoomValue, setZoomVal] = useLocalStorage<number>('zoomValue', 5);
+   const [brightVal, setBright] = useLocalStorage<number>('brightValue', 100);
    const loading_props = {
       text: useSpring({
          from: {
@@ -39,18 +39,18 @@ const Manga = () => {
          filter: `brightness(${brightVal}%)`,
       },
       widthAdjust: {
-         maxWidth: `${(zoomValue / 10 + 0.5) * 700}px`,
+         maxWidth: `${((zoomValue || 5) / 10 + 0.5) * 700}px`,
          transition: '0.3s',
       },
    });
 
    useEffect(() => {
       if (loading) {
-         document.title = 'Loading...'
+         document.title = 'Loading...';
       } else {
-         document.title = data.manga.name
+         document.title = data.manga.name;
       }
-   })
+   });
 
    useEffect(() => {
       scroll.scrollToTop();
@@ -65,7 +65,11 @@ const Manga = () => {
                </h3>
             </div>
          )}
-         <ErrorBlock hasErrors={error && true} errors={error} retry={refetch}>
+         <ErrorBlock
+            loading={loading}
+            hasErrors={Boolean(error)}
+            errors={error}
+            retry={refetch}>
             <div className="wrapper">
                {!loading && (
                   <ProgressBar
@@ -89,7 +93,7 @@ const Manga = () => {
                   )}
                   id="viewer">
                   {!loading &&
-                     data.manga.data.map((d, k) => (
+                     data.manga.data.map((d: any, k: number) => (
                         <MangaView key={k} panelImg={d} />
                      ))}
                </div>

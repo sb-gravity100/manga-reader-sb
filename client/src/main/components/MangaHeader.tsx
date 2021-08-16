@@ -1,7 +1,7 @@
 import { FaPlus, FaMinus } from 'react-icons/fa';
 // import styles from '../css_modules/Manga.module.scss';
 
-const MangaHeader = ({
+const MangaHeader: FC = ({
    manga,
    zoomValue,
    brightVal,
