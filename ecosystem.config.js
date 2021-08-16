@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'Manga Reader',
       script: './server.js',
-      watch: false,
+      watch: ["server.js"],
       env: {
         NODE_ENV: 'production',
       },

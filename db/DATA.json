@@ -853,8 +853,120 @@
       "name": "[tyibin] Human skin and Chocolate [English-Translated] [Re-write]",
       "pathname": "%DJ_PATH%\\[tyibin] Human skin and Chocolate [English-Translated] [Re-write]",
       "createdAt": "2021-07-16T19:05:59.489Z",
-      "size": 5701305,
+      "size": 5715677,
       "cover": "cdn/manga/[tyibin] Human skin and Chocolate [English-Translated] [Re-write]/cover.jpg"
+    },
+    {
+      "id": "M108",
+      "name": "[DATE] -Hanshin- ~Mou Hitotsu no Tamashii~ [English] [Facedesk]",
+      "pathname": "%DJ_PATH%\\[DATE] -Hanshin- ~Mou Hitotsu no Tamashii~ [English] [Facedesk]",
+      "createdAt": "2021-07-16T19:19:17.253Z",
+      "size": 2474618,
+      "cover": "cdn/manga/[DATE] -Hanshin- ~Mou Hitotsu no Tamashii~ [English] [Facedesk]/cover.jpg"
+    },
+    {
+      "id": "M109",
+      "name": "Residence Kouhen",
+      "pathname": "%DJ_PATH%\\Residence Kouhen",
+      "createdAt": "2021-07-16T19:19:34.432Z",
+      "size": 14472258,
+      "cover": "cdn/manga/Residence Kouhen/cover.jpg"
+    },
+    {
+      "id": "M110",
+      "name": "[DATE] Residence ~ Shounen Shoushitsu~ (COMIC Unreal 2015-010 Vol. 57) [English] [desudesu]",
+      "pathname": "%DJ_PATH%\\[DATE] Residence ~ Shounen Shoushitsu~ (COMIC Unreal 2015-010 Vol. 57) [English] [desudesu]",
+      "createdAt": "2021-07-16T19:19:34.836Z",
+      "size": 4405972,
+      "cover": "cdn/manga/[DATE] Residence ~ Shounen Shoushitsu~ (COMIC Unreal 2015-010 Vol. 57) [English] [desudesu]/cover.jpg"
+    },
+    {
+      "id": "M111",
+      "name": "[DATE] Residence ~Shounen Shoushitsu 2~ Residence ~Missing Boy 2~ (Doukyo Suru Neneki) [English] [desudesu] [Digital]",
+      "pathname": "%DJ_PATH%\\[DATE] Residence ~Shounen Shoushitsu 2~ Residence ~Missing Boy 2~ (Doukyo Suru Neneki) [English] [desudesu] [Digital]",
+      "createdAt": "2021-07-16T19:19:49.150Z",
+      "size": 5989941,
+      "cover": "cdn/manga/[DATE] Residence ~Shounen Shoushitsu 2~ Residence ~Missing Boy 2~ (Doukyo Suru Neneki) [English] [desudesu] [Digital]/cover.jpg"
+    },
+    {
+      "id": "M112",
+      "name": "[Taketombo (Metako)] Utsuri Kawari (Shinymas TS Goudou) (THE iDOLM@STER_ Shiny Colors) [English] [Digital]",
+      "pathname": "%DJ_PATH%\\[Taketombo (Metako)] Utsuri Kawari (Shinymas TS Goudou) (THE iDOLM@STER_ Shiny Colors) [English] [Digital]",
+      "createdAt": "2021-07-19T19:33:40.779Z",
+      "size": 2637240,
+      "cover": "cdn/manga/[Taketombo (Metako)] Utsuri Kawari (Shinymas TS Goudou) (THE iDOLM@STER_ Shiny Colors) [English] [Digital]/cover.jpg"
+    },
+    {
+      "id": "M113",
+      "name": "(C93) [Taketombo (SeiroA)] Tokutouseki VIP Seat (Fumika Onee-chan to Irekawacchau Hon) (THE IDOLM@STER CINDERELLA GIRLS) [English]",
+      "pathname": "%DJ_PATH%\\(C93) [Taketombo (SeiroA)] Tokutouseki VIP Seat (Fumika Onee-chan to Irekawacchau Hon) (THE IDOLM@STER CINDERELLA GIRLS) [English]",
+      "createdAt": "2021-07-19T19:46:09.628Z",
+      "size": 1576212,
+      "cover": "cdn/manga/(C93) [Taketombo (SeiroA)] Tokutouseki VIP Seat (Fumika Onee-chan to Irekawacchau Hon) (THE IDOLM@STER CINDERELLA GIRLS) [English]/cover.jpg"
+    },
+    {
+      "id": "M114",
+      "name": "[Senpenbankashiki (DATE)] Kyou kara Shimamura-san (THE IDOLM@STER CINDERELLA GIRLS) [English] [Digital]",
+      "pathname": "%DJ_PATH%\\[Senpenbankashiki (DATE)] Kyou kara Shimamura-san (THE IDOLM@STER CINDERELLA GIRLS) [English] [Digital]",
+      "createdAt": "2021-07-19T19:46:24.511Z",
+      "size": 29674923,
+      "cover": "cdn/manga/[Senpenbankashiki (DATE)] Kyou kara Shimamura-san (THE IDOLM@STER CINDERELLA GIRLS) [English] [Digital]/cover.jpg"
+    },
+    {
+      "id": "M115",
+      "name": "[Hairu Nukemichi (Arubento, QZO。)] Kiru,Kiru,Kuru! (Nottori! ~Onnanoko no Karada o Nottoru Comic Anthology~Ⅱ) [English] [Digital] [desudesu]",
+      "pathname": "%DJ_PATH%\\[Hairu Nukemichi (Arubento, QZO。)] Kiru,Kiru,Kuru! (Nottori! ~Onnanoko no Karada o Nottoru Comic Anthology~Ⅱ) [English] [Digital] [desudesu]",
+      "createdAt": "2021-07-19T19:52:52.616Z",
+      "size": 9754696,
+      "cover": "cdn/manga/[Hairu Nukemichi (Arubento, QZO。)] Kiru,Kiru,Kuru! (Nottori! ~Onnanoko no Karada o Nottoru Comic Anthology~Ⅱ) [English] [Digital] [desudesu]/cover.jpg"
+    },
+    {
+      "id": "M116",
+      "name": "[Taketombo (Naba)] Fuyu Kawa (THE iDOLM@STER_ Shiny Colors) [Digital] [English] [obsoletezero]",
+      "pathname": "%DJ_PATH%\\[Taketombo (Naba)] Fuyu Kawa (THE iDOLM@STER_ Shiny Colors) [Digital] [English] [obsoletezero]",
+      "createdAt": "2021-07-19T19:54:16.244Z",
+      "size": 8117565,
+      "cover": "cdn/manga/[Taketombo (Naba)] Fuyu Kawa (THE iDOLM@STER_ Shiny Colors) [Digital] [English] [obsoletezero]/cover.jpg"
+    },
+    {
+      "id": "M117",
+      "name": "[Hinaki] Kukkorose no Himekishi to nari, Yuri Shoukan de Hataraku koto ni Narimashita 5",
+      "pathname": "%DJ_PATH%\\[Hinaki] Kukkorose no Himekishi to nari, Yuri Shoukan de Hataraku koto ni Narimashita 5",
+      "createdAt": "2021-07-31T20:52:49.202Z",
+      "size": 12808308,
+      "cover": "cdn/manga/[Hinaki] Kukkorose no Himekishi to nari, Yuri Shoukan de Hataraku koto ni Narimashita 5/cover.jpg"
+    },
+    {
+      "id": "M118",
+      "name": "[kinntarou] Saimin Shinsatsu [English] [desudesu] [Digital]",
+      "pathname": "%DJ_PATH%\\[kinntarou] Saimin Shinsatsu [English] [desudesu] [Digital]",
+      "createdAt": "2021-07-31T21:28:32.831Z",
+      "size": 78910299,
+      "cover": "cdn/manga/[kinntarou] Saimin Shinsatsu [English] [desudesu] [Digital]/cover.jpg"
+    },
+    {
+      "id": "M119",
+      "name": "(C92) [Karakishi Youhei-dan Shinga (Sahara Wataru)] Botan to Sakura (Naruto) [English] {Hennojin}",
+      "pathname": "%DJ_PATH%\\(C92) [Karakishi Youhei-dan Shinga (Sahara Wataru)] Botan to Sakura (Naruto) [English] {Hennojin}",
+      "createdAt": "2021-07-31T21:32:58.329Z",
+      "size": 13784417,
+      "cover": "cdn/manga/(C92) [Karakishi Youhei-dan Shinga (Sahara Wataru)] Botan to Sakura (Naruto) [English] {Hennojin}/cover.jpg"
+    },
+    {
+      "id": "M120",
+      "name": "[SMUGGLER (Kazuwo Daisuke)] Yakou Bus de Tonariawaseta Kyonyuu JD ni Itazura shitetara Saigo made Ikechatta Ken The Case Of Groping a Big Breasted College Girl On a Night Train Until She Came [English] {Doujins com}",
+      "pathname": "%DJ_PATH%\\[SMUGGLER (Kazuwo Daisuke)] Yakou Bus de Tonariawaseta Kyonyuu JD ni Itazura shitetara Saigo made Ikechatta Ken The Case Of Groping a Big Breasted College Girl On a Night Train Until She Came [English] {Doujins com}",
+      "createdAt": "2021-08-08T19:22:08.174Z",
+      "size": 9666611,
+      "cover": "cdn/manga/[SMUGGLER (Kazuwo Daisuke)] Yakou Bus de Tonariawaseta Kyonyuu JD ni Itazura shitetara Saigo made Ikechatta Ken The Case Of Groping a Big Breasted College Girl On a Night Train Until She Came [English] {Doujins com}/cover.jpg"
+    },
+    {
+      "id": "M121",
+      "name": "[TSF no F (Mugen no Sudadokei)] (TS Akuochi) Inma Abrahel Koutan (TSF no F no Hon 2021 No 3) [English] {Heartnsoul32} [Digital]",
+      "pathname": "%DJ_PATH%\\[TSF no F (Mugen no Sudadokei)] (TS Akuochi) Inma Abrahel Koutan (TSF no F no Hon 2021 No 3) [English] {Heartnsoul32} [Digital]",
+      "createdAt": "2021-08-08T19:27:47.538Z",
+      "size": 12972865,
+      "cover": "cdn/manga/[TSF no F (Mugen no Sudadokei)] (TS Akuochi) Inma Abrahel Koutan (TSF no F no Hon 2021 No 3) [English] {Heartnsoul32} [Digital]/cover.jpg"
     }
   ]
 }

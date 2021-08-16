@@ -56,8 +56,9 @@ startApollo().then(({ app }) => {
    app.use(compression());
    app.use(cors());
    app.use('/cdn/manga', express.static(DJ_PATH));
-   app.use('/static', express.static(ASSETS_PATH + '/static'));
+   app.use(express.static(ASSETS_PATH));
    app.get('/(*/)?', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
+    app.get('/manga', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
 
    app.use((_req, _res, next) => {
       next(createError(404));
