@@ -65,7 +65,6 @@ export const resolvers: Resolvers = {
          const index = Fuse.createIndex(options.keys, list.value());
          const fuse = new Fuse(list.value(), options, index);
          const results = fuse.search(term);
-         console.log(results);
          return results.map(e => e.item);
       },
       async total() {
