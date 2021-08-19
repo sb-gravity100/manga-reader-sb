@@ -1,12 +1,12 @@
 module.exports = {
-  apps: [
-    {
-      name: 'Manga Reader',
-      script: './server.js',
-      watch: ["server.js"],
-      env: {
-        NODE_ENV: 'production',
+   apps: [
+      {
+         name: 'Manga Reader',
+         script: '.dist/server.js',
+         watch: ['dist/'],
+         env: {
+            NODE_ENV: 'production',
+         },
       },
-    },
-  ],
-}
+   ],
+};

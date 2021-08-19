@@ -1,30 +1,32 @@
-import express, { static } from 'express';
+require('dotenv').config();
+import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { normalize, join } from 'path';
 import logger from 'morgan';
 import createError from 'http-errors';
 import cors from 'cors';
-import { promisify } from 'util';
 import compression from 'compression';
-import { resolvers, typeDefs } from './graphql';
-import Jimp from 'jimp';
+import loadSchema from './graphql';
+import db from './db';
+import _ from 'lodash';
+console.log(process.cwd());
 // const { mangaData } = require('./lib/folder_lister');
-require('dotenv').config();
 
 const { NODE_ENV, PORT } = process.env;
-const DJ_PATH = normalize(join(__dirname, 'DJ/'));
+const DJ_PATH = normalize(join(__dirname, '../DJ/'));
 const port = PORT;
-const Join = (...dir) => normalize(join(__dirname, ...dir));
-const ASSETS_PATH = Join('public/');
+const Join = (...dir: string[]) => normalize(join(__dirname, ...dir));
+const ASSETS_PATH = Join('../public/');
 const debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
 
 const startApollo = async () => {
+   await db.read();
+   _.defaultsDeep([]);
    const app = express();
-   const Listen = promisify(app.listen).bind(app);
+   const schema = await loadSchema();
    const apollo = new ApolloServer({
-      resolvers,
-      typeDefs,
+      schema,
       playground: false /* NODE_ENV === 'development' && {
          title: 'MangaQL',
          cdnUrl: '/api/_apollo',
@@ -38,7 +40,7 @@ const startApollo = async () => {
    });
    await apollo.start();
    apollo.applyMiddleware({ app, path: '/api/ql' });
-   await Listen({ port });
+   await new Promise<void>(res => app.listen(PORT, res));
    debug(`Apollo server ready at %s`, apollo.graphqlPath);
    debug(`Server listening at %s`, port);
 
@@ -55,8 +57,8 @@ startApollo().then(({ app }) => {
    );
    app.use(compression());
    app.use(cors());
-   app.use('/cdn/manga', static(DJ_PATH));
-   app.use(static(ASSETS_PATH));
+   app.use('/cdn/manga', express.static(DJ_PATH));
+   app.use(express.static(ASSETS_PATH));
    app.get('/(*/)?', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
    app.get('/manga', (_req, res) => res.sendFile(ASSETS_PATH + 'index.html'));
 
