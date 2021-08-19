@@ -12,7 +12,6 @@ import {
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import qs from 'qs';
 import { FC } from 'react';
 import styles from '../css_modules/main.module.scss';
 import { useSearchParam } from 'react-use';

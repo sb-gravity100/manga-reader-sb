@@ -1,13 +1,15 @@
 /* eslint-disable jsx-a11y/alt-text */
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import { ReaderItemProps } from '../props';
 
-const ReaderItem = props => {
+const ReaderItem: FC<ReaderItemProps> = props => {
    const { item } = props;
 
    return (
       <Link className="flex-item" title={item.name} to={`/manga?id=${item.id}`}>
          {true ? (
-            <img className="bg-img" src={item.cover} />
+            <img className="bg-img" src={item.cover || undefined} />
          ) : (
             <div
                className="bg-img"
@@ -20,7 +22,7 @@ const ReaderItem = props => {
                Loading...
             </div>
          )}
-         <div className='description'>
+         <div className="description">
             <p>{item.name}</p>
          </div>
       </Link>

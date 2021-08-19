@@ -3,21 +3,20 @@ import { useLocalStorage } from 'react-use';
 import { css, StyleSheet } from 'aphrodite';
 import { useLocation } from 'react-router-dom';
 import { ProgressBar } from 'scrolling-based-progressbar';
-import { useQuery } from '@apollo/client';
 import MangaView from './MangaView';
 import { useSpring, animated as anim } from 'react-spring';
 import * as Scroll from 'react-scroll';
 import MangaHeader from './MangaHeader';
 import ErrorBlock from './sub-components/ErrorBlock';
-import { GET_MANGA } from '../data/queries';
 import styles from '../css_modules/main.module.scss';
+import { useGetMangaQuery } from '../../types';
 
 const scroll = Scroll.animateScroll;
 
 const Manga = () => {
    const location = useLocation();
-   const mangaID = new URLSearchParams(location.search).get('id');
-   const { loading, data, error, refetch } = useQuery(GET_MANGA, {
+   const mangaID = new URLSearchParams(location.search).get('id') || '';
+   const { loading, data, error, refetch } = useGetMangaQuery({
       variables: {
          id: mangaID,
       },
@@ -48,7 +47,9 @@ const Manga = () => {
       if (loading) {
          document.title = 'Loading...';
       } else {
-         document.title = data.manga.name;
+         if (data?.manga) {
+            document.title = data.manga.name;
+         }
       }
    });
 
@@ -80,7 +81,7 @@ const Manga = () => {
                   />
                )}
                <MangaHeader
-                  manga={!loading && data.manga}
+                  manga={!loading && data?.manga}
                   zoomValue={zoomValue}
                   brightVal={brightVal}
                   setBright={setBright}
@@ -93,7 +94,7 @@ const Manga = () => {
                   )}
                   id="viewer">
                   {!loading &&
-                     data.manga.data.map((d: any, k: number) => (
+                     data?.manga?.data?.map((d, k: number) => (
                         <MangaView key={k} panelImg={d} />
                      ))}
                </div>

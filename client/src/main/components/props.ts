@@ -1,16 +1,26 @@
 import { ApolloError } from '@apollo/client';
+import { Dispatch, SetStateAction } from 'react';
+import { Manga, MangaData } from '../../types';
 
 export interface MangaHeaderProps {
-   manga: any;
-   zoomValue: any;
-   brightVal: any;
-   setBright: any;
-   setZoomVal: any;
+   manga?: Manga | any;
+   zoomValue?: number;
+   brightVal?: number;
+   setBright: Dispatch<SetStateAction<number | undefined>>;
+   setZoomVal: Dispatch<SetStateAction<number | undefined>>;
+}
+
+export interface ReaderItemProps {
+   item: Manga;
+}
+
+export interface MangaViewProps {
+   panelImg: MangaData;
 }
 
 export interface ReaderProps {
-   total: number;
-   data: any[];
+   total?: number;
+   data?: Manga[] | null;
    loading: boolean;
    refetch(...args: any[]): void;
 }

@@ -1,14 +1,17 @@
-import { useQuery, useLazyQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { MdRefresh } from 'react-icons/md';
 import Reader from './Reader';
 import ErrorBlock from './sub-components/ErrorBlock';
-import { GET_MANGAS, SEARCH_MANGA, UPDATE_COVERS } from '../data/queries';
 import { useState, useEffect, ChangeEventHandler } from 'react';
 import styles from '../css_modules/main.module.scss';
+import {
+   useAllMangasQuery,
+   useSearchMangaLazyQuery,
+   useUpdateDataLazyQuery,
+} from '../../types';
 
 const Main = () => {
-   const mangas = useQuery(GET_MANGAS, {
+   const mangas = useAllMangasQuery({
       partialRefetch: true,
       notifyOnNetworkStatusChange: true,
    });
@@ -18,12 +21,8 @@ const Main = () => {
    }>({
       isSearched: false,
    });
-   const [REFRESH_COVERS] = useLazyQuery(UPDATE_COVERS);
-   const [GET_SEARCH, search] = useLazyQuery(SEARCH_MANGA, {
-      variables: {
-         s: '',
-      },
-   });
+   const [REFRESH_COVERS] = useUpdateDataLazyQuery();
+   const [GET_SEARCH, search] = useSearchMangaLazyQuery();
 
    const handleSearchChange: ChangeEventHandler<HTMLInputElement> = e => {
       if (!e.target.value) {
@@ -115,8 +114,8 @@ const Main = () => {
             hasErrors={Boolean(mangas.error)}
             errors={mangas.error}>
             <Reader
-               total={mangas.data.total}
-               data={mangas.data.list}
+               total={mangas?.data?.total}
+               data={mangas?.data?.list}
                loading={mangas.loading}
                refetch={mangas.refetch}
             />

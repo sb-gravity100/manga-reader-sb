@@ -1,6 +1,6 @@
 overwrite: true
-schema: './schema.graphql'
-documents: './docs.graphql'
+schema: './graphql/schema.graphql'
+documents: './graphql/docs.graphql'
 generates:
    ./src/types.ts:
       config:
@@ -11,5 +11,9 @@ generates:
          - 'typescript-resolvers'
    ./client/src/types.tsx:
       plugins:
+         - 'typescript'
          - 'typescript-operations'
          - 'typescript-react-apollo'
+      config:
+         skipTypename: true
+         maybeValue: T | undefined

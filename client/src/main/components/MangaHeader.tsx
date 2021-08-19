@@ -1,10 +1,12 @@
+import { FC } from 'react';
 import { FaPlus, FaMinus } from 'react-icons/fa';
+import { MangaHeaderProps } from './props';
 // import styles from '../css_modules/Manga.module.scss';
 
-const MangaHeader: FC = ({
+const MangaHeader: FC<MangaHeaderProps> = ({
    manga,
-   zoomValue,
-   brightVal,
+   zoomValue = 5,
+   brightVal = 100,
    setBright,
    setZoomVal,
 }) => (
@@ -17,7 +19,7 @@ const MangaHeader: FC = ({
                type="range"
                min="0"
                max="100"
-               onChange={e => setBright(e.target.value)}
+               onChange={e => setBright(e.target.valueAsNumber)}
                value={brightVal}
             />
          </div>
@@ -30,8 +32,9 @@ const MangaHeader: FC = ({
             <input
                type="text"
                onChange={e =>
-                  (e.target.value <= 10) & (e.target.value > 0) &&
-                  setZoomVal(e.target.value)
+                  e.target.valueAsNumber <= 10 &&
+                  e.target.valueAsNumber > 0 &&
+                  setZoomVal(e.target.valueAsNumber)
                }
                value={zoomValue}
             />

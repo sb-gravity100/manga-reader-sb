@@ -1,6 +1,62 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+export type Maybe<T> = T | undefined;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 const defaultOptions =  {}
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+  DateTime: any;
+};
+
+
+export type Manga = {
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  pathname: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  size: Scalars['Int'];
+  data?: Maybe<Array<MangaData>>;
+  cover?: Maybe<Scalars['String']>;
+};
+
+export type MangaData = {
+  name: Scalars['String'];
+  path: Scalars['String'];
+};
+
+export type Query = {
+  mangas?: Maybe<Array<Manga>>;
+  manga?: Maybe<Manga>;
+  search?: Maybe<Array<Manga>>;
+  total: Scalars['Int'];
+  update?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type QueryMangasArgs = {
+  sort?: Maybe<Scalars['String']>;
+  limit?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['Int']>;
+  refresh?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type QueryMangaArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QuerySearchArgs = {
+  term?: Maybe<Scalars['String']>;
+};
+
 export type AllMangasQueryVariables = Exact<{
   refresh?: Maybe<Scalars['Boolean']>;
   slice?: Maybe<Scalars['Int']>;
@@ -8,26 +64,26 @@ export type AllMangasQueryVariables = Exact<{
 }>;
 
 
-export type AllMangasQuery = { __typename?: 'Query', total: number, list?: Maybe<Array<{ __typename?: 'Manga', id: string, name: string, pathname: string, createdAt: any, size: number, cover?: Maybe<string> }>> };
+export type AllMangasQuery = { total: number, list?: Maybe<Array<{ id: string, name: string, pathname: string, createdAt: any, size: number, cover?: Maybe<string> }>> };
 
 export type GetMangaQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetMangaQuery = { __typename?: 'Query', manga?: Maybe<{ __typename?: 'Manga', id: string, name: string, pathname: string, createdAt: any, size: number, data?: Maybe<Array<{ __typename?: 'MangaData', name: string, path: string }>> }> };
+export type GetMangaQuery = { manga?: Maybe<{ id: string, name: string, pathname: string, createdAt: any, size: number, data?: Maybe<Array<{ name: string, path: string }>> }> };
 
 export type SearchMangaQueryVariables = Exact<{
   s?: Maybe<Scalars['String']>;
 }>;
 
 
-export type SearchMangaQuery = { __typename?: 'Query', search?: Maybe<Array<{ __typename?: 'Manga', id: string, name: string, cover?: Maybe<string> }>> };
+export type SearchMangaQuery = { search?: Maybe<Array<{ id: string, name: string, cover?: Maybe<string> }>> };
 
 export type UpdateDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UpdateDataQuery = { __typename?: 'Query', update?: Maybe<boolean> };
+export type UpdateDataQuery = { update?: Maybe<boolean> };
 
 
 export const AllMangasDocument = gql`
