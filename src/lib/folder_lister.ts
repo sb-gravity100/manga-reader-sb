@@ -1,53 +1,65 @@
+require('dotenv').config();
+
 import path from 'path';
 import fs from 'fs';
-import fs2 from 'nodejs-fs-utils';
-import urljoin from 'url-join';
 import _ from 'lodash';
 import Jimp from 'jimp';
-import { Manga } from '../types';
+import { ObjectId } from 'bson';
+import { Manga, MangaData } from '../types';
 
-const DJ_PATH = path.normalize(path.join(__dirname, '../../DJ/'));
+const DJ_PATH = path.normalize(path.join(process.cwd(), 'DJ/'));
 
-export function dirSync() {
-   const dir = fs.readdirSync(DJ_PATH, {
+async function getDirSize(filepath: string) {
+   const dir = fs
+      .readdirSync(filepath)
+      .map(e => fs.promises.stat(path.join(filepath, e)));
+   const d = await Promise.all(dir);
+   return d.map(e_1 => e_1.size).reduce((p, n) => p + n);
+}
+
+export async function dirSync() {
+   const dir = await fs.promises.readdir(DJ_PATH, {
       withFileTypes: true,
    });
    const db: Manga[] = [];
 
-   const DIRS = dir.map(folder => {
+   for (let k = dir.length - 1; k >= 0; k--) {
+      const folder = dir[k];
       if (folder.isDirectory()) {
          const pathname = path.join('%DJ_PATH%', folder.name);
          const realPath = pathname.replace(
             /%DJ_PATH%/,
             path.normalize(DJ_PATH)
          );
-         const createdAt = new Date(fs.statSync(realPath).birthtime);
-         const size = fs2.fsizeSync(realPath);
-         const cover = fs.readdirSync(realPath);
-         return {
+         const { birthtime } = await fs.promises.stat(realPath);
+         const size = await getDirSize(realPath);
+         const createdAt = new Date(birthtime);
+         db.push({
             name: folder.name,
             pathname,
             createdAt,
-            size: size,
-            cover: urljoin('cdn/manga', folder.name, 'cover.jpg'),
-         };
+            size,
+            cover: `cdn/manga/${folder.name}/cover.jpg`,
+         });
       }
-   });
-   _.sortBy(DIRS, ['createdAt']).forEach((d, i) =>
-      db.push({ id: `M${i + 1}`, ...d })
-   );
-   return db.map(e => ({ /* cover: urljoin('cdn/covers', e.id), */ ...e }));
+   }
+   const newDB = _.sortBy(db, ['createdAt']);
+   // console.log(newDB)
+   return newDB;
 }
 
-export function mangaData(manga: Manga) {
+export async function mangaData(manga: Manga) {
    const mangaPath = manga.pathname.replace(
       '%DJ_PATH%',
       path.normalize(DJ_PATH)
    );
-   const data = fs
-      .readdirSync(mangaPath, {
-         withFileTypes: true,
-      })
+   let data:
+      | Promise<fs.Dirent[]>
+      | fs.Dirent[]
+      | MangaData[] = await fs.promises.readdir(mangaPath, {
+      withFileTypes: true,
+   });
+   data = data
       .map(file => {
          if (file.isFile()) {
             if (file.name === 'cover.jpg') {
@@ -56,20 +68,21 @@ export function mangaData(manga: Manga) {
             if (path.extname(file.name).match(/^\.(jpe?g|png|svg)$/i)) {
                return {
                   name: file.name,
-                  path: urljoin('cdn/manga', manga.name, file.name),
+                  path: `cdn/manga/${manga.name}/${file.name}`,
                };
             }
             return null;
          }
          return null;
       })
-      .filter(_.isObjectLike);
+      .filter(Boolean);
    return data;
 }
 
 export async function updateCovers() {
    const dirs = await fs.promises.readdir(DJ_PATH);
-   const coverdirs = [];
+   const coverdirs: string[] = [];
+   const imagePromises: Promise<Jimp>[] = [];
    for (let i = 0; i < dirs.length; i++) {
       const mangadir = dirs[i];
       const _dir = await fs.promises.readdir(path.join(DJ_PATH, mangadir));
@@ -83,7 +96,14 @@ export async function updateCovers() {
       const cover = coverdirs[i];
       const cover_file = path.join(path.dirname(cover), 'cover.jpg');
       const image = await Jimp.read(cover);
-      await image.cover(200, 270).quality(30).writeAsync(cover_file);
+      imagePromises.push(
+         image.cover(200, 270).quality(30).writeAsync(cover_file)
+      );
+   }
+   const chunks = _.chunk(imagePromises, 10);
+   for (let i = chunks.length - 1; i >= 0; i--) {
+      const chunk = chunks[i];
+      await Promise.all(chunk);
    }
    return;
 }

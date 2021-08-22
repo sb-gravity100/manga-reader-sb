@@ -1,96 +1,95 @@
 Arguments: 
-  /home/gitpod/.nvm/versions/node/v14.17.5/bin/node /home/gitpod/.nvm/versions/node/v14.17.5/bin/yarn add @graphql-tools
+  C:\Program Files\nodejs\node.exe C:\Users\seven\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add --offline @types/validator
 
 PATH: 
-  /home/gitpod/.pyenv/plugins/pyenv-virtualenv/shims:/workspace/.cargo/bin:/workspace/.pip-modules/bin:/workspace/.rvm/bin:/home/gitpod/.sdkman/candidates/maven/current/bin:/home/gitpod/.sdkman/candidates/java/current/bin:/home/gitpod/.sdkman/candidates/gradle/current/bin:/home/gitpod/.rvm/gems/ruby-2.7.3/bin:/home/gitpod/.rvm/gems/ruby-2.7.3@global/bin:/home/gitpod/.rvm/rubies/ruby-2.7.3/bin:/home/gitpod/.pyenv/plugins/pyenv-virtualenv/shims:/workspace/.cargo/bin:/workspace/.pip-modules/bin:/workspace/.rvm/bin:/ide/bin:/home/gitpod/.pyenv/bin:/home/gitpod/.pyenv/shims:/workspace/go/bin:/home/gitpod/go/bin:/home/gitpod/go-packages/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/:/home/gitpod/.nvm/versions/node/v14.17.5/bin:/home/gitpod/.cargo/bin:/usr/games:/usr/games:/home/gitpod/.nvm/versions/node/v14.17.5/bin:/home/gitpod/.rvm/bin:/home/gitpod/.nvm/versions/node/v14.17.5/bin:/home/gitpod/.nvm/versions/node/v14.17.5/bin
+  C:\Program Files\Cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\windows\System32;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\MariaDB 10.3\bin;C:\Program Files\Cmder;C:\Program Files\curl\bin;C:\Program Files\heroku\bin;D:\Cafe STL;C:\Program Files\Google\Chrome\Application;C:\Program Files\Cmder\vendor\bin;C:\Program Files\Cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\Program Files\Cmder\vendor\conemu-maximus5;C:\Program Files\Cmder\vendor\conemu-maximus5\ConEmu;C:\sqlite;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\bin;C:\Python27\Scripts;C:\Python27;C:\Users\seven\AppData\Roaming\npm;C:\Users\seven\AppData\Local\Yarn\bin;C:\Program Files\Git\mingw32\bin;C:\Program Files\Git\usr\bin
 
 Yarn version: 
-  1.22.11
+  1.22.10
 
 Node version: 
-  14.17.5
+  12.22.1
 
 Platform: 
-  linux x64
+  win32 ia32
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@graphql-tools: Request "https://registry.yarnpkg.com/@graphql-tools" returned a 405
-      at Request.params.callback [as _callback] (/home/gitpod/.nvm/versions/node/v14.17.5/lib/node_modules/yarn/lib/cli.js:67001:18)
-      at Request.self.callback (/home/gitpod/.nvm/versions/node/v14.17.5/lib/node_modules/yarn/lib/cli.js:140763:22)
-      at Request.emit (events.js:400:28)
-      at Request.<anonymous> (/home/gitpod/.nvm/versions/node/v14.17.5/lib/node_modules/yarn/lib/cli.js:141735:10)
-      at Request.emit (events.js:400:28)
-      at IncomingMessage.<anonymous> (/home/gitpod/.nvm/versions/node/v14.17.5/lib/node_modules/yarn/lib/cli.js:141657:12)
-      at Object.onceWrapper (events.js:519:28)
-      at IncomingMessage.emit (events.js:412:35)
-      at endReadableNT (internal/streams/readable.js:1317:12)
-      at processTicksAndRejections (internal/process/task_queues.js:82:21)
+  SyntaxError: D:\Cafe STL\DL\Manga\package.json: Unexpected token } in JSON at position 617
+      at JSON.parse (<anonymous>)
+      at C:\Users\seven\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (C:\Users\seven\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:310:30)
+      at C:\Users\seven\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:321:13
 
 npm manifest: 
   {
-    "name": "reader-server",
-    "version": "1.0.0",
-    "description": "",
-    "main": "server.js",
-    "dependencies": {
-      "@types/lodash": "^4.14.172",
-      "@types/node": "^16.6.1",
-      "apollo-server-express": "^2.24.0",
-      "chalk": "^4.1.0",
-      "compression": "^1.7.4",
-      "cors": "^2.8.5",
-      "debug": "^4.3.1",
-      "dotenv": "^8.2.0",
-      "express": "^4.17.1",
-      "graphql": "^15.5.1",
-      "graphql-scalars": "^1.9.3",
-      "graphql-tag": "^2.12.5",
-      "http-errors": "^1.8.0",
-      "jimp": "^0.16.1",
-      "lodash": "^4.17.21",
-      "lowdb": "github:dankreiger/lowdb#chore/esm-cjs-hybrid-WITH-LIB",
-      "morgan": "^1.10.0",
-      "nanoid": "^3.1.20",
-      "nodejs-fs-utils": "^1.2.5",
-      "url-join": "^4.0.1"
-    },
-    "scripts": {
-      "gitpod:start": "nodemon server.js",
-      "start": "pm2 stop \"Manga Reader\" & nodemon server.js",
-      "prod": "SET NODE_ENV=production & node server.js",
-      "deploy": "pm2 start ecosystem.config.js && pm2 save",
-      "restart": "pm2 reload \"Manga Reader\"",
-      "codegen": "graphql-codegen --config codegen.yml"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "nodemonConfig": {
-      "ignore": [
-        "package.json",
-        "node_modules/",
-        "package-lock.json",
-        "DATA.json",
-        "session.json",
-        "test.js",
-        "client/"
-      ],
-      "env": {
-        "NODE_ENV": "development",
-        "DEBUG": "RD*"
-      }
-    },
-    "devDependencies": {
-      "@graphql-codegen/cli": "2.0.1",
-      "@graphql-codegen/typescript": "2.0.0",
-      "@graphql-codegen/typescript-operations": "2.0.1",
-      "@graphql-codegen/typescript-react-apollo": "3.0.0",
-      "@graphql-codegen/typescript-resolvers": "2.0.0",
-      "graphql-playground-middleware-express": "^1.7.22",
-      "nodemon": "^2.0.12",
-      "ts-node": "^10.2.0",
-      "typescript": "^4.3.5"
-    }
+     "name": "reader-server",
+     "version": "1.0.0",
+     "description": "",
+     "main": "server.js",
+     "dependencies": {
+        "@graphql-tools/graphql-file-loader": "^7.0.5",
+        "@graphql-tools/load": "^7.1.8",
+        "apollo-server-express": "^2.24.0",
+        "axios": "^0.21.1",
+        "chalk": "^4.1.0",
+        "compression": "^1.7.4",
+        "cors": "^2.8.5",
+        "debug": "^4.3.1",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "fuse.js": "^6.4.6",
+        "graphql": "^15.5.1",
+        "graphql-scalars": "^1.9.3",
+        "http-errors": "^1.8.0",
+        "jimp": "^0.16.1",
+        "lodash": "^4.17.21",
+     },
+     "scripts": {
+        "gitpod:start": "nodemon src/server.ts",
+        "start": "pm2 stop \"Manga Reader\" & nodemon dist/server.js",
+        "prod": "SET NODE_ENV=production & node server.js",
+        "deploy": "pm2 start ecosystem.config.js && pm2 save",
+        "restart": "pm2 reload \"Manga Reader\"",
+        "codegen": "graphql-codegen --config codegen.yml",
+        "compile": "tsc"
+     },
+     "keywords": [],
+     "author": "",
+     "license": "ISC",
+     "nodemonConfig": {
+        "ignore": [
+           "package.json",
+           "node_modules/",
+           "package-lock.json",
+           "DATA.json",
+           "session.json",
+           "test.js",
+           "client/",
+           "lib/"
+        ],
+        "execMap": {
+           "ts": "ts-node"
+        },
+        "env": {
+           "NODE_ENV": "development",
+           "DEBUG": "RD*"
+        },
+        "ext": ".js,.ts"
+     },
+     "devDependencies": {
+        "@graphql-codegen/cli": "2.0.1",
+        "@graphql-codegen/typescript": "2.0.0",
+        "@graphql-codegen/typescript-operations": "2.0.1",
+        "@graphql-codegen/typescript-react-apollo": "3.0.0",
+        "@graphql-codegen/typescript-resolvers": "2.0.0",
+        "@types/lodash": "^4.14.172",
+        "@types/node": "^16.6.1",
+        "graphql-playground-middleware-express": "^1.7.22",
+        "nodemon": "^2.0.12",
+        "ts-node": "^10.2.1",
+        "typescript": "^4.3.5"
+     }
   }
 
 yarn manifest: 
@@ -825,6 +824,17 @@ Lockfile:
       tslib "~2.3.0"
       unixify "^1.0.0"
   
+  "@graphql-tools/graphql-file-loader@^7.0.5":
+    version "7.0.5"
+    resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-file-loader/-/graphql-file-loader-7.0.5.tgz#38d538fd1cf746627b38e948c8fa90d2148fed47"
+    integrity sha512-hYdz/zvA2z2M6zqgTCkEiqWPIKLsFirg1ZawaKzCLN0sUi+hRrLVTc1eIlz/vfR8ojvswEq81OMtk5d+lbHiHQ==
+    dependencies:
+      "@graphql-tools/import" "^6.2.6"
+      "@graphql-tools/utils" "^8.1.1"
+      globby "^11.0.3"
+      tslib "~2.3.0"
+      unixify "^1.0.0"
+  
   "@graphql-tools/graphql-tag-pluck@^7.0.4":
     version "7.0.4"
     resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-7.0.4.tgz#cc4bec1685f816102e9429117f983fa66f99778d"
@@ -864,6 +874,16 @@ Lockfile:
       p-limit "3.1.0"
       tslib "~2.3.0"
   
+  "@graphql-tools/load@^7.1.8":
+    version "7.1.8"
+    resolved "https://registry.yarnpkg.com/@graphql-tools/load/-/load-7.1.8.tgz#c6f2ce19e7497d2f56d572d4fe2aded01a87edf1"
+    integrity sha512-dVl2jJon9VL0qLTC98hJH4CkQ/oat6j9TouCk69ezzWHFxiPlz6tF78BzLr86Mz+bY6QCGeNIJ75Ovyn7EutCQ==
+    dependencies:
+      "@graphql-tools/schema" "8.1.2"
+      "@graphql-tools/utils" "^8.1.1"
+      p-limit "3.1.0"
+      tslib "~2.3.0"
+  
   "@graphql-tools/merge@8.0.1":
     version "8.0.1"
     resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.0.1.tgz#4cb94998e7c61abc6ebec54edca5c19f06c3330d"
@@ -879,6 +899,14 @@ Lockfile:
     dependencies:
       "@graphql-tools/schema" "^8.0.2"
       "@graphql-tools/utils" "8.0.2"
+      tslib "~2.3.0"
+  
+  "@graphql-tools/merge@^8.0.2":
+    version "8.0.2"
+    resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.0.2.tgz#510d6a8da6a761853e18d36710a23791edbc2405"
+    integrity sha512-li/bl6RpcZCPA0LrSxMYMcyYk+brer8QYY25jCKLS7gvhJkgzEFpCDaX43V1+X13djEoAbgay2mCr3dtfJQQRQ==
+    dependencies:
+      "@graphql-tools/utils" "^8.1.1"
       tslib "~2.3.0"
   
   "@graphql-tools/optimize@^1.0.1":
@@ -933,6 +961,16 @@ Lockfile:
       tslib "~2.3.0"
       value-or-promise "1.0.10"
   
+  "@graphql-tools/schema@8.1.2":
+    version "8.1.2"
+    resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-8.1.2.tgz#913879da1a7889a9488e9b7dc189e7c83eff74be"
+    integrity sha512-rX2pg42a0w7JLVYT+f/yeEKpnoZL5PpLq68TxC3iZ8slnNBNjfVfvzzOn8Q8Q6Xw3t17KP9QespmJEDfuQe4Rg==
+    dependencies:
+      "@graphql-tools/merge" "^8.0.2"
+      "@graphql-tools/utils" "^8.1.1"
+      tslib "~2.3.0"
+      value-or-promise "1.0.10"
+  
   "@graphql-tools/url-loader@^7.0.10", "@graphql-tools/url-loader@^7.0.3":
     version "7.0.10"
     resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.0.10.tgz#ac93b7e47507eb07381ef094e37e9e349670bdfc"
@@ -967,7 +1005,7 @@ Lockfile:
     dependencies:
       tslib "~2.3.0"
   
-  "@graphql-tools/utils@8.1.1", "@graphql-tools/utils@^8.0.1":
+  "@graphql-tools/utils@8.1.1", "@graphql-tools/utils@^8.0.1", "@graphql-tools/utils@^8.1.1":
     version "8.1.1"
     resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.1.1.tgz#2ef056a1d6e1e909085e1115d3bb48f890c2a2b6"
     integrity sha512-QbFNoBmBiZ+ej4y6mOv8Ba4lNhcrTEKXAhZ0f74AhdEXi7b9xbGUH/slO5JaSyp85sGQYIPmxjRPpXBjLklbmw==
@@ -1563,9 +1601,9 @@ Lockfile:
     integrity sha512-7Uc8IRrL8yZz5ti45RaFxpbU8TxlzdC3HvxV+hOWo1EyLsuKv/w7y0n+TwZzwL3vdx3oZ2k3ubxPq131hNtXyg==
   
   "@types/node@^16.6.1":
-    version "16.6.1"
-    resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.1.tgz#aee62c7b966f55fc66c7b6dfa1d58db2a616da61"
-    integrity sha512-Sr7BhXEAer9xyGuCN3Ek9eg9xPviCF2gfu9kTfuU2HkTVAMYSDeX40fvpmo72n5nansg3nsBjuQBrsS28r+NUw==
+    version "16.6.2"
+    resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.2.tgz#331b7b9f8621c638284787c5559423822fdffc50"
+    integrity sha512-LSw8TZt12ZudbpHc6EkIyDM3nHVWKYrAvGy6EAJfNfjusbwnThqjqxUKKRwuV3iWYeW/LYMzNgaq3MaLffQ2xA==
   
   "@types/parse-json@^4.0.0":
     version "4.0.0"
@@ -1941,6 +1979,13 @@ Lockfile:
     version "4.0.0"
     resolved "https://registry.yarnpkg.com/auto-bind/-/auto-bind-4.0.0.tgz#e3589fc6c2da8f7ca43ba9f84fa52a744fc997fb"
     integrity sha512-Hdw8qdNiqdJ8LqT0iK0sVzkFbzg6fhnQqqfWhBDxcHZvU75+B+ayzTy8x+k5Ix0Y92XOhOUlx74ps+bA6BeYMQ==
+  
+  axios@^0.21.1:
+    version "0.21.1"
+    resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+    integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+    dependencies:
+      follow-redirects "^1.10.0"
   
   babel-plugin-dynamic-import-node@^2.3.3:
     version "2.3.3"
@@ -2983,6 +3028,11 @@ Lockfile:
       locate-path "^5.0.0"
       path-exists "^4.0.0"
   
+  follow-redirects@^1.10.0:
+    version "1.14.1"
+    resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
+    integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
+  
   for-each@^0.3.3:
     version "0.3.3"
     resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.3.tgz#69b447e88a0a5d32c3e7084f3f1710034b21376e"
@@ -3037,6 +3087,11 @@ Lockfile:
     version "1.1.1"
     resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
     integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
+  
+  fuse.js@^6.4.6:
+    version "6.4.6"
+    resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-6.4.6.tgz#62f216c110e5aa22486aff20be7896d19a059b79"
+    integrity sha512-/gYxR/0VpXmWSfZOIPS3rWwU8SHgsRTwWuXhyb2O6s7aRuVtHtxCkR33bNYu3wyLyNx/Wpv0vU7FZy8Vj53VNw==
   
   gensync@^1.0.0-beta.2:
     version "1.0.0-beta.2"
@@ -4159,11 +4214,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
     integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
   
-  module-require@*:
-    version "1.4.5"
-    resolved "https://registry.yarnpkg.com/module-require/-/module-require-1.4.5.tgz#633df0833443c9ad8596f4c42e5237348355af88"
-    integrity sha1-Yz3wgzRDya2FlvTELlI3NINVr4g=
-  
   morgan@^1.10.0:
     version "1.10.0"
     resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.10.0.tgz#091778abc1fc47cd3509824653dae1faab6b17d7"
@@ -4232,13 +4282,6 @@ Lockfile:
     version "1.1.74"
     resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.74.tgz#e5866488080ebaa70a93b91144ccde06f3c3463e"
     integrity sha512-caJBVempXZPepZoZAPCWRTNxYQ+xtG/KAi4ozTA5A+nJ7IU+kLQCbqaUjb5Rwy14M9upBWiQ4NutcmW04LJSRw==
-  
-  nodejs-fs-utils@^1.2.5:
-    version "1.2.5"
-    resolved "https://registry.yarnpkg.com/nodejs-fs-utils/-/nodejs-fs-utils-1.2.5.tgz#0f5dd1c44097842de8bcc5f838ec87296d2f79e5"
-    integrity sha512-QuIFfHWaQJhjmUnGSCq+knKrYL2Q8HJUNAzRk8qoHK+g0oKzq57MdB4tODIknclKII0oAO0kO1lDt8yLyLhsAQ==
-    dependencies:
-      module-require "*"
   
   nodemon@^2.0.12:
     version "2.0.12"
@@ -4965,7 +5008,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
     integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
   
-  steno@^1.0.0:
+  steno@1, steno@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/steno/-/steno-1.0.0.tgz#475e32c6066ec9760229eaaf1550601764fbecba"
     integrity sha512-C/KgCvEa1yWnpHmaPjAXrz1yWxh6hs+HvhqqPa71euaQmNi1wr4+WFo57VQxjKKuFl2KqS7gtlrN0oxj2noQLw==
@@ -5200,10 +5243,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-2.2.3.tgz#4da5640fe25a9fb52642cd32391c886721318efb"
     integrity sha512-XvB+OdKSJ708Dmf9ore4Uf/q62AYDTzFcAdxc8KNML1mmAWywRFVt/dn1KYJH8Agt5UJNujfM3znU5PxgAzA2w==
   
-  ts-node@^10.2.0:
-    version "10.2.0"
-    resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.2.0.tgz#f1e88249a00e26aa95e9a93c50f70241a8a1c4bb"
-    integrity sha512-FstYHtQz6isj8rBtYMN4bZdnXN1vq4HCbqn9vdNQcInRqtB86PePJQIxE6es0PhxKWhj2PHuwbG40H+bxkZPmg==
+  ts-node@^10.2.1:
+    version "10.2.1"
+    resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.2.1.tgz#4cc93bea0a7aba2179497e65bb08ddfc198b3ab5"
+    integrity sha512-hCnyOyuGmD5wHleOQX6NIjJtYVIO8bPP8F2acWkB4W06wdlkgyvJtubO/I9NkI88hCFECbsEgoLc0VNkYmcSfw==
     dependencies:
       "@cspotcode/source-map-support" "0.6.1"
       "@tsconfig/node10" "^1.0.7"

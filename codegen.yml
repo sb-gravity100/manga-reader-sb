@@ -4,8 +4,13 @@ documents: './graphql/docs.graphql'
 generates:
    ./src/types.ts:
       config:
-         constEnums: true
          skipTypename: true
+         maybeValue: T | undefined
+         contextType: ./database#ApolloContext
+         mapperTypeSuffix: Model
+         declarationKind: interface
+         mappers:
+            Manga: ./models#Manga
       plugins:
          - 'typescript'
          - 'typescript-resolvers'

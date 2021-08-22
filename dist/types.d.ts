@@ -1,5 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-export declare type Maybe<T> = T | null;
+import { Manga as MangaModel } from './models';
+import { ApolloContext } from './database';
+export declare type Maybe<T> = T | undefined;
 export declare type Exact<T extends {
     [key: string]: unknown;
 }> = {
@@ -17,46 +19,46 @@ export declare type RequireFields<T, K extends keyof T> = {
     [P in K]-?: NonNullable<T[P]>;
 };
 /** All built-in and custom scalars, mapped to their actual values */
-export declare type Scalars = {
+export interface Scalars {
     ID: string;
     String: string;
     Boolean: boolean;
     Int: number;
     Float: number;
     DateTime: any;
-};
-export declare type Manga = {
-    id: Scalars['ID'];
+}
+export interface Manga {
+    id?: Maybe<Scalars['ID']>;
     name: Scalars['String'];
     pathname: Scalars['String'];
     createdAt: Scalars['DateTime'];
     size: Scalars['Int'];
     data?: Maybe<Array<MangaData>>;
     cover?: Maybe<Scalars['String']>;
-};
-export declare type MangaData = {
+}
+export interface MangaData {
     name: Scalars['String'];
     path: Scalars['String'];
-};
-export declare type Query = {
+}
+export interface Query {
     mangas?: Maybe<Array<Manga>>;
     manga?: Maybe<Manga>;
     search?: Maybe<Array<Manga>>;
-    total: Scalars['Int'];
+    total?: Maybe<Scalars['Int']>;
     update?: Maybe<Scalars['Boolean']>;
-};
-export declare type QueryMangasArgs = {
-    sort?: Maybe<Scalars['String']>;
+}
+export interface QueryMangasArgs {
+    sort?: Maybe<Array<Maybe<Scalars['String']>>>;
     limit?: Maybe<Scalars['Int']>;
     cursor?: Maybe<Scalars['Int']>;
     refresh?: Maybe<Scalars['Boolean']>;
-};
-export declare type QueryMangaArgs = {
+}
+export interface QueryMangaArgs {
     id: Scalars['ID'];
-};
-export declare type QuerySearchArgs = {
+}
+export interface QuerySearchArgs {
     term?: Maybe<Scalars['String']>;
-};
+}
 export declare type ResolverTypeWrapper<T> = Promise<T> | T;
 export declare type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
     resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
@@ -86,7 +88,7 @@ export declare type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {
 /** Mapping between all available schema types and the resolvers types */
 export declare type ResolversTypes = {
     DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
-    Manga: ResolverTypeWrapper<Manga>;
+    Manga: ResolverTypeWrapper<MangaModel>;
     ID: ResolverTypeWrapper<Scalars['ID']>;
     String: ResolverTypeWrapper<Scalars['String']>;
     Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -97,7 +99,7 @@ export declare type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export declare type ResolversParentTypes = {
     DateTime: Scalars['DateTime'];
-    Manga: Manga;
+    Manga: MangaModel;
     ID: Scalars['ID'];
     String: Scalars['String'];
     Int: Scalars['Int'];
@@ -108,8 +110,8 @@ export declare type ResolversParentTypes = {
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
     name: 'DateTime';
 }
-export declare type MangaResolvers<ContextType = any, ParentType extends ResolversParentTypes['Manga'] = ResolversParentTypes['Manga']> = {
-    id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+export declare type MangaResolvers<ContextType = ApolloContext, ParentType extends ResolversParentTypes['Manga'] = ResolversParentTypes['Manga']> = {
+    id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
     name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     pathname?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -118,19 +120,19 @@ export declare type MangaResolvers<ContextType = any, ParentType extends Resolve
     cover?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
-export declare type MangaDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['MangaData'] = ResolversParentTypes['MangaData']> = {
+export declare type MangaDataResolvers<ContextType = ApolloContext, ParentType extends ResolversParentTypes['MangaData'] = ResolversParentTypes['MangaData']> = {
     name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
-export declare type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export declare type QueryResolvers<ContextType = ApolloContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
     mangas?: Resolver<Maybe<Array<ResolversTypes['Manga']>>, ParentType, ContextType, RequireFields<QueryMangasArgs, 'sort' | 'cursor' | 'refresh'>>;
     manga?: Resolver<Maybe<ResolversTypes['Manga']>, ParentType, ContextType, RequireFields<QueryMangaArgs, 'id'>>;
     search?: Resolver<Maybe<Array<ResolversTypes['Manga']>>, ParentType, ContextType, RequireFields<QuerySearchArgs, never>>;
-    total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+    total?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
     update?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
 };
-export declare type Resolvers<ContextType = any> = {
+export declare type Resolvers<ContextType = ApolloContext> = {
     DateTime?: GraphQLScalarType;
     Manga?: MangaResolvers<ContextType>;
     MangaData?: MangaDataResolvers<ContextType>;

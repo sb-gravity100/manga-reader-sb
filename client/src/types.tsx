@@ -17,7 +17,7 @@ export type Scalars = {
 
 
 export type Manga = {
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
   pathname: Scalars['String'];
   createdAt: Scalars['DateTime'];
@@ -35,13 +35,13 @@ export type Query = {
   mangas?: Maybe<Array<Manga>>;
   manga?: Maybe<Manga>;
   search?: Maybe<Array<Manga>>;
-  total: Scalars['Int'];
+  total?: Maybe<Scalars['Int']>;
   update?: Maybe<Scalars['Boolean']>;
 };
 
 
 export type QueryMangasArgs = {
-  sort?: Maybe<Scalars['String']>;
+  sort?: Maybe<Array<Maybe<Scalars['String']>>>;
   limit?: Maybe<Scalars['Int']>;
   cursor?: Maybe<Scalars['Int']>;
   refresh?: Maybe<Scalars['Boolean']>;
@@ -64,21 +64,21 @@ export type AllMangasQueryVariables = Exact<{
 }>;
 
 
-export type AllMangasQuery = { total: number, list?: Maybe<Array<{ id: string, name: string, pathname: string, createdAt: any, size: number, cover?: Maybe<string> }>> };
+export type AllMangasQuery = { total?: Maybe<number>, list?: Maybe<Array<{ id?: Maybe<string>, name: string, pathname: string, createdAt: any, size: number, cover?: Maybe<string> }>> };
 
 export type GetMangaQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetMangaQuery = { manga?: Maybe<{ id: string, name: string, pathname: string, createdAt: any, size: number, data?: Maybe<Array<{ name: string, path: string }>> }> };
+export type GetMangaQuery = { manga?: Maybe<{ id?: Maybe<string>, name: string, pathname: string, createdAt: any, size: number, data?: Maybe<Array<{ name: string, path: string }>> }> };
 
 export type SearchMangaQueryVariables = Exact<{
   s?: Maybe<Scalars['String']>;
 }>;
 
 
-export type SearchMangaQuery = { search?: Maybe<Array<{ id: string, name: string, cover?: Maybe<string> }>> };
+export type SearchMangaQuery = { search?: Maybe<Array<{ id?: Maybe<string>, name: string, cover?: Maybe<string> }>> };
 
 export type UpdateDataQueryVariables = Exact<{ [key: string]: never; }>;
 

@@ -1,49 +1,41 @@
 Arguments: 
-  /home/gitpod/.nvm/versions/node/v14.17.4/bin/node /home/gitpod/.nvm/versions/node/v14.17.4/bin/yarn add @types/scrolling-based-progressbar
+  C:\Program Files\nodejs\node.exe C:\Users\seven\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
 
 PATH: 
-  /home/gitpod/.pyenv/plugins/pyenv-virtualenv/shims:/workspace/.cargo/bin:/workspace/.pip-modules/bin:/workspace/.rvm/bin:/home/gitpod/.sdkman/candidates/maven/current/bin:/home/gitpod/.sdkman/candidates/java/current/bin:/home/gitpod/.sdkman/candidates/gradle/current/bin:/home/gitpod/.rvm/gems/ruby-2.7.3/bin:/home/gitpod/.rvm/gems/ruby-2.7.3@global/bin:/home/gitpod/.rvm/rubies/ruby-2.7.3/bin:/home/gitpod/.pyenv/plugins/pyenv-virtualenv/shims:/workspace/.cargo/bin:/workspace/.pip-modules/bin:/workspace/.rvm/bin:/ide/bin:/home/gitpod/.pyenv/bin:/home/gitpod/.pyenv/shims:/workspace/go/bin:/home/gitpod/go/bin:/home/gitpod/go-packages/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/:/home/gitpod/.nvm/versions/node/v14.17.4/bin:/home/gitpod/.cargo/bin:/usr/games:/usr/games:/home/gitpod/.nvm/versions/node/v14.17.4/bin:/home/gitpod/.rvm/bin:/home/gitpod/.nvm/versions/node/v14.17.4/bin:/home/gitpod/.nvm/versions/node/v14.17.4/bin
+  C:\Program Files\Cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\windows\System32;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\MariaDB 10.3\bin;C:\Program Files\Cmder;C:\Program Files\curl\bin;C:\Program Files\heroku\bin;D:\Cafe STL;C:\Program Files\Google\Chrome\Application;C:\Program Files\Cmder\vendor\bin;C:\Program Files\Cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\Program Files\Cmder\vendor\conemu-maximus5;C:\Program Files\Cmder\vendor\conemu-maximus5\ConEmu;C:\sqlite;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\bin;C:\Python27\Scripts;C:\Python27;C:\Users\seven\AppData\Roaming\npm;C:\Users\seven\AppData\Local\Yarn\bin;C:\Program Files\Git\mingw32\bin;C:\Program Files\Git\usr\bin
 
 Yarn version: 
-  1.22.11
+  1.22.10
 
 Node version: 
-  14.17.4
+  12.22.1
 
 Platform: 
-  linux x64
+  win32 ia32
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fscrolling-based-progressbar: Not found
-      at Request.params.callback [as _callback] (/home/gitpod/.nvm/versions/node/v14.17.4/lib/node_modules/yarn/lib/cli.js:66992:18)
-      at Request.self.callback (/home/gitpod/.nvm/versions/node/v14.17.4/lib/node_modules/yarn/lib/cli.js:140763:22)
-      at Request.emit (events.js:400:28)
-      at Request.<anonymous> (/home/gitpod/.nvm/versions/node/v14.17.4/lib/node_modules/yarn/lib/cli.js:141735:10)
-      at Request.emit (events.js:400:28)
-      at IncomingMessage.<anonymous> (/home/gitpod/.nvm/versions/node/v14.17.4/lib/node_modules/yarn/lib/cli.js:141657:12)
-      at Object.onceWrapper (events.js:519:28)
-      at IncomingMessage.emit (events.js:412:35)
-      at endReadableNT (internal/streams/readable.js:1317:12)
-      at processTicksAndRejections (internal/process/task_queues.js:82:21)
+  SyntaxError: D:\Cafe STL\DL\Manga\client\package.json: Unexpected token } in JSON at position 971
+      at JSON.parse (<anonymous>)
+      at C:\Users\seven\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (C:\Users\seven\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:310:30)
+      at C:\Users\seven\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:321:13
 
 npm manifest: 
   {
      "name": "client",
      "version": "0.1.0",
      "private": true,
+     "proxy": "http://localhost:7800",
      "dependencies": {
         "@apollo/client": "^3.3.16",
-        "@testing-library/jest-dom": "^5.11.4",
-        "@testing-library/react": "^11.1.0",
-        "@testing-library/user-event": "^12.1.10",
-        "@types/jest": "^26.0.15",
         "@types/lodash": "^4.14.172",
         "@types/node": "^12.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-router-dom": "^5.1.8",
+        "@types/react-scroll": "^1.8.3",
         "aphrodite": "^2.4.0",
-        "axios": "^0.21.1",
         "classnames": "^2.3.1",
         "graphql": "^15.5.1",
         "http-proxy-middleware": "^2.0.1",
@@ -51,19 +43,16 @@ npm manifest:
         "react": "^17.0.2",
         "react-cool-img": "^1.2.12",
         "react-dom": "^17.0.2",
-        "react-helmet": "^6.1.0",
         "react-icons": "^4.2.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.3",
         "react-scroll": "^1.8.2",
-        "react-select": "^4.3.1",
         "react-spring": "^9.1.2",
         "react-table": "^7.7.0",
         "react-use": "^17.2.4",
         "sass": "^1.32.12",
         "scrolling-based-progressbar": "^1.21.0",
         "typescript": "^4.1.2",
-        "web-vitals": "^1.0.1"
      },
      "scripts": {
         "start": "react-scripts start",
@@ -2125,6 +2114,13 @@ Lockfile:
     integrity sha512-8d7nR/fNSqlTFGHti0R3F9WwIertOaaA1UEB8/jr5l5mDMOs4CidEgvvYMw4ivqrBK+vtVLxyTj2P+Pr/dtgzg==
     dependencies:
       "@types/history" "*"
+      "@types/react" "*"
+  
+  "@types/react-scroll@^1.8.3":
+    version "1.8.3"
+    resolved "https://registry.yarnpkg.com/@types/react-scroll/-/react-scroll-1.8.3.tgz#80951ed1934ab49d4926aad95c26607b8b1a9713"
+    integrity sha512-Xt0+Y58pwrIv+vRFxcyKDoo0gBWBR2eNMJ4XRMhQpZdGUtmjnszPi/wFEJSAY+5r83ypJsSA+hOpSc3hRpYlWw==
+    dependencies:
       "@types/react" "*"
   
   "@types/react@*", "@types/react@^17.0.0":

@@ -6,19 +6,19 @@ schema {
 
 type Query {
    mangas(
-      sort: String = "createAt asc"
+      sort: [String] = ["createdAt", "ASC"]
       limit: Int
       cursor: Int = 0
       refresh: Boolean = false
    ): [Manga!]
    manga(id: ID!): Manga
    search(term: String): [Manga!]
-   total: Int!
+   total: Int
    update: Boolean
 }
 
 type Manga {
-   id: ID!
+   id: ID
    name: String!
    pathname: String!
    createdAt: DateTime!

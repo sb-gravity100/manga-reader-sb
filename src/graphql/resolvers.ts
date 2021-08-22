@@ -1,79 +1,60 @@
 import { mangaData, dirSync, updateCovers } from '../lib/folder_lister';
-import DB from '../db';
 import _ from 'lodash';
 import { Manga, Resolvers } from '../types';
 import { DateTimeResolver } from 'graphql-scalars';
 import Fuse from 'fuse.js';
+type AnyObject = { [key: string]: any };
 
 export const resolvers: Resolvers = {
    DateTime: DateTimeResolver,
    Query: {
-      async mangas(_o, args) {
-         await DB.read();
-         const db = DB.chain();
-         let folders: Manga[];
-         if (args && args.refresh) {
-            folders = dirSync();
-            db.get('list').union(folders).value();
-            await DB.write();
-         } else {
-            folders = db.get('list').value();
+      mangas: async (_o, args, ctx) => {
+         const options = {
+            limit: undefined,
+            order: undefined,
+            offset: 0,
+         };
+         if (args.refresh) {
+            const data = await dirSync();
+            await ctx.sequelize.sync({ force: true })
+            await ctx.Models.Manga.bulkCreate(data);
          }
-         if (_.isString(args.sort)) {
-            let orders = [[], []];
-            args.sort
-               .replace(/\s+/gi, ' ')
-               .replace(/^\s*/gi, '')
-               .replace(/\s*,\s*/gi, ',')
-               .split(',')
-               .map(v => v.trim().split(' '))
-               .forEach(v => {
-                  orders[0].push(v[0]);
-                  orders[1].push(v[1]);
-               });
-            // console.log(orders)
-            folders = _.chain(folders)
-               .orderBy(...orders)
-               .value();
+         if (args.sort) {
+            const keys = args.sort[0].split(',');
+            const order = args.sort[1].split(',');
+            if (keys.length === order.length) {
+               options.order = _.zip(keys, order);
+            }
          }
-         if (typeof args.cursor === 'number') {
-            folders = _.slice(folders, args.cursor);
+         if (args.cursor) {
+            options.offset = args.cursor;
          }
          if (args.limit) {
-            folders = _.take(folders, args.limit);
+            options.limit = args.limit;
          }
-         return folders;
+         return await ctx.Models.Manga.findAll({
+            ...options,
+         });
       },
-      async manga(_o, args) {
-         await DB.read();
-         const db = DB.chain();
-         return db.get('list').find({ id: args.id }).value();
-      },
-      async search(_o, { term }) {
+      manga: (_o, args, ctx) => ctx.Models.Manga.findByPk(args.id),
+      search: async (_o, { term }, ctx) => {
          if (!term) {
             return null;
          }
-         await DB.read();
-         const options: Fuse.IFuseOptions<Manga> = {
+         const options: Fuse.IFuseOptions<any> = {
             useExtendedSearch: true,
             threshold: 0.35,
             keys: ['name'],
             includeScore: true,
          };
-         const db = DB.chain();
-         const list = db.get('list');
-         const index = Fuse.createIndex(options.keys, list.value());
-         const fuse = new Fuse(list.value(), options, index);
+         const list = await ctx.Models.Manga.findAll();
+         const index = Fuse.createIndex(options.keys, list);
+         const fuse = new Fuse(list, options, index);
          const results = fuse.search(term);
          return results.map(e => e.item);
       },
-      async total() {
-         await DB.read();
-         const db = DB.chain();
-         const list = db.get('list');
-         return list.size().value();
-      },
-      async update() {
+      total: (_o, _a, ctx) => ctx.Models.Manga.count(),
+      update: async () => {
          try {
             await updateCovers();
             return true;
@@ -83,6 +64,6 @@ export const resolvers: Resolvers = {
       },
    },
    Manga: {
-      data: p => mangaData(p),
+      data: (p: any) => mangaData(p),
    },
 };

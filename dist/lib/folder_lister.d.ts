@@ -1,15 +1,4 @@
-import { Manga } from '../types';
-export declare function dirSync(): {
-    id: string;
-    name: string;
-    pathname: string;
-    createdAt: any;
-    size: number;
-    data?: import("../types").MangaData[];
-    cover?: string;
-}[];
-export declare function mangaData(manga: Manga): {
-    name: string;
-    path: any;
-}[];
+import { Manga, MangaData } from '../types';
+export declare function dirSync(): Promise<Manga[]>;
+export declare function mangaData(manga: Manga): Promise<MangaData[]>;
 export declare function updateCovers(): Promise<void>;

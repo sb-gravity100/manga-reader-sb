@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { Manga, MangaData } from '../../types';
 
 export interface MangaHeaderProps {
-   manga?: Manga | any;
+   manga?: Manga;
    zoomValue?: number;
    brightVal?: number;
    setBright: Dispatch<SetStateAction<number | undefined>>;
@@ -20,7 +20,7 @@ export interface MangaViewProps {
 
 export interface ReaderProps {
    total?: number;
-   data?: Manga[] | null;
+   data?: Manga[];
    loading: boolean;
    refetch(...args: any[]): void;
 }

@@ -82,6 +82,9 @@ const Main = () => {
                placeholder="Search..."
                onChange={handleSearchChange}
                onBlur={() => setSearchList({ isSearched: false })}
+               autoComplete="none"
+               autoCorrect="none"
+               aria-autocomplete="none"
             />
             {searchList.isSearched && (
                <div className="search-list">

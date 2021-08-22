@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocalStorage } from 'react-use';
+import { useLocalStorage, useSearchParam } from 'react-use';
 import { css, StyleSheet } from 'aphrodite';
 import { useLocation } from 'react-router-dom';
 import { ProgressBar } from 'scrolling-based-progressbar';
@@ -8,14 +8,14 @@ import { useSpring, animated as anim } from 'react-spring';
 import * as Scroll from 'react-scroll';
 import MangaHeader from './MangaHeader';
 import ErrorBlock from './sub-components/ErrorBlock';
-import styles from '../css_modules/main.module.scss';
+import styles from '../style.module.scss';
 import { useGetMangaQuery } from '../../types';
 
 const scroll = Scroll.animateScroll;
 
 const Manga = () => {
    const location = useLocation();
-   const mangaID = new URLSearchParams(location.search).get('id') || '';
+   const mangaID = useSearchParam('id') || '';
    const { loading, data, error, refetch } = useGetMangaQuery({
       variables: {
          id: mangaID,
@@ -31,7 +31,7 @@ const Manga = () => {
          opacity: 0,
          loop: { reverse: true },
          reset: loading,
-      }),
+      })
    };
    const viewerStyles = StyleSheet.create({
       brightnessAdjust: {

@@ -5,7 +5,7 @@ import path from 'path';
 
 export default async () => {
    const schema = await loadSchema(
-      path.join(__dirname, '../../graphql/schema.graphql'),
+      path.join(process.cwd(), 'graphql/schema.graphql'),
       {
          loaders: [new GraphQLFileLoader()],
          resolvers,
