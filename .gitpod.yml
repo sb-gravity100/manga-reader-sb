@@ -1,0 +1,8 @@
+tasks:
+  - before: yarn
+    init: yarn
+    name: Server
+    
+  - name: Client
+    init: cd client && yarn
+    before: cd client && yarn
