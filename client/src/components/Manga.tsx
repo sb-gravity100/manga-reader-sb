@@ -5,13 +5,9 @@ import { useLocation } from 'react-router-dom';
 import { ProgressBar } from 'scrolling-based-progressbar';
 import MangaView from './MangaView';
 import { useSpring, animated as anim } from 'react-spring';
-import * as Scroll from 'react-scroll';
 import MangaHeader from './MangaHeader';
 import ErrorBlock from './sub-components/ErrorBlock';
 import styles from '../style.module.scss';
-import { useGetMangaQuery } from '../../types';
-
-const scroll = Scroll.animateScroll;
 
 const Manga = () => {
    const location = useLocation();
@@ -31,7 +27,7 @@ const Manga = () => {
          opacity: 0,
          loop: { reverse: true },
          reset: loading,
-      })
+      }),
    };
    const viewerStyles = StyleSheet.create({
       brightnessAdjust: {
@@ -54,7 +50,10 @@ const Manga = () => {
    });
 
    useEffect(() => {
-      scroll.scrollToTop();
+      window.scroll({
+         top: 0,
+         left: 0,
+      });
    }, []);
 
    return (
@@ -76,8 +75,8 @@ const Manga = () => {
                   <ProgressBar
                      height="3px"
                      top="30px"
-                     color="#546"
-                     bgColor="#aae"
+                     bgColor="#546"
+                     color="#aae"
                   />
                )}
                <MangaHeader

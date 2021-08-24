@@ -56,6 +56,10 @@ __decorate([
     __metadata("design:type", String)
 ], Manga.prototype, "cover", void 0);
 __decorate([
+    SQ.Column(DataType.VIRTUAL),
+    __metadata("design:type", Array)
+], Manga.prototype, "data", void 0);
+__decorate([
     SQ.Column,
     __metadata("design:type", Date)
 ], Manga.prototype, "createdAt", void 0);

@@ -4,7 +4,6 @@ import path from 'path';
 import fs from 'fs';
 import _ from 'lodash';
 import Jimp from 'jimp';
-import { ObjectId } from 'bson';
 import { Manga, MangaData } from '../types';
 
 const DJ_PATH = path.normalize(path.join(process.cwd(), 'DJ/'));

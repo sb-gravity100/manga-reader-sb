@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styles from '../../css_modules/ErrorBlock.module.scss';
+import styles from '../../style.module.scss';
 import { ErrorProps } from '../props';
 
 const ErrorBlock: FC<ErrorProps> = ({

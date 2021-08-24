@@ -32,3 +32,9 @@ export interface ErrorProps {
    loading: boolean;
    status?: number;
 }
+
+export interface NavProps {
+   isCurrent(i: number): boolean;
+   chunks: Manga[][];
+   p_index: string | null;
+}

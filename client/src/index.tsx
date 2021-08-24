@@ -8,7 +8,6 @@ import App from './main/App';
 import styles from './main/css_modules/TopComponent.module.scss'
 import './stylesheets/index.scss';
 import Footer from './main/Footer';
-import client from './apollo_client'
 
 const ToTopComponent: React.FC = () => {
   return (
@@ -25,9 +24,7 @@ const ToTopComponent: React.FC = () => {
 ReactDOM.render(
   <>
     <Router>
-      <ApolloProvider client={client}>
         <App />
-      </ApolloProvider>
     </Router>
     <ToTopComponent />
     <Footer />

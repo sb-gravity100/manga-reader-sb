@@ -8,6 +8,7 @@ const folder_lister_1 = require("../lib/folder_lister");
 const lodash_1 = __importDefault(require("lodash"));
 const graphql_scalars_1 = require("graphql-scalars");
 const fuse_js_1 = __importDefault(require("fuse.js"));
+// type AnyObject = { [key: string]: any };
 exports.resolvers = {
     DateTime: graphql_scalars_1.DateTimeResolver,
     Query: {

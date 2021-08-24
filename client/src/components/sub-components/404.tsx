@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import styles from '../../css_modules/404.module.scss'
+import styles from '../../style.module.scss'
 
 const NotFound = () => (
   <div className={styles.NotFoundBlock}>

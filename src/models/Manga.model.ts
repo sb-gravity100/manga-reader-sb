@@ -3,7 +3,7 @@ import * as types from '../types';
 
 const { DataType } = SQ
 
-type MangaAttributes = Partial<Omit<types.Manga, 'data'>>;
+type MangaAttributes = types.Manga;
 
 @SQ.Table({
    tableName: 'manga_list'
@@ -25,6 +25,9 @@ export class Manga extends SQ.Model<MangaAttributes> {
 
    @SQ.Column
    cover: string;
+
+   @SQ.Column(DataType.VIRTUAL)
+   data: types.MangaData[]
 
    @SQ.Column
    createdAt: Date
