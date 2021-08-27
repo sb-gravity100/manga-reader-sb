@@ -9,8 +9,10 @@ import { useAllMangasQuery, useSearchQuery } from '../slices/MangaApi';
 import { useDispatch, useSelector } from '../store';
 import { clearSearch, setSearch } from '../slices/ControlSlice';
 import { SearchBarProps } from './props';
+import _ from 'lodash';
+import { SearchResult } from '../../../src/types';
 
-const SearchComponent: FC<Record<string, any>> = (props) => (
+const SearchComponent: FC<SearchResult> = (props) => (
    <Link
       to={`/manga?id=${props.item.id}`}
       className="search-props.item"
@@ -39,7 +41,13 @@ const SearchBar: FC<SearchBarProps> = (props) => {
             autoCorrect="none"
             aria-autocomplete="none"
          />
-         {search.data?.length && <div className="search-list"></div>}
+         {search.data?.length && (
+            <div className="search-list">
+               {_.sortBy(search.data).map((manga) => (
+                  <SearchComponent {...manga} />
+               ))}
+            </div>
+         )}
       </div>
    );
 };
