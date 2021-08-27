@@ -11,7 +11,6 @@ import styles from '../style.module.scss';
 import { useGetMangaQuery } from '../slices/MangaApi';
 
 const Manga = () => {
-   const location = useLocation();
    const mangaID = useSearchParam('id') || '';
    const {
       data: manga,
