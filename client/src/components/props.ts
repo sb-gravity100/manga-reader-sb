@@ -1,6 +1,6 @@
-import { ApolloError } from '@apollo/client';
-import { Dispatch, SetStateAction } from 'react';
-import { Manga, MangaData } from '../../types';
+import { ChangeEventHandler, Dispatch, SetStateAction } from 'react';
+import { Manga, MangaData } from '../../../src/types';
+import { useSearchQuery } from '../slices/MangaApi';
 
 export interface MangaHeaderProps {
    manga?: Manga;
@@ -27,14 +27,18 @@ export interface ReaderProps {
 
 export interface ErrorProps {
    hasErrors: boolean;
-   errors?: ApolloError;
+   errors?: any;
    retry: () => void;
-   loading: boolean;
-   status?: number;
+   isFetching: boolean;
 }
 
 export interface NavProps {
    isCurrent(i: number): boolean;
    chunks: Manga[][];
    p_index: string | null;
+}
+
+export interface SearchBarProps {
+   handleSearchChange: ChangeEventHandler<HTMLInputElement>;
+   search: string;
 }

@@ -2,18 +2,24 @@ import { useEffect } from 'react';
 import { useLocalStorage, useSearchParam } from 'react-use';
 import { css, StyleSheet } from 'aphrodite';
 import { useLocation } from 'react-router-dom';
-import ProgressBar from 'react-progressbar-on-scroll'
+import { ProgressBar } from 'scrolling-based-progressbar';
 import MangaView from './MangaView';
 import { useSpring, animated as anim } from 'react-spring';
 import MangaHeader from './MangaHeader';
 import ErrorBlock from './sub-components/ErrorBlock';
 import styles from '../style.module.scss';
-import { useGetMangaQuery } from '../slices/MangaApi';
+import { useGetMangaQuery } from '../slices/MangaApi';
 
 const Manga = () => {
    const location = useLocation();
    const mangaID = useSearchParam('id') || '';
-   const { data } = useGetMangaQuery(mangaID);
+   const {
+      data: manga,
+      isLoading: loading,
+      error,
+      refetch,
+      isFetching,
+   } = useGetMangaQuery(Number(mangaID));
    const [zoomValue, setZoomVal] = useLocalStorage<number>('zoomValue', 5);
    const [brightVal, setBright] = useLocalStorage<number>('brightValue', 100);
    const loading_props = {
@@ -40,8 +46,8 @@ const Manga = () => {
       if (loading) {
          document.title = 'Loading...';
       } else {
-         if (data?.manga) {
-            document.title = data.manga.name;
+         if (manga) {
+            document.title = manga?.name;
          }
       }
    });
@@ -63,21 +69,22 @@ const Manga = () => {
             </div>
          )}
          <ErrorBlock
-            loading={loading}
             hasErrors={Boolean(error)}
             errors={error}
-            retry={refetch}>
+            retry={refetch}
+            isFetching={isFetching}
+         >
             <div className="wrapper">
                {!loading && (
                   <ProgressBar
-                     height={10}
+                     height="10px"
                      color="#aae"
-                     gradient={true}
-                     gradientColor="#546"
+                     top="30px"
+                     bgColor="#546"
                   />
                )}
                <MangaHeader
-                  manga={!loading && data?.manga}
+                  manga={manga}
                   zoomValue={zoomValue}
                   brightVal={brightVal}
                   setBright={setBright}
@@ -88,9 +95,10 @@ const Manga = () => {
                      viewerStyles.brightnessAdjust,
                      viewerStyles.widthAdjust
                   )}
-                  id="viewer">
+                  id="viewer"
+               >
                   {!loading &&
-                     data?.manga?.data?.map((d, k: number) => (
+                     manga?.data?.map((d, k: number) => (
                         <MangaView key={k} panelImg={d} />
                      ))}
                </div>

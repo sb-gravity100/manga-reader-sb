@@ -17,11 +17,11 @@ const ApiSlice = createApi({
    baseQuery: fetchBaseQuery({
       baseUrl: '/api',
    }),
-   endpoints: builder => ({
+   endpoints: (builder) => ({
       allMangas: builder.query<Manga[], MangasQuery | null>({
          query(opts) {
             const query = new URLSearchParams();
-            _.toPairs(opts as any).forEach(e => {
+            _.toPairs(opts as any).forEach((e) => {
                query.append(e[0], e[1] as string);
             });
             return `/mangas?${query.toString()}`;
@@ -34,13 +34,17 @@ const ApiSlice = createApi({
       }),
       search: builder.query<SearchResult[], string>({
          query(q) {
-            return `/?q=${q}`
-         }
-      })
+            return `/?q=${q}`;
+         },
+      }),
    }),
-   
 });
 
-export default ApiSlice
+export default ApiSlice;
 
-export const { useAllMangasQuery, useGetMangaQuery, useLazySearchQuery } = ApiSlice
+export const {
+   useAllMangasQuery,
+   useGetMangaQuery,
+   useLazySearchQuery,
+   useSearchQuery,
+} = ApiSlice;

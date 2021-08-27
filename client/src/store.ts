@@ -1,18 +1,22 @@
-import { configureStore } from '@reduxjs/toolkit'
-import * as ReactRedux from 'react-redux'
-import ControlReducer from './slices/ControlSlice'
-import ApiSlice from './slices/MangaApi'
+import { configureStore } from '@reduxjs/toolkit';
+import {
+   useDispatch as useReduxDispatch,
+   useSelector as useReduxSelector,
+   TypedUseSelectorHook,
+} from 'react-redux';
+import ControlReducer from './slices/ControlSlice';
+import ApiSlice from './slices/MangaApi';
 
 const store = configureStore({
    reducer: {
       controls: ControlReducer,
-      [ApiSlice.reducerPath]: ApiSlice.reducer
+      [ApiSlice.reducerPath]: ApiSlice.reducer,
    },
-   middleware: getDefMid => getDefMid().concat(ApiSlice.middleware)
-})
+   middleware: (getDefMid) => getDefMid().concat(ApiSlice.middleware),
+});
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 
-export const useSelector: ReactRedux.TypedUseSelectorHook<RootState> = ReactRedux.useSelector
-export const useDispatch = () => ReactRedux.useDispatch<RootState>()
-export default store
+export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
+export const useDispatch = () => useReduxDispatch<typeof store.dispatch>();
+export default store;

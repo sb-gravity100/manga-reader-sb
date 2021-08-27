@@ -7,8 +7,7 @@ const ErrorBlock: FC<ErrorProps> = ({
    hasErrors,
    errors,
    retry,
-   loading,
-   status,
+   isFetching,
 }) => {
    if (hasErrors) {
       console.log(hasErrors);
@@ -18,8 +17,9 @@ const ErrorBlock: FC<ErrorProps> = ({
             <button
                className={styles.retryBtn}
                onClick={() => retry()}
-               style={{ cursor: status === 4 ? 'progress' : 'pointer' }}>
-               {status === 4 ? 'Retrying...' : 'Retry?'}
+               style={{ cursor: isFetching ? 'progress' : 'pointer' }}
+            >
+               {isFetching ? 'Retrying...' : 'Retry?'}
             </button>
             <code className={styles.errorMsg}>{errors?.message}</code>
          </div>
