@@ -46,12 +46,9 @@ route.get('/', async (req, res) => {
    }
    if (_.isString(query.q)) {
       fuse.setCollection(SearchIndex, FuseIndex);
-      const results: types.Manga[] = _.map(
-         fuse.search(query.q, {
-            limit: 10,
-         }),
-         'item'
-      );
+      const results = fuse.search(query.q, {
+         limit: 10,
+      });
       return res.jsonp(results);
    }
    res.jsonp(null);
@@ -119,7 +116,10 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
          pageQuery.append('limit', query.limit.toString());
          pageHeaders.first = `${pageUrl}?${pageQuery.toString()}`;
       }
-      const pageHeaderQuery = _.chain(pageHeaders).toPairs().invokeMap('join', '=').value();
+      const pageHeaderQuery = _.chain(pageHeaders)
+         .toPairs()
+         .invokeMap('join', '=')
+         .value();
       res.setHeader('x-page-control', pageHeaderQuery);
    }
    _.unset(query, 'page');
@@ -137,7 +137,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
 route.get('/manga/:id', async (req, res) => {
    const manga = await Manga.findByPk(Number(req.params.id));
    if (manga instanceof Manga) {
-   const json = manga.get();
+      const json = manga.get();
       const data = await mangaData(json as any);
       manga.data = data;
       return res.jsonp(json);

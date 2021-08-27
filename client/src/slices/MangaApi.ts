@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import _ from 'lodash';
-import { Manga } from '../../../src/types';
+import { Manga, SearchResult } from '../../../src/types';
 
 interface MangasQuery {
    offset?: number;
@@ -32,7 +32,7 @@ const ApiSlice = createApi({
             return `/manga/${id}`;
          },
       }),
-      search: builder.query<Manga[], string>({
+      search: builder.query<SearchResult[], string>({
          query(q) {
             return `/?q=${q}`
          }

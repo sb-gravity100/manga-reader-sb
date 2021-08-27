@@ -4,9 +4,6 @@
    "description": "",
    "main": "server.js",
    "dependencies": {
-      "@graphql-tools/graphql-file-loader": "^7.0.5",
-      "@graphql-tools/load": "^7.1.8",
-      "apollo-server-express": "^2.24.0",
       "axios": "^0.21.1",
       "chalk": "^4.1.0",
       "compression": "^1.7.4",
@@ -16,16 +13,12 @@
       "express": "^4.17.1",
       "express-async-errors": "^3.1.1",
       "fuse.js": "^6.4.6",
-      "graphql": "^15.5.1",
-      "graphql-scalars": "^1.9.3",
-      "graphql-tag": "^2.12.5",
       "http-errors": "^1.8.0",
       "jimp": "^0.16.1",
       "lodash": "^4.17.21",
-      "mariadb": "^2.5.4",
       "morgan": "^1.10.0",
       "reflect-metadata": "^0.1.13",
-      "sequelize": "^6.6.4",
+      "sequelize": "^6.6.5",
       "sequelize-typescript": "^2.1.0"
    },
    "scripts": {
@@ -33,8 +26,7 @@
       "start": "nodemon dist/server.js",
       "prod": "SET NODE_ENV=production & node server.js",
       "deploy": "pm2 start ecosystem.config.js && pm2 save",
-      "restart": "pm2 reload \"Manga Reader\"",
-      "codegen": "graphql-codegen --config codegen.yml"
+      "restart": "pm2 reload \"Manga Reader\""
    },
    "keywords": [],
    "author": "",
@@ -60,11 +52,6 @@
       "ext": ".js,.ts"
    },
    "devDependencies": {
-      "@graphql-codegen/cli": "2.0.1",
-      "@graphql-codegen/typescript": "2.0.0",
-      "@graphql-codegen/typescript-operations": "2.0.1",
-      "@graphql-codegen/typescript-react-apollo": "3.0.0",
-      "@graphql-codegen/typescript-resolvers": "2.0.0",
       "@types/compression": "^1.7.1",
       "@types/cors": "^2.8.12",
       "@types/debug": "^4.1.7",
@@ -72,8 +59,7 @@
       "@types/lodash": "^4.14.172",
       "@types/morgan": "^1.9.3",
       "@types/node": "^16.6.1",
-      "@types/validator": "^13.1.3",
-      "graphql-playground-middleware-express": "^1.7.22",
+      "@types/validator": "*",
       "nodemon": "^2.0.12",
       "ts-node": "^10.2.1",
       "typescript": "^4.3.5"

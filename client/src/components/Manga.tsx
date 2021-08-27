@@ -2,21 +2,18 @@ import { useEffect } from 'react';
 import { useLocalStorage, useSearchParam } from 'react-use';
 import { css, StyleSheet } from 'aphrodite';
 import { useLocation } from 'react-router-dom';
-import { ProgressBar } from 'scrolling-based-progressbar';
+import ProgressBar from 'react-progressbar-on-scroll'
 import MangaView from './MangaView';
 import { useSpring, animated as anim } from 'react-spring';
 import MangaHeader from './MangaHeader';
 import ErrorBlock from './sub-components/ErrorBlock';
 import styles from '../style.module.scss';
+import { useGetMangaQuery } from '../slices/MangaApi';
 
 const Manga = () => {
    const location = useLocation();
    const mangaID = useSearchParam('id') || '';
-   const { loading, data, error, refetch } = useGetMangaQuery({
-      variables: {
-         id: mangaID,
-      },
-   });
+   const { data } = useGetMangaQuery(mangaID);
    const [zoomValue, setZoomVal] = useLocalStorage<number>('zoomValue', 5);
    const [brightVal, setBright] = useLocalStorage<number>('brightValue', 100);
    const loading_props = {
@@ -73,10 +70,10 @@ const Manga = () => {
             <div className="wrapper">
                {!loading && (
                   <ProgressBar
-                     height="3px"
-                     top="30px"
-                     bgColor="#546"
+                     height={10}
                      color="#aae"
+                     gradient={true}
+                     gradientColor="#546"
                   />
                )}
                <MangaHeader

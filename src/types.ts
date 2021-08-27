@@ -1,3 +1,5 @@
+import Fuse from 'fuse.js'
+
 export interface Manga {
   id?: string | number;
   name: string;
@@ -12,3 +14,5 @@ export interface MangaData {
   name: string;
   path: string;
 }
+
+export type SearchResult = Fuse.FuseResult<Manga>
