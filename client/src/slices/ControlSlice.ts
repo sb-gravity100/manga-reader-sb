@@ -29,7 +29,7 @@ const ControlSlice = createSlice({
          state.search = action.payload;
       },
       clearSearch(state) {
-         _.unset(state, 'search');
+         state.search = '';
       },
    },
 });
