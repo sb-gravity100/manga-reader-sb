@@ -4,8 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const models_1 = require("./models");
-const database_1 = require("./database");
+const database_1 = __importDefault(require("./database"));
 const folder_lister_1 = require("./lib/folder_lister");
 const url_1 = require("url");
 const lodash_1 = __importDefault(require("lodash"));
@@ -23,7 +22,7 @@ exports.default = route;
 route.get('/', async (req, res) => {
     const { query } = req;
     if (SearchIndex.length < 1) {
-        SearchIndex = lodash_1.default.invokeMap(await models_1.Manga.findAll(), 'get');
+        SearchIndex = await database_1.default.find({});
         FuseIndex = fuse_js_1.default.createIndex(['name'], SearchIndex);
     }
     if (lodash_1.default.isString(query.q)) {
@@ -37,31 +36,41 @@ route.get('/', async (req, res) => {
 });
 route.get('/mangas', async (req, res) => {
     const { query } = req;
+    let results = database_1.default.find({});
     if (query.limit) {
         query.limit = Number(query.limit);
+        results.limit(query.limit);
     }
     if (query.offset) {
         query.offset = Number(query.offset);
+        results.skip(query.offset);
     }
     if (lodash_1.default.has(query, 'refresh')) {
-        const data = await folder_lister_1.dirSync();
-        await database_1.sequelize.sync({ force: true });
-        await models_1.Manga.bulkCreate(data);
+        await database_1.default.remove({}, {
+            multi: true,
+        });
+        const mangaData = await folder_lister_1.dirSync();
+        await database_1.default.insert(mangaData);
+        results = database_1.default.find({});
     }
     if (lodash_1.default.has(query, '_updateCovers')) {
         await folder_lister_1.updateCovers();
-        const data = await folder_lister_1.dirSync();
-        await database_1.sequelize.sync({ force: true });
-        await models_1.Manga.bulkCreate(data);
+        await database_1.default.remove({}, {
+            multi: true,
+        });
+        const mangaData = await folder_lister_1.dirSync();
+        await database_1.default.insert(mangaData);
+        results = database_1.default.find({});
     }
     if (lodash_1.default.isString(query.sort) && lodash_1.default.isString(query.order)) {
         const keys = query.sort.split(',');
         const order = query.order.split(',');
         if (keys.length === order.length) {
-            query.order = lodash_1.default.zip(keys, order);
+            query.order = lodash_1.default.zip(keys, order.map(Number));
+            results = results.sort(lodash_1.default.fromPairs(query.order));
         }
     }
-    const totalCount = await models_1.Manga.count();
+    const totalCount = await database_1.default.count({});
     if (query.page) {
         query.page = Number(query.page);
         if (!query.limit) {
@@ -101,23 +110,19 @@ route.get('/mangas', async (req, res) => {
             .value();
         res.setHeader('x-page-control', pageHeaderQuery);
     }
-    lodash_1.default.unset(query, 'page');
-    lodash_1.default.unset(query, 'refresh');
-    lodash_1.default.unset(query, 'sort');
-    lodash_1.default.unset(query, '_updateCovers');
-    const results = await models_1.Manga.findAll(Object.assign({}, query));
     res.setHeader('x-total-count', totalCount);
-    const json = lodash_1.default.invokeMap(results, 'get');
+    const json = await results.exec();
     SearchIndex = [...SearchIndex, ...json];
     res.jsonp(json);
 });
 route.get('/manga/:id', async (req, res) => {
-    const manga = await models_1.Manga.findByPk(Number(req.params.id));
-    if (manga instanceof models_1.Manga) {
-        const json = manga.get();
-        const data = await folder_lister_1.mangaData(json);
+    const manga = await database_1.default.findOne({
+        id: Number(req.params.id),
+    });
+    if (manga) {
+        const data = await folder_lister_1.mangaData(manga);
         manga.data = data;
-        return res.jsonp(json);
+        return res.jsonp(manga);
     }
     throw new Error('Manga not found');
 });
