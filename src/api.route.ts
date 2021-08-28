@@ -33,6 +33,8 @@ const fuse = new Fuse(
    {
       keys: ['name'],
       threshold: 0.55,
+      includeScore: true,
+      useExtendedSearch: true,
    },
    FuseIndex
 );

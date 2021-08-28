@@ -1,7 +1,7 @@
 module.exports = {
    apps: [
       {
-         name: 'Manga Reader',
+         name: 'manga-reader',
          script: './dist/server.js',
          watch: ['dist/'],
          env: {
