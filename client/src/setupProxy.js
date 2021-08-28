@@ -1,6 +1,6 @@
 const { execSync } = require('child_process');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const hostname = require('os');
+const { hostname } = require('os');
 
 let url = 'http://localhost:7800';
 

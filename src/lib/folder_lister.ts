@@ -42,7 +42,10 @@ export async function dirSync() {
          });
       }
    }
-   const newDB = _.sortBy(db, ['createdAt']);
+   const newDB = _.sortBy(db, ['createdAt']).map((e, i) => {
+      e.id = i + 1;
+      return e;
+   });
    // console.log(newDB)
    return newDB;
 }

@@ -47,4 +47,7 @@ export const {
    useGetMangaQuery,
    useLazySearchQuery,
    useSearchQuery,
+   useLazyAllMangasQuery,
+   useLazyGetMangaQuery,
+   usePrefetch,
 } = ApiSlice;

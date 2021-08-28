@@ -6,8 +6,6 @@ export interface MangaHeaderProps {
    manga?: Manga;
    zoomValue?: number;
    brightVal?: number;
-   setBright: Dispatch<SetStateAction<number | undefined>>;
-   setZoomVal: Dispatch<SetStateAction<number | undefined>>;
 }
 
 export interface ReaderItemProps {
@@ -38,7 +36,4 @@ export interface NavProps {
    p_index: string | null;
 }
 
-export interface SearchBarProps {
-   handleSearchChange: ChangeEventHandler<HTMLInputElement>;
-   search: string;
-}
+export interface SearchBarProps {}

@@ -8,6 +8,7 @@ import cors from 'cors';
 import logger from 'morgan';
 import compression from 'compression';
 import _ from 'lodash';
+import fs from 'fs';
 import db from './database';
 import { dirSync } from './lib/folder_lister';
 import ApiRoute from './api.route';
@@ -25,15 +26,22 @@ debug('Starting...');
 const boot = async () => {
    const app = express();
 
+   await fs.promises.rm(Join('data.db'), {
+      force: true,
+      maxRetries: 5,
+   });
    await db.ensureIndex({
       fieldName: 'id',
-      unique: true
-   })
-   await db.remove({}, {
-      multi: true
-   })
+      unique: true,
+   });
+   await db.remove(
+      {},
+      {
+         multi: true,
+      }
+   );
    const mangaData = await dirSync();
-   await db.insert(mangaData)
+   await db.insert(mangaData);
    debug('Database ready!');
 
    await new Promise<void>((res) => app.listen(Number(PORT), res));
