@@ -1,11 +1,11 @@
 tasks:
-   - before: yarn
-     init: yarn
+   - before: yarn --force
+     init: yarn --force
      name: Server
 
    - name: Client
-     init: cd client && yarn
-     before: cd client && yarn
+     init: cd client && yarn --force
+     before: cd client && yarn --force
 ports:
    - port: 3000
      visibility: public
