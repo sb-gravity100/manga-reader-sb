@@ -18,7 +18,7 @@
    }
 }
 
-@mixin flex($ai: center, $jc: start, $fd: row) {
+@mixin flex($ai: center, $jc: flex-start, $fd: row) {
    display: flex;
    flex-direction: $fd;
    align-items: $ai;

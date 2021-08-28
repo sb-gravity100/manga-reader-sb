@@ -1,6 +1,5 @@
 import { Router, Request } from 'express';
-import { Manga } from './models';
-import { sequelize } from './database';
+import db from './database';
 import { dirSync, mangaData, updateCovers } from './lib/folder_lister';
 import { URLSearchParams } from 'url';
 import _ from 'lodash';
@@ -18,7 +17,7 @@ type IRequest<Query = any, Body = any> = Request<
 interface MangasQuery {
    offset?: number;
    limit?: number;
-   order?: any;
+   order?: string | string[] | any[];
    sort?: string | string[];
    refresh?: any;
    _updateCovers?: any;
@@ -43,7 +42,7 @@ export default route;
 route.get('/', async (req, res) => {
    const { query } = req;
    if (SearchIndex.length < 1) {
-      SearchIndex = _.invokeMap(await Manga.findAll(), 'get');
+      SearchIndex = await db.find({});
       FuseIndex = Fuse.createIndex(['name'], SearchIndex);
    }
    if (_.isString(query.q)) {
@@ -58,31 +57,49 @@ route.get('/', async (req, res) => {
 
 route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
    const { query } = req;
+   let results = db.find<types.Manga>({});
    if (query.limit) {
       query.limit = Number(query.limit);
+      results.limit(query.limit);
    }
    if (query.offset) {
       query.offset = Number(query.offset);
+      results.skip(query.offset);
    }
    if (_.has(query, 'refresh')) {
-      const data = await dirSync();
-      await sequelize.sync({ force: true });
-      await Manga.bulkCreate(data);
+      await db.remove(
+         {},
+         {
+            multi: true,
+         }
+      );
+      const mangaData = await dirSync();
+      await db.insert(mangaData);
+      results = db.find({});
    }
    if (_.has(query, '_updateCovers')) {
       await updateCovers();
-      const data = await dirSync();
-      await sequelize.sync({ force: true });
-      await Manga.bulkCreate(data);
+      await db.remove(
+         {},
+         {
+            multi: true,
+         }
+      );
+      const mangaData = await dirSync();
+      await db.insert(mangaData);
+      results = db.find({});
    }
    if (_.isString(query.sort) && _.isString(query.order)) {
       const keys = query.sort.split(',');
       const order = query.order.split(',');
       if (keys.length === order.length) {
-         query.order = _.zip(keys, order);
+         query.order = _.zip(keys, order.map(Number));
+         results = results.sort(
+            _.fromPairs<Record<string, number>>(query.order)
+         );
       }
    }
-   const totalCount = await Manga.count();
+   const totalCount = await db.count({});
    if (query.page) {
       query.page = Number(query.page);
       if (!query.limit) {
@@ -124,25 +141,19 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
          .value();
       res.setHeader('x-page-control', pageHeaderQuery);
    }
-   _.unset(query, 'page');
-   _.unset(query, 'refresh');
-   _.unset(query, 'sort');
-   _.unset(query, '_updateCovers');
-   const results = await Manga.findAll({
-      ...query,
-   });
    res.setHeader('x-total-count', totalCount);
-   const json: types.Manga[] = _.invokeMap(results, 'get');
+   const json = await results.exec();
    SearchIndex = [...SearchIndex, ...json];
    res.jsonp(json);
 });
 route.get('/manga/:id', async (req, res) => {
-   const manga = await Manga.findByPk(Number(req.params.id));
-   if (manga instanceof Manga) {
-      const json = manga.get();
-      const data = await mangaData(json as any);
-      manga.data = data;
-      return res.jsonp(json);
+   const manga = await db.findOne<types.Manga>({
+      id: Number(req.params.id),
+   });
+   if (manga) {
+      const data = await mangaData(manga);
+      manga.data = data as any;
+      return res.jsonp(manga);
    }
    throw new Error('Manga not found');
 });

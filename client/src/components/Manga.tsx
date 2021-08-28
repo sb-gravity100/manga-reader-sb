@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { useLocalStorage, useSearchParam } from 'react-use';
+import { useSearchParam } from 'react-use';
 import { css, StyleSheet } from 'aphrodite';
-import { useLocation } from 'react-router-dom';
 import { ProgressBar } from 'scrolling-based-progressbar';
 import MangaView from './MangaView';
 import { useSpring, animated as anim } from 'react-spring';
@@ -9,6 +8,7 @@ import MangaHeader from './MangaHeader';
 import ErrorBlock from './sub-components/ErrorBlock';
 import styles from '../style.module.scss';
 import { useGetMangaQuery } from '../slices/MangaApi';
+import { useSelector } from '../store';
 
 const Manga = () => {
    const mangaID = useSearchParam('id') || '';
@@ -19,8 +19,7 @@ const Manga = () => {
       refetch,
       isFetching,
    } = useGetMangaQuery(Number(mangaID));
-   const [zoomValue, setZoomVal] = useLocalStorage<number>('zoomValue', 5);
-   const [brightVal, setBright] = useLocalStorage<number>('brightValue', 100);
+   const controls = useSelector((state) => state.controls);
    const loading_props = {
       text: useSpring({
          from: {
@@ -33,10 +32,10 @@ const Manga = () => {
    };
    const viewerStyles = StyleSheet.create({
       brightnessAdjust: {
-         filter: `brightness(${brightVal}%)`,
+         filter: `brightness(${controls.brightness}%)`,
       },
       widthAdjust: {
-         maxWidth: `${((zoomValue || 5) / 10 + 0.5) * 700}px`,
+         maxWidth: `${((controls.zoom || 5) / 10 + 0.5) * 700}px`,
          transition: '0.3s',
       },
    });
@@ -76,7 +75,7 @@ const Manga = () => {
             <div className="wrapper">
                {!loading && (
                   <ProgressBar
-                     height="10px"
+                     height="5px"
                      color="#aae"
                      top="30px"
                      bgColor="#546"
@@ -84,10 +83,8 @@ const Manga = () => {
                )}
                <MangaHeader
                   manga={manga}
-                  zoomValue={zoomValue}
-                  brightVal={brightVal}
-                  setBright={setBright}
-                  setZoomVal={setZoomVal}
+                  zoomValue={controls.zoom}
+                  brightVal={controls.brightness}
                />
                <div
                   className={css(

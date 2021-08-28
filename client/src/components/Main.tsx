@@ -5,7 +5,11 @@ import Reader from './Reader';
 import ErrorBlock from './sub-components/ErrorBlock';
 import { useState, useEffect, ChangeEventHandler } from 'react';
 import styles from '../style.module.scss';
-import { useAllMangasQuery, useSearchQuery } from '../slices/MangaApi';
+import {
+   useAllMangasQuery,
+   useLazyAllMangasQuery,
+   useSearchQuery,
+} from '../slices/MangaApi';
 import { useDispatch, useSelector } from '../store';
 import { clearSearch, setSearch } from '../slices/ControlSlice';
 import { SearchBarProps } from './props';
@@ -29,14 +33,23 @@ const SearchComponent: FC<SearchResult> = (props) => (
 );
 
 const SearchBar: FC<SearchBarProps> = (props) => {
-   const search = useSearchQuery(props.search);
+   const searchQuery = useSelector((state) => state.controls.search);
+   const dispatch = useDispatch();
+   const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+      if (!e.target.value) {
+         dispatch(clearSearch());
+      } else {
+         dispatch(setSearch(e.target.value));
+      }
+   };
+   const search = useSearchQuery(searchQuery);
    return (
       <div className="search-bar">
          <input
             type="text"
             name="search"
             placeholder="Search..."
-            onChange={props.handleSearchChange}
+            onChange={handleSearchChange}
             autoComplete="none"
             autoCorrect="none"
             aria-autocomplete="none"
@@ -53,17 +66,11 @@ const SearchBar: FC<SearchBarProps> = (props) => {
 };
 
 const Main = () => {
-   const searchQuery = useSelector((state) => state.controls.search);
-   const dispatch = useDispatch();
-   const mangas = useAllMangasQuery(null);
+   const [getMangas, mangas] = useLazyAllMangasQuery();
 
-   const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-      if (!e.target.value) {
-         dispatch(clearSearch());
-      } else {
-         dispatch(setSearch(e.target.value));
-      }
-   };
+   useEffect(() => {
+      getMangas(null);
+   }, []);
 
    return (
       <div id="main">
@@ -75,14 +82,22 @@ const Main = () => {
             </h1>
             <div className="btn-flex">
                <button
-                  // onClick={}
+                  onClick={() =>
+                     getMangas({
+                        refresh: true,
+                     })
+                  }
                   className={styles.refresh_btn}
                >
                   <MdRefresh fontSize="1.2rem" />
                   <span>Refresh</span>
                </button>
                <button
-                  // onClick={}
+                  onClick={() =>
+                     getMangas({
+                        _updateCovers: true,
+                     })
+                  }
                   className={styles.refresh_btn}
                >
                   <MdRefresh fontSize="1.2rem" />
@@ -90,12 +105,9 @@ const Main = () => {
                </button>
             </div>
          </div>
-         <SearchBar
-            handleSearchChange={handleSearchChange}
-            search={searchQuery}
-         />
+         <SearchBar />
          <ErrorBlock
-            retry={mangas.refetch}
+            retry={() => getMangas(null)}
             hasErrors={mangas.isError}
             errors={mangas.error}
             isFetching={mangas.isFetching}
@@ -104,7 +116,7 @@ const Main = () => {
                total={mangas?.data?.length}
                data={mangas?.data}
                loading={mangas.isFetching}
-               refetch={mangas.refetch}
+               refetch={() => getMangas(null)}
             />
          </ErrorBlock>
       </div>

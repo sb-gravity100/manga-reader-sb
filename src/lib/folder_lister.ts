@@ -11,9 +11,9 @@ const DJ_PATH = path.normalize(path.join(process.cwd(), 'DJ/'));
 async function getDirSize(filepath: string) {
    const dir = fs
       .readdirSync(filepath)
-      .map(e => fs.promises.stat(path.join(filepath, e)));
+      .map((e) => fs.promises.stat(path.join(filepath, e)));
    const d = await Promise.all(dir);
-   return d.map(e_1 => e_1.size).reduce((p, n) => p + n);
+   return d.map((e_1) => e_1.size).reduce((p, n) => p + n);
 }
 
 export async function dirSync() {
@@ -42,7 +42,10 @@ export async function dirSync() {
          });
       }
    }
-   const newDB = _.sortBy(db, ['createdAt']);
+   const newDB = _.sortBy(db, ['createdAt']).map((e, i) => {
+      e.id = i + 1;
+      return e;
+   });
    // console.log(newDB)
    return newDB;
 }
@@ -52,30 +55,26 @@ export async function mangaData(manga: Manga) {
       '%DJ_PATH%',
       path.normalize(DJ_PATH)
    );
-   let data:
-      | Promise<fs.Dirent[]>
-      | fs.Dirent[]
-      | MangaData[] = await fs.promises.readdir(mangaPath, {
-      withFileTypes: true,
-   });
-   data = data
-      .map(file => {
+   let data: Promise<fs.Dirent[]> | fs.Dirent[] | MangaData[] | null =
+      await fs.promises.readdir(mangaPath, {
+         withFileTypes: true,
+      });
+   const final: (MangaData | undefined)[] = data
+      .map((file) => {
          if (file.isFile()) {
-            if (file.name === 'cover.jpg') {
-               return null;
-            }
-            if (path.extname(file.name).match(/^\.(jpe?g|png|svg)$/i)) {
+            if (
+               file.name !== 'cover.jpg' &&
+               path.extname(file.name).match(/^\.(jpe?g|png|svg)$/i)
+            ) {
                return {
                   name: file.name,
                   path: `cdn/manga/${manga.name}/${file.name}`,
                };
             }
-            return null;
          }
-         return null;
       })
-      .filter(Boolean);
-   return data;
+      .filter((v) => typeof v !== 'undefined');
+   return final;
 }
 
 export async function updateCovers() {
@@ -85,8 +84,8 @@ export async function updateCovers() {
    for (let i = 0; i < dirs.length; i++) {
       const mangadir = dirs[i];
       const _dir = await fs.promises.readdir(path.join(DJ_PATH, mangadir));
-      const index = _dir.findIndex(e => e.match(/\.(png|jpe?g)$/i));
-      if (!_dir.find(e => e === 'cover.jpg')) {
+      const index = _dir.findIndex((e) => e.match(/\.(png|jpe?g)$/i));
+      if (!_dir.find((e) => e === 'cover.jpg')) {
          coverdirs.push(path.join(DJ_PATH, mangadir, _dir[index]));
       }
    }

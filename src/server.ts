@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('express-async-errors')
+require('express-async-errors');
 import 'reflect-metadata';
 import express from 'express';
 import { normalize, join } from 'path';
@@ -8,10 +8,10 @@ import cors from 'cors';
 import logger from 'morgan';
 import compression from 'compression';
 import _ from 'lodash';
-import { sequelize } from './database';
-import * as Models from './models';
+import fs from 'fs';
+import db from './database';
 import { dirSync } from './lib/folder_lister';
-import ApiRoute from './api.route'
+import ApiRoute from './api.route';
 console.log(process.cwd());
 
 const { NODE_ENV, PORT } = process.env;
@@ -26,12 +26,25 @@ debug('Starting...');
 const boot = async () => {
    const app = express();
 
+   await fs.promises.rm(Join('data.db'), {
+      force: true,
+      maxRetries: 5,
+   });
+   await db.ensureIndex({
+      fieldName: 'id',
+      unique: true,
+   });
+   await db.remove(
+      {},
+      {
+         multi: true,
+      }
+   );
    const mangaData = await dirSync();
-   await sequelize.sync({ force: true });
-   await Models.Manga.bulkCreate(mangaData);
+   await db.insert(mangaData);
    debug('Database ready!');
 
-   await new Promise<void>(res => app.listen(Number(PORT), res));
+   await new Promise<void>((res) => app.listen(Number(PORT), res));
 
    debug(`Server listening at %s`, port);
 
@@ -39,7 +52,7 @@ const boot = async () => {
 };
 
 boot()
-   .then(app => {
+   .then((app) => {
       app.use(cors());
       app.use(logger('dev'));
       app.use(
@@ -57,7 +70,7 @@ boot()
          res.sendFile(join(ASSETS_PATH, 'index.html'))
       );
 
-      app.use('/api', ApiRoute)
+      app.use('/api', ApiRoute);
       app.use((_req, _res, next) => next(createError(404)));
       app.use(
          (
@@ -71,7 +84,7 @@ boot()
          }
       );
    })
-   .catch(e => {
+   .catch((e) => {
       if (_.has(e, 'sql')) {
          _.unset(e, 'sql');
          _.unset(e, 'parent');
@@ -79,5 +92,5 @@ boot()
          _.unset(e, 'original');
       }
       console.log(e);
-      process.exit()
+      process.exit();
    });

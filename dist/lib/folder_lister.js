@@ -13,9 +13,9 @@ const DJ_PATH = path_1.default.normalize(path_1.default.join(process.cwd(), 'DJ/
 async function getDirSize(filepath) {
     const dir = fs_1.default
         .readdirSync(filepath)
-        .map(e => fs_1.default.promises.stat(path_1.default.join(filepath, e)));
+        .map((e) => fs_1.default.promises.stat(path_1.default.join(filepath, e)));
     const d = await Promise.all(dir);
-    return d.map(e_1 => e_1.size).reduce((p, n) => p + n);
+    return d.map((e_1) => e_1.size).reduce((p, n) => p + n);
 }
 async function dirSync() {
     const dir = await fs_1.default.promises.readdir(DJ_PATH, {
@@ -49,24 +49,20 @@ async function mangaData(manga) {
     let data = await fs_1.default.promises.readdir(mangaPath, {
         withFileTypes: true,
     });
-    data = data
-        .map(file => {
+    const final = data
+        .map((file) => {
         if (file.isFile()) {
-            if (file.name === 'cover.jpg') {
-                return null;
-            }
-            if (path_1.default.extname(file.name).match(/^\.(jpe?g|png|svg)$/i)) {
+            if (file.name !== 'cover.jpg' &&
+                path_1.default.extname(file.name).match(/^\.(jpe?g|png|svg)$/i)) {
                 return {
                     name: file.name,
                     path: `cdn/manga/${manga.name}/${file.name}`,
                 };
             }
-            return null;
         }
-        return null;
     })
-        .filter(Boolean);
-    return data;
+        .filter((v) => typeof v !== 'undefined');
+    return final;
 }
 exports.mangaData = mangaData;
 async function updateCovers() {
@@ -76,8 +72,8 @@ async function updateCovers() {
     for (let i = 0; i < dirs.length; i++) {
         const mangadir = dirs[i];
         const _dir = await fs_1.default.promises.readdir(path_1.default.join(DJ_PATH, mangadir));
-        const index = _dir.findIndex(e => e.match(/\.(png|jpe?g)$/i));
-        if (!_dir.find(e => e === 'cover.jpg')) {
+        const index = _dir.findIndex((e) => e.match(/\.(png|jpe?g)$/i));
+        if (!_dir.find((e) => e === 'cover.jpg')) {
             coverdirs.push(path_1.default.join(DJ_PATH, mangadir, _dir[index]));
         }
     }

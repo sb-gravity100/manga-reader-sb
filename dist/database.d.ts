@@ -1,2 +1,3 @@
-import { Sequelize } from 'sequelize-typescript';
-export declare const sequelize: Sequelize;
+import Datastore from 'nedb-promises';
+declare const db: Datastore;
+export default db;
