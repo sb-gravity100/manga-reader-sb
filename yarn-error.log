@@ -1,5 +1,5 @@
 Arguments: 
-  /home/gitpod/.nvm/versions/node/v14.17.5/bin/node /home/gitpod/.nvm/versions/node/v14.17.5/bin/yarn --force
+  /home/gitpod/.nvm/versions/node/v14.17.5/bin/node /home/gitpod/.nvm/versions/node/v14.17.5/bin/yarn install --check-files --force
 
 PATH: 
   /home/gitpod/.sdkman/candidates/maven/current/bin:/home/gitpod/.sdkman/candidates/java/current/bin:/home/gitpod/.sdkman/candidates/gradle/current/bin:/home/gitpod/.rvm/gems/ruby-2.7.3/bin:/home/gitpod/.rvm/gems/ruby-2.7.3@global/bin:/home/gitpod/.rvm/rubies/ruby-2.7.3/bin:/home/gitpod/.pyenv/plugins/pyenv-virtualenv/shims:/workspace/.cargo/bin:/workspace/.pip-modules/bin:/workspace/.rvm/bin:/ide/bin:/workspace/.cargo/bin:/workspace/.rvm/bin:/workspace/.pip-modules/bin:/home/gitpod/.pyenv/bin:/home/gitpod/.pyenv/shims:/workspace/go/bin:/home/gitpod/go/bin:/home/gitpod/go-packages/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/:/home/gitpod/.nvm/versions/node/v14.17.5/bin:/home/gitpod/.cargo/bin:/usr/games:/usr/games:/home/gitpod/.nvm/versions/node/v14.17.5/bin:/home/gitpod/.rvm/bin
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.3.tgz: ENOENT: no such file or directory, open '/home/gitpod/.cache/yarn/v6/npm-@babel-runtime-7.15.3-2e1c2880ca118e5b2f9988322bd8a7656a32502b-integrity/node_modules/@babel/runtime/.yarn-tarball.tgz'
+  Error: https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz: ENOENT: no such file or directory, open '/home/gitpod/.cache/yarn/v6/npm-ms-2.1.2-d09d1f357b443f493382a8eb3ccd183872ae6009-integrity/node_modules/ms/.yarn-tarball.tgz'
 
 npm manifest: 
   {

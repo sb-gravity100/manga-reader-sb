@@ -1,5 +1,6 @@
-node_modules/
-DJ/
-*.sublime-project
-*.sublime-workspace
-N/
+/*
+/*/node_modules
+!/public
+!/src
+!/dist
+!/client
