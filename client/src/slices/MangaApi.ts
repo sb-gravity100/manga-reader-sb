@@ -1,5 +1,14 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+   BaseQueryFn,
+   createApi,
+   FetchArgs,
+   fetchBaseQuery,
+   FetchBaseQueryError,
+   FetchBaseQueryMeta,
+} from '@reduxjs/toolkit/query/react';
+import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import _ from 'lodash';
+import qs from 'qs';
 import { Manga, SearchResult } from '../../../src/types';
 
 interface MangasQuery {
@@ -12,19 +21,37 @@ interface MangasQuery {
    page?: number;
 }
 
+interface Meta {
+   nextPage?: {
+      limit: number;
+      page: number;
+   };
+   prevPage?: {
+      limit: number;
+      page: number;
+   };
+   firstPage?: {
+      limit: number;
+      page: number;
+   };
+   lastPage?: {
+      limit: number;
+      page: number;
+   };
+}
+
 const ApiSlice = createApi({
-   reducerPath: 'mangaApi',
+   reducerPath: 'MangaApi',
    baseQuery: fetchBaseQuery({
       baseUrl: '/api',
    }),
    endpoints: (builder) => ({
-      allMangas: builder.query<Manga[], MangasQuery | null>({
+      allMangas: builder.query<Manga[], MangasQuery | void>({
          query(opts) {
-            const query = new URLSearchParams();
-            _.toPairs(opts as any).forEach((e) => {
-               query.append(e[0], e[1] as string);
-            });
-            return `/mangas?${query.toString()}`;
+            return {
+               url: '/mangas',
+               params: opts || {},
+            };
          },
       }),
       getManga: builder.query<Manga, number>({

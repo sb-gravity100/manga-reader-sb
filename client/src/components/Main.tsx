@@ -69,8 +69,10 @@ const Main = () => {
    const isBlur = useSelector((state) => state.controls.blur);
    const dispatch = useDispatch();
    useEffect(() => {
-      getMangas(null);
+      getMangas();
    }, []);
+
+   console.log(mangas);
 
    return (
       <div id="main">
@@ -115,7 +117,7 @@ const Main = () => {
          </div>
          <SearchBar />
          <ErrorBlock
-            retry={() => getMangas(null)}
+            retry={() => getMangas()}
             hasErrors={mangas.isError}
             errors={mangas.error}
             isFetching={mangas.isFetching}
@@ -124,7 +126,7 @@ const Main = () => {
                total={mangas?.data?.length}
                data={mangas?.data}
                loading={mangas.isFetching}
-               refetch={() => getMangas(null)}
+               refetch={() => getMangas()}
             />
          </ErrorBlock>
       </div>

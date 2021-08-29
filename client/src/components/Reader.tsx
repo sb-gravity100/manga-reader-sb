@@ -12,10 +12,12 @@ import classname from 'classnames';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { FC } from 'react';
-import { ReaderProps, NavProps } from './props';
+import { ReaderProps } from './props';
 import Loading from './sub-components/Loading';
+import { useSelector } from '../store';
 
 const Reader: FC<ReaderProps> = (props) => {
+   const page = useSelector((state) => state.controls.page);
    return (
       <div className="main-reader">
          <div className="main-reader-box">

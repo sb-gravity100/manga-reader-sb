@@ -31,9 +31,15 @@ export interface ErrorProps {
 }
 
 export interface NavProps {
-   isCurrent(i: number): boolean;
-   chunks: Manga[][];
-   p_index: string | null;
+   totalCount: number;
+   nextPage?: {
+      limit: number;
+      page: number;
+   };
+   prevPage?: {
+      limit: number;
+      page: number;
+   };
 }
 
 export interface SearchBarProps {}

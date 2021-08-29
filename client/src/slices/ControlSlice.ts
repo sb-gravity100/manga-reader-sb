@@ -6,11 +6,15 @@ interface ControlState {
    brightness: number;
    search: string;
    blur: boolean;
+   page: number;
+   limit: number;
 }
 
 const initialState = {
    blur: true,
    zoom: 5,
+   page: 0,
+   limit: 10,
    brightness: 100,
    search: '',
 } as ControlState;

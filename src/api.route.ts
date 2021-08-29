@@ -5,6 +5,7 @@ import { URLSearchParams } from 'url';
 import _ from 'lodash';
 import Fuse from 'fuse.js';
 import * as types from './types';
+import qs from 'qs';
 
 type IRequest<Query = any, Body = any> = Request<
    any,
@@ -90,50 +91,58 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       }
    }
    const totalCount = await db.count({});
+   res.setHeader('x-total-count', totalCount);
    if (query.page) {
       query.page = Number(query.page);
       if (!query.limit) {
          query.limit = 10;
       }
       query.offset = query.page * query.limit;
-      const totalPage = Math.floor(totalCount / query.limit);
+      const totalPage = Math.ceil(totalCount / query.limit);
       const pageUrl = `${req.protocol}://${req.headers.host}${
          req.url.split('?')[0]
       }`;
-      const pageHeaders: Record<string, string> = {};
+      const pageHeaders: Record<
+         'last' | 'first' | 'next' | 'prev' | string,
+         string | { limit: number; page: number }
+      > = {};
       if (query.page < totalPage) {
-         const pageQuery = new URLSearchParams();
-         pageQuery.append('page', (query.page + 1).toString());
-         pageQuery.append('limit', query.limit.toString());
-         pageHeaders.next = `${pageUrl}?${pageQuery.toString()}`;
+         pageHeaders.next = {
+            page: query.page + 1,
+            limit: query.limit,
+         };
       }
-      if (query.page > 0) {
-         const pageQuery = new URLSearchParams();
-         pageQuery.append('page', (query.page - 1).toString());
-         pageQuery.append('limit', query.limit.toString());
-         pageHeaders.prev = `${pageUrl}?${pageQuery.toString()}`;
+      if (query.page > 0 && totalPage > query.page + 1) {
+         pageHeaders.prev = {
+            page: query.page - 1,
+            limit: query.limit,
+         };
       }
-      if (query.page !== totalPage) {
-         const pageQuery = new URLSearchParams();
-         pageQuery.append('page', totalPage.toString());
-         pageQuery.append('limit', query.limit.toString());
-         pageHeaders.last = `${pageUrl}?${pageQuery.toString()}`;
+      if (query.page + 1 !== totalPage) {
+         pageHeaders.last = {
+            page: totalPage - 1,
+            limit: query.limit,
+         };
       }
       if (query.page !== 0) {
-         const pageQuery = new URLSearchParams();
-         pageQuery.append('page', '0');
-         pageQuery.append('limit', query.limit.toString());
-         pageHeaders.first = `${pageUrl}?${pageQuery.toString()}`;
+         pageHeaders.first = {
+            page: 0,
+            limit: query.limit,
+         };
       }
-      const pageHeaderQuery = _.chain(pageHeaders)
-         .toPairs()
-         .invokeMap('join', '=')
-         .value();
-      res.setHeader('x-page-control', pageHeaderQuery);
+      res.setHeader('x-total-page', totalPage);
+      _.forIn(pageHeaders, (val, key) => {
+         res.setHeader(`x-page-${key}`, qs.stringify(val));
+      });
+      const json = await results.exec();
+      res.jsonp({
+         items: json,
+         ...pageHeaders,
+      });
+   } else {
+      const json = await results.exec();
+      res.jsonp(json);
    }
-   res.setHeader('x-total-count', totalCount);
-   const json = await results.exec();
-   res.jsonp(json);
 });
 route.get('/manga/:id', async (req, res) => {
    const manga = await db.findOne<types.Manga>({
