@@ -60,12 +60,6 @@
          justify-content: space-between;
          transition: 0.3s;
 
-         &:hover {
-            .bg-img {
-               filter: brightness(30%) blur(0.3rem);
-            }
-         }
-
          .bg-img {
             height: 270px;
             z-index: 0;
@@ -73,7 +67,6 @@
             border-top-right-radius: 10px;
             border-top-left-radius: 10px;
             object-fit: cover;
-            filter: blur(0.3rem) opacity(0.2);
             transition: 0.3s;
          }
 
@@ -128,10 +121,10 @@
       padding: 0.6rem;
       font-size: 0.9rem;
       z-index: 9999;
-      max-width: 500px;
+      width: 400px;
       border-radius: 10px;
       max-height: 500px;
-      overflow-y: scroll;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 10px;

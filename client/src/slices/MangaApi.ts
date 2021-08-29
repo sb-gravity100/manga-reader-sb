@@ -34,7 +34,7 @@ const ApiSlice = createApi({
       }),
       search: builder.query<SearchResult[], string>({
          query(q) {
-            return `/?q=${q}`;
+            return `/search?q=${q || ''}`;
          },
       }),
    }),

@@ -1,2 +1,18 @@
 {"$$indexCreated":{"fieldName":"id","unique":true,"sparse":false}}
-{"name":"Mock Data","pathname":"%DJ_PATH%/Mock Data","createdAt":{"$$date":1630193928368},"size":6079468,"cover":"cdn/manga/Mock Data/cover.jpg","id":1,"_id":"6ZJnHlKbWQp1tWwl"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"IpJI7M7zThsN7H7c"}
+{"$$deleted":true,"_id":"IpJI7M7zThsN7H7c"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"Gccuy3QXEfSbky7z"}
+{"$$deleted":true,"_id":"Gccuy3QXEfSbky7z"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"3F2CngePhvDlWiHs"}
+{"$$deleted":true,"_id":"3F2CngePhvDlWiHs"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"6zgmslF1QXumyHKK"}
+{"$$deleted":true,"_id":"6zgmslF1QXumyHKK"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"YXA23ZUGu1hJcHAM"}
+{"$$deleted":true,"_id":"YXA23ZUGu1hJcHAM"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"ejJpUG5h6qasbgwl"}
+{"$$deleted":true,"_id":"ejJpUG5h6qasbgwl"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"t7OFYAy4u15simvH"}
+{"$$deleted":true,"_id":"t7OFYAy4u15simvH"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"UaUKTYfo5uSRM7jy"}
+{"$$deleted":true,"_id":"UaUKTYfo5uSRM7jy"}
+{"name":"_mock_data","pathname":"%DJ_PATH%/_mock_data","createdAt":{"$$date":1630214375557},"size":155678,"cover":"cdn/manga/_mock_data/cover.jpg","id":1,"_id":"05Whvlh1SvkEfc8x"}

@@ -36,15 +36,7 @@ const MangaHeader: FC<MangaHeaderProps> = ({
                >
                   <FaMinus />
                </button>
-               <input
-                  type="text"
-                  onChange={(e) =>
-                     e.target.valueAsNumber <= 10 &&
-                     e.target.valueAsNumber > 0 &&
-                     dispatch(setZoom(e.target.valueAsNumber))
-                  }
-                  value={zoomValue}
-               />
+               <input type="text" value={zoomValue} contentEditable="false" />
                <button
                   type="button"
                   onClick={() =>

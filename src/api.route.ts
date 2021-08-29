@@ -25,34 +25,24 @@ interface MangasQuery {
 }
 
 const route = Router();
-let SearchIndex: types.Manga[] = [];
-let FuseIndex = Fuse.createIndex(['name'], SearchIndex);
-const fuse = new Fuse(
-   SearchIndex,
-   {
-      keys: ['name'],
-      threshold: 0.55,
-      includeScore: true,
-      useExtendedSearch: true,
-   },
-   FuseIndex
-);
+
 export default route;
 
-route.get('/', async (req, res) => {
+route.get('/search', async (req, res) => {
    const { query } = req;
-   if (SearchIndex.length < 1) {
-      SearchIndex = await db.find({});
-      FuseIndex = Fuse.createIndex(['name'], SearchIndex);
-   }
+   const SearchIndex = await db.find<types.Manga>({});
+   const fuse = new Fuse(SearchIndex, {
+      keys: ['name'],
+      includeScore: true,
+      useExtendedSearch: true,
+   });
    if (_.isString(query.q)) {
-      fuse.setCollection(SearchIndex, FuseIndex);
       const results = fuse.search(query.q, {
-         limit: 10,
+         limit: 20,
       });
-      return res.jsonp(results);
+      return res.json(results);
    }
-   res.jsonp(null);
+   res.json(null);
 });
 
 route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
@@ -143,7 +133,6 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
    }
    res.setHeader('x-total-count', totalCount);
    const json = await results.exec();
-   SearchIndex = [...SearchIndex, ...json];
    res.jsonp(json);
 });
 route.get('/manga/:id', async (req, res) => {

@@ -9,6 +9,8 @@ if (hostname().match(/(seven|seven-PC)/i)) {
 } else {
    url = execSync('gp url 7800').toString().trim();
 }
+console.log(url);
+// process.exit();
 
 module.exports = (app) => {
    app.use(

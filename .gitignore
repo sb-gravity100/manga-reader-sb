@@ -3,6 +3,7 @@ node_modules
 /DJ/*
 !/DJ/_mock_data
 .pnp.js
+package-lock.json
 
 # testing
 /coverage

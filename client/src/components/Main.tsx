@@ -7,7 +7,7 @@ import { useState, useEffect, ChangeEventHandler } from 'react';
 import styles from '../style.module.scss';
 import { useLazyAllMangasQuery, useSearchQuery } from '../slices/MangaApi';
 import { useDispatch, useSelector } from '../store';
-import { clearSearch, setSearch } from '../slices/ControlSlice';
+import { clearSearch, setSearch, toggleBlur } from '../slices/ControlSlice';
 import { SearchBarProps } from './props';
 import _ from 'lodash';
 import { SearchResult } from '../../../src/types';
@@ -15,7 +15,7 @@ import { SearchResult } from '../../../src/types';
 const SearchComponent: FC<SearchResult> = (props) => (
    <Link
       to={`/manga?id=${props.item.id}`}
-      className="search-props.item"
+      className="search-item"
       title={props.item.name}
    >
       <div
@@ -46,13 +46,11 @@ const SearchBar: FC<SearchBarProps> = (props) => {
             name="search"
             placeholder="Search..."
             onChange={handleSearchChange}
-            autoComplete="none"
-            autoCorrect="none"
-            aria-autocomplete="none"
+            autoComplete="off"
          />
-         {search.data?.length && (
+         {search.isSuccess && search.data.length > 0 && (
             <div className="search-list">
-               {_.sortBy(search.data).map((manga) => (
+               {search.data.map((manga) => (
                   <SearchComponent {...manga} />
                ))}
             </div>
@@ -63,7 +61,8 @@ const SearchBar: FC<SearchBarProps> = (props) => {
 
 const Main = () => {
    const [getMangas, mangas] = useLazyAllMangasQuery();
-
+   const isBlur = useSelector((state) => state.controls.blur);
+   const dispatch = useDispatch();
    useEffect(() => {
       getMangas(null);
    }, []);
@@ -99,6 +98,14 @@ const Main = () => {
                   <MdRefresh fontSize="1.2rem" />
                   <span>Covers</span>
                </button>
+               <div className="is-blur-check">
+                  <div>Blur</div>
+                  <input
+                     type="checkbox"
+                     checked={isBlur}
+                     onChange={() => dispatch(toggleBlur())}
+                  />
+               </div>
             </div>
          </div>
          <SearchBar />

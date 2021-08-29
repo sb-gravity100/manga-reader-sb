@@ -5,20 +5,17 @@ interface ControlState {
    zoom: number;
    brightness: number;
    search: string;
+   blur: boolean;
 }
 
-const initialState = {} as ControlState;
+const initialState = {
+   blur: true,
+} as ControlState;
 
 const ControlSlice = createSlice({
    initialState,
    name: 'control',
    reducers: {
-      incZoom(state) {
-         state.zoom += 1;
-      },
-      decZoom(state) {
-         state.zoom -= 1;
-      },
       setZoom(state, action: PayloadAction<number>) {
          state.zoom = action.payload;
       },
@@ -31,16 +28,13 @@ const ControlSlice = createSlice({
       clearSearch(state) {
          state.search = '';
       },
+      toggleBlur(state) {
+         state.blur = !state.blur;
+      },
    },
 });
 
-export const {
-   incZoom,
-   decZoom,
-   setZoom,
-   setBrightness,
-   setSearch,
-   clearSearch,
-} = ControlSlice.actions;
+export const { setZoom, setBrightness, setSearch, clearSearch, toggleBlur } =
+   ControlSlice.actions;
 
 export default ControlSlice.reducer;
