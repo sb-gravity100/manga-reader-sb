@@ -21,11 +21,17 @@ export async function dirSync() {
       withFileTypes: true,
    });
    const db: Manga[] = [];
-   const promiseFuncs: Promise<void>[] = []
+   const promiseFuncs: Promise<void>[] = [];
 
    for (let k = dir.length - 1; k >= 0; k--) {
+      const folder = dir[k];
+      if (
+         process.env.NODE_ENV !== 'development' &&
+         folder.name === '_mock_data'
+      ) {
+         return;
+      }
       const func = async () => {
-         const folder = dir[k];
          if (folder.isDirectory()) {
             const pathname = path.join('%DJ_PATH%', folder.name);
             const realPath = pathname.replace(
@@ -43,10 +49,10 @@ export async function dirSync() {
                cover: `cdn/manga/${folder.name}/cover.jpg`,
             });
          }
-      }
-      promiseFuncs.push(func())
+      };
+      promiseFuncs.push(func());
    }
-   await Promise.all(promiseFuncs)
+   await Promise.all(promiseFuncs);
    const newDB = _.sortBy(db, ['createdAt']).map((e, i) => {
       e.id = i + 1;
       return e;
