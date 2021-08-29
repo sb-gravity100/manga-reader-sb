@@ -5,7 +5,7 @@ tasks:
 
    - name: Client
      init: cd client && yarn --force
-     before: cd client && yarn --force
+     before: yarn --force
 ports:
    - port: 3000
      visibility: public
