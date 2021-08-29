@@ -24,8 +24,8 @@ const Manga = () => {
       filter: `brightness(${controls.brightness}%)`,
    });
    const widthAdjust = useCss({
-      maxWidth: `${((controls.zoom || 5) / 10 + 0.5) * 700}px`,
-      transition: '0.3s',
+      maxWidth: `${((controls.zoom || 5) / 10 + 0.5) * 700}px !important`,
+      transition: '0.3s !important',
    });
    const loading_props = {
       text: useSpring({
