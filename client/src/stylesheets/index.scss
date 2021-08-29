@@ -47,7 +47,7 @@ body {
    line-height: 1.3;
    width: 100%;
    color: white;
-   background: #223;
+   background: $x-dark;
    overflow-y: scroll;
    overflow-x: hidden;
 }
@@ -62,9 +62,8 @@ img {
 }
 
 button {
-   $bgcolor: #334;
+   $bgcolor: $x-primary;
    font-family: 'Jetbrains Mono', monospace;
-   color: white;
    @include bgtext($bgcolor);
    border: none;
    border-radius: 0;
@@ -76,7 +75,7 @@ button {
    justify-content: center;
 
    &:hover {
-      color: #dde;
+      color: $x-secondary;
    }
 }
 

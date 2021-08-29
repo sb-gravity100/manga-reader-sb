@@ -3,16 +3,15 @@
 /* eslint-disable jsx-a11y/alt-text */
 import ReaderItem from './sub-components/ReaderItem';
 import classname from 'classnames';
-import {
-   FaAngleLeft,
-   FaAngleRight,
-   FaAngleDoubleLeft,
-   FaAngleDoubleRight,
-} from 'react-icons/fa';
+// import {
+//    FaAngleLeft,
+//    FaAngleRight,
+//    FaAngleDoubleLeft,
+//    FaAngleDoubleRight,
+// } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { FC } from 'react';
-import { useSearchParam } from 'react-use';
 import { ReaderProps, NavProps } from './props';
 import Loading from './sub-components/Loading';
 

@@ -1,4 +1,15 @@
+tasks:
+   - init: npm i
+     before: npm i
+     name: Server
+
+   - name: Backend
+     init: cd client && npm i
+     before: npm i
 ports:
-   - port: 3000-7800
+   - port: 3000
+     visibility: public
+     onOpen: ignore
+   - port: 7800
      visibility: public
      onOpen: ignore

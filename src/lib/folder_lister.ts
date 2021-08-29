@@ -5,6 +5,7 @@ import fs from 'fs';
 import _ from 'lodash';
 import Jimp from 'jimp';
 import { Manga, MangaData } from '../types';
+import { randomBytes, randomInt } from 'crypto';
 
 const DJ_PATH = path.normalize(path.join(process.cwd(), 'DJ/'));
 

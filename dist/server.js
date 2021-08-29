@@ -1,11 +1,19 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 require('express-async-errors');
-require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
 const path_1 = require("path");
 const http_errors_1 = __importDefault(require("http-errors"));
@@ -25,29 +33,37 @@ const port = PORT;
 const ASSETS_PATH = Join('public/');
 const debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
-const boot = async () => {
+const boot = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = express_1.default();
-    await database_1.default.ensureIndex({
+    yield database_1.default.ensureIndex({
         fieldName: 'id',
-        unique: true
+        unique: true,
     });
-    await database_1.default.remove({}, {
-        multi: true
+    yield database_1.default.remove({}, {
+        multi: true,
     });
-    const mangaData = await folder_lister_1.dirSync();
-    await database_1.default.insert(mangaData);
+    const mangaData = yield folder_lister_1.dirSync();
+    yield database_1.default.insert(mangaData);
     debug('Database ready!');
-    await new Promise((res) => app.listen(Number(PORT), res));
+    yield new Promise((res) => app.listen(Number(PORT), res));
     debug(`Server listening at %s`, port);
     return app;
-};
+});
 boot()
     .then((app) => {
     app.use(cors_1.default());
-    app.use(morgan_1.default('dev'));
-    app.use(compression_1.default({
-        level: 7,
+    app.use(morgan_1.default('dev', {
+        skip: (req) => {
+            if (req.url.length > 50) {
+                return false;
+            }
+            return true;
+        },
+        stream: {
+            write: (msg) => debug(msg.trimEnd()),
+        },
     }));
+    app.use(compression_1.default());
     app.use('/cdn/manga', express_1.default.static(DJ_PATH));
     app.use(express_1.default.static(ASSETS_PATH));
     app.get('/(*/)?', (_req, res) => res.sendFile(path_1.join(ASSETS_PATH, 'index.html')));

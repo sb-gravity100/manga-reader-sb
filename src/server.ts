@@ -11,6 +11,7 @@ import fs from 'fs';
 import db from './database';
 import { dirSync } from './lib/folder_lister';
 import ApiRoute from './api.route';
+import { Debugger } from 'debug';
 console.log(process.cwd());
 
 const { NODE_ENV, PORT } = process.env;
@@ -19,16 +20,12 @@ const Join = (...dir: string[]) => normalize(join(CWD, ...dir));
 const DJ_PATH = Join('DJ/');
 const port = PORT;
 const ASSETS_PATH = Join('public/');
-const debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
+const debug: Debugger =
+   NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
 
 const boot = async () => {
    const app = express();
-
-   await fs.promises.rm(Join('data.db'), {
-      force: true,
-      maxRetries: 5,
-   });
    await db.ensureIndex({
       fieldName: 'id',
       unique: true,
@@ -53,12 +50,21 @@ const boot = async () => {
 boot()
    .then((app) => {
       app.use(cors());
-      app.use(logger('dev'));
       app.use(
-         compression({
-            level: 7,
+         logger('dev', {
+            skip: (req) => {
+               if (req.url.length > 50) {
+                  return false;
+               }
+               return true;
+            },
+            stream: {
+               write: (msg) => debug(msg.trimEnd()),
+            },
          })
       );
+      app.use(compression());
+
       app.use('/cdn/manga', express.static(DJ_PATH));
       app.use(express.static(ASSETS_PATH));
 

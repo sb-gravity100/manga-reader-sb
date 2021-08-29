@@ -10,6 +10,9 @@ interface ControlState {
 
 const initialState = {
    blur: true,
+   zoom: 5,
+   brightness: 100,
+   search: '',
 } as ControlState;
 
 const ControlSlice = createSlice({

@@ -24,7 +24,12 @@ const SearchComponent: FC<SearchResult> = (props) => (
             backgroundImage: `url('${props.item.cover}')`,
          }}
       ></div>
-      <div className="name">{props.item.name}</div>
+      <div>
+         {_.chunk(props.item.name.split(' '), 8).map((e, i) => (
+            <div key={i}>{e.join(' ')}</div>
+         ))}
+         ...
+      </div>
    </Link>
 );
 

@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -10,31 +19,24 @@ const url_1 = require("url");
 const lodash_1 = __importDefault(require("lodash"));
 const fuse_js_1 = __importDefault(require("fuse.js"));
 const route = express_1.Router();
-let SearchIndex = [];
-let FuseIndex = fuse_js_1.default.createIndex(['name'], SearchIndex);
-const fuse = new fuse_js_1.default(SearchIndex, {
-    keys: ['name'],
-    threshold: 0.55,
-    includeScore: true,
-    useExtendedSearch: true,
-}, FuseIndex);
 exports.default = route;
-route.get('/', async (req, res) => {
+route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req;
-    if (SearchIndex.length < 1) {
-        SearchIndex = await database_1.default.find({});
-        FuseIndex = fuse_js_1.default.createIndex(['name'], SearchIndex);
-    }
+    const SearchIndex = yield database_1.default.find({});
+    const fuse = new fuse_js_1.default(SearchIndex, {
+        keys: ['name'],
+        includeScore: true,
+        useExtendedSearch: true,
+    });
     if (lodash_1.default.isString(query.q)) {
-        fuse.setCollection(SearchIndex, FuseIndex);
         const results = fuse.search(query.q, {
-            limit: 10,
+            limit: 20,
         });
-        return res.jsonp(results);
+        return res.json(results);
     }
-    res.jsonp(null);
-});
-route.get('/mangas', async (req, res) => {
+    res.json(null);
+}));
+route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req;
     let results = database_1.default.find({});
     if (query.limit) {
@@ -46,20 +48,20 @@ route.get('/mangas', async (req, res) => {
         results.skip(query.offset);
     }
     if (lodash_1.default.has(query, 'refresh')) {
-        await database_1.default.remove({}, {
+        yield database_1.default.remove({}, {
             multi: true,
         });
-        const mangaData = await folder_lister_1.dirSync();
-        await database_1.default.insert(mangaData);
+        const mangaData = yield folder_lister_1.dirSync();
+        yield database_1.default.insert(mangaData);
         results = database_1.default.find({});
     }
     if (lodash_1.default.has(query, '_updateCovers')) {
-        await folder_lister_1.updateCovers();
-        await database_1.default.remove({}, {
+        yield folder_lister_1.updateCovers();
+        yield database_1.default.remove({}, {
             multi: true,
         });
-        const mangaData = await folder_lister_1.dirSync();
-        await database_1.default.insert(mangaData);
+        const mangaData = yield folder_lister_1.dirSync();
+        yield database_1.default.insert(mangaData);
         results = database_1.default.find({});
     }
     if (lodash_1.default.isString(query.sort) && lodash_1.default.isString(query.order)) {
@@ -70,7 +72,7 @@ route.get('/mangas', async (req, res) => {
             results = results.sort(lodash_1.default.fromPairs(query.order));
         }
     }
-    const totalCount = await database_1.default.count({});
+    const totalCount = yield database_1.default.count({});
     if (query.page) {
         query.page = Number(query.page);
         if (!query.limit) {
@@ -111,19 +113,18 @@ route.get('/mangas', async (req, res) => {
         res.setHeader('x-page-control', pageHeaderQuery);
     }
     res.setHeader('x-total-count', totalCount);
-    const json = await results.exec();
-    SearchIndex = [...SearchIndex, ...json];
+    const json = yield results.exec();
     res.jsonp(json);
-});
-route.get('/manga/:id', async (req, res) => {
-    const manga = await database_1.default.findOne({
+}));
+route.get('/manga/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const manga = yield database_1.default.findOne({
         id: Number(req.params.id),
     });
     if (manga) {
-        const data = await folder_lister_1.mangaData(manga);
+        const data = yield folder_lister_1.mangaData(manga);
         manga.data = data;
         return res.jsonp(manga);
     }
     throw new Error('Manga not found');
-});
+}));
 //# sourceMappingURL=api.route.js.map
