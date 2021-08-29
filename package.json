@@ -4,8 +4,6 @@
    "description": "",
    "main": "server.js",
    "dependencies": {
-      "ajv": "^8.6.2",
-      "ajv-formats": "^2.1.1",
       "axios": "^0.21.1",
       "chalk": "^4.1.0",
       "compression": "^1.7.4",
@@ -20,10 +18,7 @@
       "lodash": "^4.17.21",
       "mariadb": "^2.5.4",
       "morgan": "^1.10.0",
-      "nedb-promises": "^5.0.0",
-      "reflect-metadata": "^0.1.13",
-      "sequelize": "^6.6.5",
-      "sequelize-typescript": "^2.1.0"
+      "nedb-promises": "^5.0.0"
    },
    "scripts": {
       "gitpod:start": "nodemon src/server.ts",
@@ -64,7 +59,6 @@
       "@types/morgan": "^1.9.3",
       "@types/nedb": "^1.8.12",
       "@types/node": "^16.6.1",
-      "@types/validator": "*",
       "nodemon": "^2.0.12",
       "ts-node": "^10.2.1",
       "typescript": "^4.3.5"

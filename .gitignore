@@ -1,9 +1,5 @@
 node_modules/
-**/node_modules/**
 DJ/
 *.sublime-project
 *.sublime-workspace
 N/
-server/session.json
-server/Data.json
-old-client/

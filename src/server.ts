@@ -1,6 +1,5 @@
 require('dotenv').config();
 require('express-async-errors');
-import 'reflect-metadata';
 import express from 'express';
 import { normalize, join } from 'path';
 import createError, { HttpError } from 'http-errors';

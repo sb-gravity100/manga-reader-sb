@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { useSearchParam } from 'react-use';
-import { css, StyleSheet } from 'aphrodite';
+import { useCss, useSearchParam } from 'react-use';
 import { ProgressBar } from 'scrolling-based-progressbar';
 import MangaView from './MangaView';
 import { useSpring, animated as anim } from 'react-spring';
@@ -9,6 +8,7 @@ import ErrorBlock from './sub-components/ErrorBlock';
 import styles from '../style.module.scss';
 import { useGetMangaQuery } from '../slices/MangaApi';
 import { useSelector } from '../store';
+import classNames from 'classnames';
 
 const Manga = () => {
    const mangaID = useSearchParam('id') || '';
@@ -20,6 +20,13 @@ const Manga = () => {
       isFetching,
    } = useGetMangaQuery(Number(mangaID));
    const controls = useSelector((state) => state.controls);
+   const brightnessAdjust = useCss({
+      filter: `brightness(${controls.brightness}%)`,
+   });
+   const widthAdjust = useCss({
+      maxWidth: `${((controls.zoom || 5) / 10 + 0.5) * 700}px`,
+      transition: '0.3s',
+   });
    const loading_props = {
       text: useSpring({
          from: {
@@ -30,15 +37,6 @@ const Manga = () => {
          reset: loading,
       }),
    };
-   const viewerStyles = StyleSheet.create({
-      brightnessAdjust: {
-         filter: `brightness(${controls.brightness}%)`,
-      },
-      widthAdjust: {
-         maxWidth: `${((controls.zoom || 5) / 10 + 0.5) * 700}px`,
-         transition: '0.3s',
-      },
-   });
 
    useEffect(() => {
       if (loading) {
@@ -87,10 +85,7 @@ const Manga = () => {
                   brightVal={controls.brightness}
                />
                <div
-                  className={css(
-                     viewerStyles.brightnessAdjust,
-                     viewerStyles.widthAdjust
-                  )}
+                  className={classNames(brightnessAdjust, widthAdjust)}
                   id="viewer"
                >
                   {!loading &&

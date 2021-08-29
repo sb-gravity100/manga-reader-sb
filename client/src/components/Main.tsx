@@ -5,11 +5,7 @@ import Reader from './Reader';
 import ErrorBlock from './sub-components/ErrorBlock';
 import { useState, useEffect, ChangeEventHandler } from 'react';
 import styles from '../style.module.scss';
-import {
-   useAllMangasQuery,
-   useLazyAllMangasQuery,
-   useSearchQuery,
-} from '../slices/MangaApi';
+import { useLazyAllMangasQuery, useSearchQuery } from '../slices/MangaApi';
 import { useDispatch, useSelector } from '../store';
 import { clearSearch, setSearch } from '../slices/ControlSlice';
 import { SearchBarProps } from './props';
