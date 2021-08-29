@@ -21,27 +21,32 @@ export async function dirSync() {
       withFileTypes: true,
    });
    const db: Manga[] = [];
+   const promiseFuncs: Promise<void>[] = []
 
    for (let k = dir.length - 1; k >= 0; k--) {
-      const folder = dir[k];
-      if (folder.isDirectory()) {
-         const pathname = path.join('%DJ_PATH%', folder.name);
-         const realPath = pathname.replace(
-            /%DJ_PATH%/,
-            path.normalize(DJ_PATH)
-         );
-         const { birthtime } = await fs.promises.stat(realPath);
-         const size = await getDirSize(realPath);
-         const createdAt = new Date(birthtime);
-         db.push({
-            name: folder.name,
-            pathname,
-            createdAt,
-            size,
-            cover: `cdn/manga/${folder.name}/cover.jpg`,
-         });
+      const func = async () => {
+         const folder = dir[k];
+         if (folder.isDirectory()) {
+            const pathname = path.join('%DJ_PATH%', folder.name);
+            const realPath = pathname.replace(
+               /%DJ_PATH%/,
+               path.normalize(DJ_PATH)
+            );
+            const { birthtime } = await fs.promises.stat(realPath);
+            const size = await getDirSize(realPath);
+            const createdAt = new Date(birthtime);
+            db.push({
+               name: folder.name,
+               pathname,
+               createdAt,
+               size,
+               cover: `cdn/manga/${folder.name}/cover.jpg`,
+            });
+         }
       }
+      promiseFuncs.push(func())
    }
+   await Promise.all(promiseFuncs)
    const newDB = _.sortBy(db, ['createdAt']).map((e, i) => {
       e.id = i + 1;
       return e;
