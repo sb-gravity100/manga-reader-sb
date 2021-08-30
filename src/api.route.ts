@@ -138,6 +138,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       res.jsonp({
          items: json,
          ...pageHeaders,
+         total: totalPage
       });
    } else {
       const json = await results.exec();

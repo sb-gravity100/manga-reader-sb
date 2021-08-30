@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const database_1 = __importDefault(require("./database"));
 const folder_lister_1 = require("./lib/folder_lister");
-const url_1 = require("url");
 const lodash_1 = __importDefault(require("lodash"));
 const fuse_js_1 = __importDefault(require("fuse.js"));
+const qs_1 = __importDefault(require("qs"));
 const route = express_1.Router();
 exports.default = route;
 route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -73,48 +73,51 @@ route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
     const totalCount = yield database_1.default.count({});
+    res.setHeader('x-total-count', totalCount);
     if (query.page) {
         query.page = Number(query.page);
         if (!query.limit) {
             query.limit = 10;
         }
         query.offset = query.page * query.limit;
-        const totalPage = Math.floor(totalCount / query.limit);
+        const totalPage = Math.ceil(totalCount / query.limit);
         const pageUrl = `${req.protocol}://${req.headers.host}${req.url.split('?')[0]}`;
         const pageHeaders = {};
         if (query.page < totalPage) {
-            const pageQuery = new url_1.URLSearchParams();
-            pageQuery.append('page', (query.page + 1).toString());
-            pageQuery.append('limit', query.limit.toString());
-            pageHeaders.next = `${pageUrl}?${pageQuery.toString()}`;
+            pageHeaders.next = {
+                page: query.page + 1,
+                limit: query.limit,
+            };
         }
-        if (query.page > 0) {
-            const pageQuery = new url_1.URLSearchParams();
-            pageQuery.append('page', (query.page - 1).toString());
-            pageQuery.append('limit', query.limit.toString());
-            pageHeaders.prev = `${pageUrl}?${pageQuery.toString()}`;
+        if (query.page > 0 && totalPage > query.page + 1) {
+            pageHeaders.prev = {
+                page: query.page - 1,
+                limit: query.limit,
+            };
         }
-        if (query.page !== totalPage) {
-            const pageQuery = new url_1.URLSearchParams();
-            pageQuery.append('page', totalPage.toString());
-            pageQuery.append('limit', query.limit.toString());
-            pageHeaders.last = `${pageUrl}?${pageQuery.toString()}`;
+        if (query.page + 1 !== totalPage) {
+            pageHeaders.last = {
+                page: totalPage - 1,
+                limit: query.limit,
+            };
         }
         if (query.page !== 0) {
-            const pageQuery = new url_1.URLSearchParams();
-            pageQuery.append('page', '0');
-            pageQuery.append('limit', query.limit.toString());
-            pageHeaders.first = `${pageUrl}?${pageQuery.toString()}`;
+            pageHeaders.first = {
+                page: 0,
+                limit: query.limit,
+            };
         }
-        const pageHeaderQuery = lodash_1.default.chain(pageHeaders)
-            .toPairs()
-            .invokeMap('join', '=')
-            .value();
-        res.setHeader('x-page-control', pageHeaderQuery);
+        res.setHeader('x-total-page', totalPage);
+        lodash_1.default.forIn(pageHeaders, (val, key) => {
+            res.setHeader(`x-page-${key}`, qs_1.default.stringify(val));
+        });
+        const json = yield results.exec();
+        res.jsonp(Object.assign(Object.assign({ items: json }, pageHeaders), { total: totalPage }));
     }
-    res.setHeader('x-total-count', totalCount);
-    const json = yield results.exec();
-    res.jsonp(json);
+    else {
+        const json = yield results.exec();
+        res.jsonp(json);
+    }
 }));
 route.get('/manga/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const manga = yield database_1.default.findOne({
