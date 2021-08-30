@@ -1,11 +1,9 @@
 tasks:
-   - init: yarn --check-files --force
-     command: yarn
+   - init: npm i
      name: Server
 
-   - name: Backend
-     init: cd client && yarn --check-files --force
-     before: yarn
+   - name: Client
+     init: cd client && npm i
 ports:
    - port: 3000
      visibility: public
