@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FaPlus, FaMinus } from 'react-icons/fa';
+import { FaPlus, FaMinus, FaSun, FaLightbulb } from 'react-icons/fa';
 import { setBrightness, setZoom } from '../slices/ControlSlice';
 import { useDispatch } from '../store';
 import { MangaHeaderProps } from './props';
@@ -16,16 +16,9 @@ const MangaHeader: FC<MangaHeaderProps> = ({
          <h2 className="logo">{manga?.name || '...'}</h2>
          <nav>
             <div className="bright-control">
-               <span>{brightVal}</span>
-               <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  onChange={(e) =>
-                     dispatch(setBrightness(e.target.valueAsNumber))
-                  }
-                  value={brightVal}
-               />
+               <button>
+                  <FaLightbulb fontSize="1.1rem" />
+               </button>
             </div>
             <div className="zoom-control">
                <button

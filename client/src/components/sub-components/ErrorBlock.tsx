@@ -10,7 +10,7 @@ const ErrorBlock: FC<ErrorProps> = ({
    isFetching,
 }) => {
    if (hasErrors) {
-      console.log(hasErrors);
+      console.log(errors);
       return (
          <div className={styles.errorBlock}>
             <h3>Something went wrong...</h3>
@@ -21,7 +21,11 @@ const ErrorBlock: FC<ErrorProps> = ({
             >
                {isFetching ? 'Retrying...' : 'Retry?'}
             </button>
-            <code className={styles.errorMsg}>{errors?.message}</code>
+            <code className={styles.errorMsg}>
+               {errors?.message || errors?.originalStatus === 404
+                  ? 'Connection to server cannot be reached.'
+                  : errors.error}
+            </code>
          </div>
       );
    }

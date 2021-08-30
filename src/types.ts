@@ -20,7 +20,4 @@ export type SearchResult = Fuse.FuseResult<Manga>;
 export type MangasResult = {
    items: Manga[];
    total: number;
-} & Record<
-   'last' | 'first' | 'next' | 'prev' | string,
-   string | { limit: number; page: number }
->;
+} & Record<'last' | 'first' | 'next' | 'prev', { limit: number; page: number }>;

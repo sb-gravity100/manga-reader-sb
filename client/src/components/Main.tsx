@@ -5,12 +5,22 @@ import Reader from './Reader';
 import ErrorBlock from './sub-components/ErrorBlock';
 import { useState, useEffect, ChangeEventHandler } from 'react';
 import styles from '../style.module.scss';
-import { useLazyAllMangasQuery, useSearchQuery } from '../slices/MangaApi';
+import {
+   useAllMangasQuery,
+   useLazyAllMangasQuery,
+   useSearchQuery,
+} from '../slices/MangaApi';
 import { useDispatch, useSelector } from '../store';
-import { clearSearch, setSearch, toggleBlur } from '../slices/ControlSlice';
+import {
+   clearSearch,
+   setPage,
+   setSearch,
+   toggleBlur,
+} from '../slices/ControlSlice';
 import { SearchBarProps } from './props';
 import _ from 'lodash';
 import { SearchResult } from '../../../src/types';
+import classNames from 'classnames';
 
 const SearchComponent: FC<SearchResult> = (props) => (
    <Link
@@ -65,68 +75,75 @@ const SearchBar: FC<SearchBarProps> = (props) => {
 };
 
 const Main = () => {
-   const [getMangas, mangas] = useLazyAllMangasQuery();
+   const { page, limit } = useSelector((state) => state.controls);
    const isBlur = useSelector((state) => state.controls.blur);
+   const mangas = useAllMangasQuery({
+      page: page.current,
+      limit,
+   });
    const dispatch = useDispatch();
-   useEffect(() => {
-      getMangas();
-   }, []);
 
-   console.log(mangas);
+   useEffect(() => {
+      dispatch(
+         setPage({
+            current: 0,
+            next: mangas.data?.next?.page,
+            prev: mangas.data?.prev?.page,
+            last: mangas.data?.last?.page,
+            first: mangas.data?.first?.page,
+            total: mangas.data?.total,
+         })
+      );
+   }, [mangas, dispatch, setPage]);
 
    return (
       <div id="main">
          <div className={styles.header_flex}>
             <h1 className="logo">
-               <Link to="/" style={{ color: 'white' }}>
+               <Link to="/">
                   <div>Reader</div>
                </Link>
             </h1>
             <div className="btn-flex">
                <button
-                  onClick={() =>
-                     getMangas({
-                        refresh: true,
-                     })
-                  }
+                  onClick={() => mangas.refetch()}
                   className={styles.refresh_btn}
                >
                   <MdRefresh fontSize="1.2rem" />
-                  <span>Refresh</span>
+                  <div>Refresh</div>
                </button>
                <button
-                  onClick={() =>
-                     getMangas({
-                        _updateCovers: true,
-                     })
-                  }
+                  onClick={() => mangas.refetch()}
                   className={styles.refresh_btn}
                >
                   <MdRefresh fontSize="1.2rem" />
-                  <span>Covers</span>
+                  <div>Covers</div>
                </button>
-               <div className="is-blur-check">
-                  <div>Blur</div>
+               <button
+                  onClick={() => dispatch(toggleBlur())}
+                  className={classNames('is-blur-check', styles.refresh_btn)}
+               >
                   <input
                      type="checkbox"
                      checked={isBlur}
                      onChange={() => dispatch(toggleBlur())}
                   />
-               </div>
+                  <div>Blur</div>
+               </button>
             </div>
          </div>
          <SearchBar />
          <ErrorBlock
-            retry={() => getMangas()}
+            retry={() => mangas.refetch()}
             hasErrors={mangas.isError}
             errors={mangas.error}
             isFetching={mangas.isFetching}
          >
             <Reader
-               total={mangas?.data?.length}
-               data={mangas?.data}
+               total={mangas?.data?.items.length}
+               data={mangas?.data?.items}
                loading={mangas.isFetching}
-               refetch={() => getMangas()}
+               refetch={() => mangas.refetch()}
             />
          </ErrorBlock>
       </div>

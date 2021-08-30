@@ -9,7 +9,7 @@ import {
 import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import _ from 'lodash';
 import qs from 'qs';
-import { Manga, SearchResult } from '../../../src/types';
+import { Manga, SearchResult, MangasResult } from '../../../src/types';
 
 interface MangasQuery {
    offset?: number;
@@ -46,11 +46,14 @@ const ApiSlice = createApi({
       baseUrl: '/api',
    }),
    endpoints: (builder) => ({
-      allMangas: builder.query<Manga[], MangasQuery | void>({
+      allMangas: builder.query<MangasResult, MangasQuery | void>({
          query(opts) {
             return {
                url: '/mangas',
-               params: opts || {},
+               params: opts || {
+                  page: 0,
+                  limit: 10,
+               },
             };
          },
       }),

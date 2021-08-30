@@ -10,8 +10,6 @@ import { useSelector } from '../store';
 import { StyleSheet, css } from 'aphrodite';
 import Loading from './sub-components/Loading';
 
-type ControlProps = { brightness?: number; zoom?: number };
-
 const Manga = () => {
    const mangaID = useSearchParam('id') || '';
    const {
@@ -60,9 +58,9 @@ const Manga = () => {
                {!loading && (
                   <ProgressBar
                      height="5px"
-                     color="#aae"
+                     bgColor="#1c2122"
                      top="30px"
-                     bgColor="#546"
+                     color="#50d8d7"
                   />
                )}
                <MangaHeader

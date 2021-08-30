@@ -1,22 +1,37 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
+type PageProps = {
+   current: number;
+   prev: number;
+   next: number;
+   first: number;
+   last: number;
+   total: number;
+};
+
 interface ControlState {
    zoom: number;
    brightness: number;
    search: string;
    blur: boolean;
-   page: number;
+   page: PageProps;
    limit: number;
+   refresh: boolean;
+   _updateCovers: boolean;
 }
 
 const initialState = {
    blur: true,
    zoom: 5,
-   page: 0,
+   page: {
+      current: 0,
+   },
    limit: 10,
    brightness: 100,
    search: '',
+   refresh: false,
+   _updateCovers: false,
 } as ControlState;
 
 const ControlSlice = createSlice({
@@ -38,10 +53,34 @@ const ControlSlice = createSlice({
       toggleBlur(state) {
          state.blur = !state.blur;
       },
+      toggleRefresh(state) {
+         state.refresh = !state.refresh;
+      },
+      toggleCpvers(state) {
+         state._updateCovers = !state._updateCovers;
+      },
+      setPage(state, action: PayloadAction<Partial<PageProps>>) {
+         Object.assign(state.page, action.payload);
+      },
+      gotoPage(
+         state,
+         action: PayloadAction<Exclude<keyof PageProps, 'total' | 'current'>>
+      ) {
+         state.page.current = state.page[action.payload];
+      },
    },
 });
 
-export const { setZoom, setBrightness, setSearch, clearSearch, toggleBlur } =
-   ControlSlice.actions;
+export const {
+   setZoom,
+   setBrightness,
+   setSearch,
+   clearSearch,
+   toggleBlur,
+   toggleCpvers,
+   toggleRefresh,
+   setPage,
+   gotoPage,
+} = ControlSlice.actions;
 
 export default ControlSlice.reducer;

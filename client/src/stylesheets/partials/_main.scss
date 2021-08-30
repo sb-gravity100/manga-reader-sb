@@ -107,6 +107,7 @@
          font-family: $font;
          transition: background-color 0.3s;
          border-radius: 10px;
+         caret-color: $x-light;
 
          &:focus {
             background-color: lighten($x-dark, 5);

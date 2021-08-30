@@ -83,7 +83,7 @@ route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const totalPage = Math.ceil(totalCount / query.limit);
         const pageUrl = `${req.protocol}://${req.headers.host}${req.url.split('?')[0]}`;
         const pageHeaders = {};
-        if (query.page < totalPage) {
+        if (query.page + 1 < totalPage) {
             pageHeaders.next = {
                 page: query.page + 1,
                 limit: query.limit,

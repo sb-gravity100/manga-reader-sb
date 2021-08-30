@@ -106,7 +106,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
          'last' | 'first' | 'next' | 'prev' | string,
          string | { limit: number; page: number }
       > = {};
-      if (query.page < totalPage) {
+      if (query.page + 1 < totalPage) {
          pageHeaders.next = {
             page: query.page + 1,
             limit: query.limit,
@@ -138,7 +138,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       res.jsonp({
          items: json,
          ...pageHeaders,
-         total: totalPage
+         total: totalPage,
       });
    } else {
       const json = await results.exec();

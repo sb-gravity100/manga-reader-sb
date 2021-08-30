@@ -3,7 +3,6 @@
 
 %btn {
    $bgcolor: #334;
-   font-family: 'Jetbrains Mono', monospace;
    color: white;
    @include bgtext($bgcolor);
    border: none;
@@ -16,10 +15,10 @@
    justify-content: center;
 
    &:hover {
-      color: #dde;
+      color: $x-primary;
    }
    &:focus {
-      box-shadow: 0 0 5px #333;
+      box-shadow: 0 0 5px $x-secondary;
    }
 }
 
@@ -68,7 +67,6 @@
    background-color: #335;
    color: #eee;
    font-size: 1.4rem;
-   font-family: 'Jetbrains Mono', monospace;
 }
 .GoHomeLink {
    padding: 0.5rem;
@@ -89,11 +87,11 @@
 }
 .errorBlock {
    width: 100vw;
+   flex-grow: 1;
    display: flex;
    align-items: center;
    justify-content: center;
    flex-direction: column;
-   height: 100vh;
 }
 .retryBtn {
    padding: 5px;
@@ -122,6 +120,11 @@
    align-items: center;
    justify-content: space-between;
    padding: 0.4rem 1rem;
+   background: $x-primary;
+
+   .logo a {
+      font-size: 1.4rem !important;
+   }
 }
 .refresh_btn {
    background-color: transparent;
