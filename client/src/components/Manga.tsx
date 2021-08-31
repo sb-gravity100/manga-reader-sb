@@ -18,6 +18,7 @@ const Manga = () => {
       error,
       refetch,
       isFetching,
+      isError,
    } = useGetMangaQuery(Number(mangaID));
    const controls = useSelector((state) => state.controls);
    const widthValue = (controls.zoom / 10 + 0.5) * 700;
@@ -46,10 +47,10 @@ const Manga = () => {
    }, []);
 
    return (
-      <div>
+      <div className="manga-container">
          {loading && <Loading />}
          <ErrorBlock
-            hasErrors={Boolean(error)}
+            hasErrors={isError}
             errors={error}
             retry={refetch}
             isFetching={isFetching}

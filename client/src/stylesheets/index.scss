@@ -19,14 +19,17 @@
       width: 0.6rem;
       height: 0.5rem;
       transition: 0.3s;
+      overflow: hidden;
    }
 
    &::-webkit-scrollbar-track {
-      background: #bbb;
+      background: transparent;
       transition: 0.3s;
+      overflow: hidden;
    }
 
    &::-webkit-scrollbar-thumb {
+      overflow: hidden;
       $primary-color: $x-secondary;
       background-color: $primary-color;
       transition: 0.3s;

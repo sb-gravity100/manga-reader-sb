@@ -129,17 +129,24 @@
 .refresh_btn {
    background-color: transparent;
 }
-.TopComponent {
+.StickyBar {
    position: fixed;
    bottom: 3rem;
    right: 1rem;
-   padding: 1rem;
-   background: #eee;
-   color: #000;
-   z-index: 1000;
-   opacity: 0.4;
-   &:hover {
+   display: flex;
+   flex-direction: column;
+
+   button,
+   a {
+      padding: 1rem;
+      background: #eee;
       color: #000;
-      opacity: 0.9;
+      z-index: 9999;
+      opacity: 0.35;
+
+      &:hover {
+         color: #000;
+         opacity: 0.9;
+      }
    }
 }

@@ -35,7 +35,8 @@ export async function dirSync(): Promise<Manga[]> {
       });
       db.push(
          ...res.data.map((e) => {
-            e.name = e.name.map((e) => _.capitalize(e)).join(' ');
+            e.name = e.name.map(_.capitalize).join(' ');
+            e.id = Number(e.id);
             return e;
          })
       );
@@ -97,7 +98,7 @@ export async function mangaData(manga: Manga) {
             ) {
                return {
                   name: file.name,
-                  path: `cdn/manga/${manga.name}/${file.name}`,
+                  path: `cdn/manga/${path.basename(mangaPath)}/${file.name}`,
                };
             }
          }

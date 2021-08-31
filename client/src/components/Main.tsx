@@ -21,7 +21,7 @@ import { SearchBarProps } from './props';
 import _ from 'lodash';
 import { SearchResult } from '../../../src/types';
 import classNames from 'classnames';
-import { useSearchParam } from 'react-use';
+import { useSearchParam, useToggle } from 'react-use';
 
 const SearchComponent: FC<SearchResult> = (props) => (
    <Link
@@ -35,17 +35,17 @@ const SearchComponent: FC<SearchResult> = (props) => (
             backgroundImage: `url('${props.item.cover}')`,
          }}
       ></div>
-      <div>
+      <div className="name">
          {_.chunk(props.item.name.split(' '), 8).map((e, i) => (
-            <div key={i}>{e.join(' ')}</div>
+            <p key={i}>{e.join(' ')}</p>
          ))}
-         ...
       </div>
    </Link>
 );
 
 const SearchBar: FC<SearchBarProps> = (props) => {
    const searchQuery = useSelector((state) => state.controls.search);
+   const [isFocused, toggleFocus] = useToggle(false);
    const dispatch = useDispatch();
    const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
       if (!e.target.value) {
@@ -63,14 +63,27 @@ const SearchBar: FC<SearchBarProps> = (props) => {
             placeholder="Search..."
             onChange={handleSearchChange}
             autoComplete="off"
+            autoCorrect="off"
+            onFocus={() => toggleFocus(true)}
+            onBlur={() => toggleFocus(false)}
          />
-         {search.isSuccess && search.data.length > 0 && (
-            <div className="search-list">
-               {search.data.map((manga) => (
-                  <SearchComponent {...manga} />
-               ))}
-            </div>
-         )}
+         <div
+            className="search-list"
+            style={{
+               display: 'non',
+            }}
+         >
+            {!search.isUninitialized && search.isFetching && (
+               <div className="search-loading loading-animation">
+                  Loading results...
+               </div>
+            )}
+            {search.isSuccess && search.data.length === 0 && isFocused && (
+               <div className="search-loading">Nothing Found! {':('}</div>
+            )}
+            {search.isSuccess &&
+               search.data.map((manga) => <SearchComponent {...manga} />)}
+         </div>
       </div>
    );
 };
@@ -88,10 +101,6 @@ const Main = () => {
          limit,
       });
    }, [pageQuery]);
-
-   if (mangas.isSuccess) {
-      console.log(mangas.data);
-   }
 
    useEffect(() => {
       dispatch(

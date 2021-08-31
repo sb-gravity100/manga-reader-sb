@@ -59,7 +59,12 @@ const ApiSlice = createApi({
       }),
       getManga: builder.query<Manga, number>({
          query(id) {
-            return `/manga/${id}`;
+            return {
+               url: `/manga`,
+               params: {
+                  id,
+               },
+            };
          },
       }),
       search: builder.query<SearchResult[], string>({

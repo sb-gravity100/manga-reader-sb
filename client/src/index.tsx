@@ -2,39 +2,42 @@ import 'intersection-observer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom';
 import store from './store';
-import { FaChevronUp } from 'react-icons/fa';
+import { FaAngleUp } from 'react-icons/fa';
 import App from './App';
 import styles from './style.module.scss';
 import './stylesheets/index.scss';
 import Footer from './Footer';
 
 const ToTopComponent: React.FC = () => {
-  return (
-    <button
-      className={styles.TopComponent}
-      onClick={() =>
-        window.scroll({
-          behavior: 'smooth',
-          top: 0,
-          left: 0,
-        })
-      }>
-      <FaChevronUp fontSize="2rem" />
-    </button>
-  );
+   const location = useLocation();
+   console.log(location.pathname);
+   return (
+      <div className={styles.StickyBar}>
+         <button
+            onClick={() =>
+               window.scroll({
+                  behavior: 'smooth',
+                  top: 0,
+                  left: 0,
+               })
+            }
+         >
+            <FaAngleUp fontSize="3rem" />
+         </button>
+         {location.pathname.trim() !== '/' && <Link to="/">Go Back</Link>}
+      </div>
+   );
 };
 
 ReactDOM.render(
-  <>
-    <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
-      <ToTopComponent />
-      <Footer />
-    </Provider>
-  </>,
-  document.querySelector('#container')
+   <Router>
+      <Provider store={store}>
+         <App />
+         <ToTopComponent />
+         <Footer />
+      </Provider>
+   </Router>,
+   document.querySelector('#container')
 );

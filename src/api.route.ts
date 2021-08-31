@@ -35,6 +35,7 @@ route.get('/search', async (req, res) => {
    const fuse = new Fuse(SearchIndex, {
       keys: ['name'],
       includeScore: true,
+      threshold: 0.5,
       useExtendedSearch: true,
    });
    if (_.isString(query.q)) {
@@ -151,15 +152,15 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       });
    }
 });
-route.get('/manga/:id', async (req, res) => {
+route.get('/manga', async (req, res) => {
    const manga = await db.findOne<types.Manga>({
-      id: `${req.params.id}`,
+      id: Number(req.query.id),
    });
    if (manga) {
       const data = await mangaData(manga);
       manga.data = data as any;
       res.jsonp(manga);
    } else {
-      res.json(null);
+      res.status(404).json(null);
    }
 });

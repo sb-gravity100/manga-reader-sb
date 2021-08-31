@@ -79,6 +79,7 @@ boot()
             _next: express.NextFunction
          ) => {
             const Errors = { ...err };
+            console.log(err);
             res.status(err.status || 500).json(Errors);
          }
       );
