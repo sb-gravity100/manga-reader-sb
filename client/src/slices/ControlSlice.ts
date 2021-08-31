@@ -30,8 +30,6 @@ const initialState = {
    limit: 10,
    brightness: 100,
    search: '',
-   refresh: false,
-   _updateCovers: false,
 } as ControlState;
 
 const ControlSlice = createSlice({

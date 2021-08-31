@@ -48,6 +48,7 @@ route.get('/search', async (req, res) => {
 
 route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
    const { query } = req;
+   console.log(query);
    let results = db.find<types.Manga>({});
    if (query.limit) {
       query.limit = Number(query.limit);
@@ -152,12 +153,13 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
 });
 route.get('/manga/:id', async (req, res) => {
    const manga = await db.findOne<types.Manga>({
-      id: Number(req.params.id),
+      id: `${req.params.id}`,
    });
    if (manga) {
       const data = await mangaData(manga);
       manga.data = data as any;
-      return res.jsonp(manga);
+      res.jsonp(manga);
+   } else {
+      res.json(null);
    }
-   throw new Error('Manga not found');
 });

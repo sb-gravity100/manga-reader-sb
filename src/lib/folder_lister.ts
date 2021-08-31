@@ -35,11 +35,7 @@ export async function dirSync(): Promise<Manga[]> {
       });
       db.push(
          ...res.data.map((e) => {
-            e.name = e.name.join(' ');
-            e.cover = `http://lorempixel.com/${randomInt(190, 250)}/${randomInt(
-               250,
-               390
-            )}/cats`;
+            e.name = e.name.map((e) => _.capitalize(e)).join(' ');
             return e;
          })
       );
