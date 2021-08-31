@@ -27,14 +27,14 @@ const api_route_1 = __importDefault(require("./api.route"));
 console.log(process.cwd());
 const { NODE_ENV, PORT } = process.env;
 const CWD = process.cwd();
-const Join = (...dir) => path_1.normalize(path_1.join(CWD, ...dir));
+const Join = (...dir) => (0, path_1.normalize)((0, path_1.join)(CWD, ...dir));
 const DJ_PATH = Join('DJ/');
 const port = PORT;
 const ASSETS_PATH = Join('public/');
 const debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
 const boot = () => __awaiter(void 0, void 0, void 0, function* () {
-    const app = express_1.default();
+    const app = (0, express_1.default)();
     yield database_1.default.ensureIndex({
         fieldName: 'id',
         unique: true,
@@ -42,7 +42,7 @@ const boot = () => __awaiter(void 0, void 0, void 0, function* () {
     yield database_1.default.remove({}, {
         multi: true,
     });
-    const mangaData = yield folder_lister_1.dirSync();
+    const mangaData = yield (0, folder_lister_1.dirSync)();
     yield database_1.default.insert(mangaData);
     debug('Database ready!');
     yield new Promise((res) => app.listen(Number(PORT), res));
@@ -51,8 +51,8 @@ const boot = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 boot()
     .then((app) => {
-    app.use(cors_1.default());
-    app.use(morgan_1.default('dev', {
+    app.use((0, cors_1.default)());
+    app.use((0, morgan_1.default)('dev', {
         skip: (req) => {
             if (req.url.length > 50) {
                 return false;
@@ -63,13 +63,13 @@ boot()
             write: (msg) => debug(msg.trimEnd()),
         },
     }));
-    app.use(compression_1.default());
+    app.use((0, compression_1.default)());
     app.use('/cdn/manga', express_1.default.static(DJ_PATH));
     app.use(express_1.default.static(ASSETS_PATH));
-    app.get('/(*/)?', (_req, res) => res.sendFile(path_1.join(ASSETS_PATH, 'index.html')));
-    app.get('/manga', (_req, res) => res.sendFile(path_1.join(ASSETS_PATH, 'index.html')));
+    app.get('/(*/)?', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
+    app.get('/manga', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
     app.use('/api', api_route_1.default);
-    app.use((_req, _res, next) => next(http_errors_1.default(404)));
+    app.use((_req, _res, next) => next((0, http_errors_1.default)(404)));
     app.use((err, _req, res, _next) => {
         const Errors = Object.assign({}, err);
         res.status(err.status || 500).json(Errors);
