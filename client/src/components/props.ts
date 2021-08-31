@@ -31,15 +31,7 @@ export interface ErrorProps {
 }
 
 export interface NavProps {
-   totalCount: number;
-   nextPage?: {
-      limit: number;
-      page: number;
-   };
-   prevPage?: {
-      limit: number;
-      page: number;
-   };
+   refetch: ReaderProps['refetch'];
 }
 
 export interface SearchBarProps {}

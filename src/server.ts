@@ -29,9 +29,9 @@ const boot = async () => {
       fieldName: 'id',
       unique: true,
    });
-   await db.remove({}, { multi: true })
+   await db.remove({}, { multi: true });
    const mangaData = await dirSync();
-   await db.insert(mangaData)
+   await db.insert(mangaData);
    debug('Database ready!');
 
    await new Promise<void>((res) => app.listen(Number(PORT), res));

@@ -56,7 +56,7 @@ const ControlSlice = createSlice({
       toggleRefresh(state) {
          state.refresh = !state.refresh;
       },
-      toggleCpvers(state) {
+      toggleCovers(state) {
          state._updateCovers = !state._updateCovers;
       },
       setPage(state, action: PayloadAction<Partial<PageProps>>) {
@@ -77,7 +77,7 @@ export const {
    setSearch,
    clearSearch,
    toggleBlur,
-   toggleCpvers,
+   toggleCovers,
    toggleRefresh,
    setPage,
    gotoPage,

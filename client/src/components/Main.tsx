@@ -21,6 +21,7 @@ import { SearchBarProps } from './props';
 import _ from 'lodash';
 import { SearchResult } from '../../../src/types';
 import classNames from 'classnames';
+import { useSearchParam } from 'react-use';
 
 const SearchComponent: FC<SearchResult> = (props) => (
    <Link
@@ -76,17 +77,26 @@ const SearchBar: FC<SearchBarProps> = (props) => {
 
 const Main = () => {
    const { page, limit } = useSelector((state) => state.controls);
+   const pageQuery = useSearchParam('page');
    const isBlur = useSelector((state) => state.controls.blur);
-   const mangas = useAllMangasQuery({
-      page: page.current,
-      limit,
-   });
+   const [getMangas, mangas] = useLazyAllMangasQuery();
    const dispatch = useDispatch();
+
+   useEffect(() => {
+      getMangas({
+         page: pageQuery ? Number(pageQuery) : page.current,
+         limit,
+      });
+   }, [pageQuery]);
+
+   if (mangas.isSuccess) {
+      console.log(mangas.data);
+   }
 
    useEffect(() => {
       dispatch(
          setPage({
-            current: 0,
+            current: pageQuery ? Number(pageQuery) : 0,
             next: mangas.data?.next?.page,
             prev: mangas.data?.prev?.page,
             last: mangas.data?.last?.page,
@@ -94,7 +104,7 @@ const Main = () => {
             total: mangas.data?.total,
          })
       );
-   }, [mangas, dispatch, setPage]);
+   }, [mangas]);
 
    return (
       <div id="main">
@@ -106,14 +116,22 @@ const Main = () => {
             </h1>
             <div className="btn-flex">
                <button
-                  onClick={() => mangas.refetch()}
+                  onClick={() =>
+                     getMangas({
+                        refresh: true,
+                     })
+                  }
                   className={styles.refresh_btn}
                >
                   <MdRefresh fontSize="1.2rem" />
                   <div>Refresh</div>
                </button>
                <button
-                  onClick={() => mangas.refetch()}
+                  onClick={() =>
+                     getMangas({
+                        _updateCovers: true,
+                     })
+                  }
                   className={styles.refresh_btn}
                >
                   <MdRefresh fontSize="1.2rem" />
@@ -134,7 +152,7 @@ const Main = () => {
          </div>
          <SearchBar />
          <ErrorBlock
-            retry={() => mangas.refetch()}
+            retry={() => getMangas()}
             hasErrors={mangas.isError}
             errors={mangas.error}
             isFetching={mangas.isFetching}
@@ -143,7 +161,7 @@ const Main = () => {
                total={mangas?.data?.items.length}
                data={mangas?.data?.items}
                loading={mangas.isFetching}
-               refetch={() => mangas.refetch()}
+               refetch={getMangas}
             />
          </ErrorBlock>
       </div>

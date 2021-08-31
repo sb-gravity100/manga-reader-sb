@@ -58,10 +58,10 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       results.skip(query.offset);
    }
    if (!query.sort) {
-      query.sort = 'createdAt'
+      query.sort = 'createdAt';
    }
    if (!query.order) {
-      query.order = '1'
+      query.order = '1';
    }
    if (_.has(query, 'refresh')) {
       await db.remove(
@@ -105,9 +105,9 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       }
       query.offset = query.page * query.limit;
       const totalPage = Math.ceil(totalCount / query.limit);
-      const pageUrl = `${req.protocol}://${req.headers.host}${
-         req.url.split('?')[0]
-      }`;
+      if (query.page >= totalPage) {
+         query.page = totalPage - 1;
+      }
       const pageHeaders: Record<
          'last' | 'first' | 'next' | 'prev' | string,
          string | { limit: number; page: number }
@@ -118,24 +118,20 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
             limit: query.limit,
          };
       }
-      if (query.page > 0 && totalPage > query.page + 1) {
+      if (query.page > 0 && totalPage > query.page) {
          pageHeaders.prev = {
             page: query.page - 1,
             limit: query.limit,
          };
       }
-      if (query.page + 1 !== totalPage) {
-         pageHeaders.last = {
-            page: totalPage - 1,
-            limit: query.limit,
-         };
-      }
-      if (query.page !== 0) {
-         pageHeaders.first = {
-            page: 0,
-            limit: query.limit,
-         };
-      }
+      pageHeaders.first = {
+         page: 0,
+         limit: query.limit,
+      };
+      pageHeaders.last = {
+         page: totalPage - 1,
+         limit: query.limit,
+      };
       res.setHeader('x-total-page', totalPage);
       _.forIn(pageHeaders, (val, key) => {
          res.setHeader(`x-page-${key}`, qs.stringify(val));

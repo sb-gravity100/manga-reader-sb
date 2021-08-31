@@ -1,13 +1,14 @@
 node_modules
 /.pnp
-/DJ/*
-!/DJ/_mock_data
+/DJ
 .pnp.js
 # testing
 /coverage
 
 # production
+data.db
 /build
+db.json
 
 # misc
 .DS_Store
