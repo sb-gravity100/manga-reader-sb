@@ -57,6 +57,12 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       query.offset = Number(query.offset);
       results.skip(query.offset);
    }
+   if (!query.sort) {
+      query.sort = 'createdAt'
+   }
+   if (!query.order) {
+      query.order = '1'
+   }
    if (_.has(query, 'refresh')) {
       await db.remove(
          {},

@@ -23,9 +23,9 @@ function getDirSize(filepath) {
     return __awaiter(this, void 0, void 0, function* () {
         const dir = fs_1.default
             .readdirSync(filepath)
-            .map((e) => fs_1.default.promises.stat(path_1.default.join(filepath, e)));
+            .map(e => fs_1.default.promises.stat(path_1.default.join(filepath, e)));
         const d = yield Promise.all(dir);
-        return d.map((e_1) => e_1.size).reduce((p, n) => p + n);
+        return d.map(e_1 => e_1.size).reduce((p, n) => p + n);
     });
 }
 function dirSync() {
@@ -38,26 +38,25 @@ function dirSync() {
         for (let k = dir.length - 1; k >= 0; k--) {
             const folder = dir[k];
             if (process.env.NODE_ENV !== 'development' &&
-                folder.name === '_mock_data') {
-                return;
+                folder.name !== '_mock_data') {
+                const func = () => __awaiter(this, void 0, void 0, function* () {
+                    if (folder.isDirectory()) {
+                        const pathname = path_1.default.join('%DJ_PATH%', folder.name);
+                        const realPath = pathname.replace(/%DJ_PATH%/, path_1.default.normalize(DJ_PATH));
+                        const { birthtime } = yield fs_1.default.promises.stat(realPath);
+                        const size = yield getDirSize(realPath);
+                        const createdAt = new Date(birthtime);
+                        db.push({
+                            name: folder.name,
+                            pathname,
+                            createdAt,
+                            size,
+                            cover: `cdn/manga/${folder.name}/cover.jpg`,
+                        });
+                    }
+                });
+                promiseFuncs.push(func());
             }
-            const func = () => __awaiter(this, void 0, void 0, function* () {
-                if (folder.isDirectory()) {
-                    const pathname = path_1.default.join('%DJ_PATH%', folder.name);
-                    const realPath = pathname.replace(/%DJ_PATH%/, path_1.default.normalize(DJ_PATH));
-                    const { birthtime } = yield fs_1.default.promises.stat(realPath);
-                    const size = yield getDirSize(realPath);
-                    const createdAt = new Date(birthtime);
-                    db.push({
-                        name: folder.name,
-                        pathname,
-                        createdAt,
-                        size,
-                        cover: `cdn/manga/${folder.name}/cover.jpg`,
-                    });
-                }
-            });
-            promiseFuncs.push(func());
         }
         yield Promise.all(promiseFuncs);
         const newDB = lodash_1.default.sortBy(db, ['createdAt']).map((e, i) => {
@@ -76,7 +75,7 @@ function mangaData(manga) {
             withFileTypes: true,
         });
         const final = data
-            .map((file) => {
+            .map(file => {
             if (file.isFile()) {
                 if (file.name !== 'cover.jpg' &&
                     path_1.default.extname(file.name).match(/^\.(jpe?g|png|svg)$/i)) {
@@ -87,7 +86,7 @@ function mangaData(manga) {
                 }
             }
         })
-            .filter((v) => typeof v !== 'undefined');
+            .filter(v => typeof v !== 'undefined');
         return final;
     });
 }
@@ -100,8 +99,8 @@ function updateCovers() {
         for (let i = 0; i < dirs.length; i++) {
             const mangadir = dirs[i];
             const _dir = yield fs_1.default.promises.readdir(path_1.default.join(DJ_PATH, mangadir));
-            const index = _dir.findIndex((e) => e.match(/\.(png|jpe?g)$/i));
-            if (!_dir.find((e) => e === 'cover.jpg')) {
+            const index = _dir.findIndex(e => e.match(/\.(png|jpe?g)$/i));
+            if (!_dir.find(e => e === 'cover.jpg')) {
                 coverdirs.push(path_1.default.join(DJ_PATH, mangadir, _dir[index]));
             }
         }

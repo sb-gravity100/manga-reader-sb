@@ -12,12 +12,12 @@ const DJ_PATH = path.normalize(path.join(process.cwd(), 'DJ/'));
 async function getDirSize(filepath: string) {
    const dir = fs
       .readdirSync(filepath)
-      .map((e) => fs.promises.stat(path.join(filepath, e)));
+      .map(e => fs.promises.stat(path.join(filepath, e)));
    const d = await Promise.all(dir);
-   return d.map((e_1) => e_1.size).reduce((p, n) => p + n);
+   return d.map(e_1 => e_1.size).reduce((p, n) => p + n);
 }
 
-export async function dirSync() {
+export async function dirSync(): Promise<Manga[]> {
    const dir = await fs.promises.readdir(DJ_PATH, {
       withFileTypes: true,
    });
@@ -28,30 +28,29 @@ export async function dirSync() {
       const folder = dir[k];
       if (
          process.env.NODE_ENV !== 'development' &&
-         folder.name === '_mock_data'
+         folder.name !== '_mock_data'
       ) {
-         return;
+         const func = async () => {
+            if (folder.isDirectory()) {
+               const pathname = path.join('%DJ_PATH%', folder.name);
+               const realPath = pathname.replace(
+                  /%DJ_PATH%/,
+                  path.normalize(DJ_PATH)
+               );
+               const { birthtime } = await fs.promises.stat(realPath);
+               const size = await getDirSize(realPath);
+               const createdAt = new Date(birthtime);
+               db.push({
+                  name: folder.name,
+                  pathname,
+                  createdAt,
+                  size,
+                  cover: `cdn/manga/${folder.name}/cover.jpg`,
+               });
+            }
+         };
+         promiseFuncs.push(func());
       }
-      const func = async () => {
-         if (folder.isDirectory()) {
-            const pathname = path.join('%DJ_PATH%', folder.name);
-            const realPath = pathname.replace(
-               /%DJ_PATH%/,
-               path.normalize(DJ_PATH)
-            );
-            const { birthtime } = await fs.promises.stat(realPath);
-            const size = await getDirSize(realPath);
-            const createdAt = new Date(birthtime);
-            db.push({
-               name: folder.name,
-               pathname,
-               createdAt,
-               size,
-               cover: `cdn/manga/${folder.name}/cover.jpg`,
-            });
-         }
-      };
-      promiseFuncs.push(func());
    }
    await Promise.all(promiseFuncs);
    const newDB = _.sortBy(db, ['createdAt']).map((e, i) => {
@@ -72,7 +71,7 @@ export async function mangaData(manga: Manga) {
          withFileTypes: true,
       });
    const final: (MangaData | undefined)[] = data
-      .map((file) => {
+      .map(file => {
          if (file.isFile()) {
             if (
                file.name !== 'cover.jpg' &&
@@ -85,7 +84,7 @@ export async function mangaData(manga: Manga) {
             }
          }
       })
-      .filter((v) => typeof v !== 'undefined');
+      .filter(v => typeof v !== 'undefined');
    return final;
 }
 
@@ -96,8 +95,8 @@ export async function updateCovers() {
    for (let i = 0; i < dirs.length; i++) {
       const mangadir = dirs[i];
       const _dir = await fs.promises.readdir(path.join(DJ_PATH, mangadir));
-      const index = _dir.findIndex((e) => e.match(/\.(png|jpe?g)$/i));
-      if (!_dir.find((e) => e === 'cover.jpg')) {
+      const index = _dir.findIndex(e => e.match(/\.(png|jpe?g)$/i));
+      if (!_dir.find(e => e === 'cover.jpg')) {
          coverdirs.push(path.join(DJ_PATH, mangadir, _dir[index]));
       }
    }
