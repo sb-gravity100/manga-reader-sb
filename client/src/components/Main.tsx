@@ -119,6 +119,8 @@ const Main = () => {
                   onClick={() =>
                      getMangas({
                         refresh: true,
+                        page: pageQuery ? Number(pageQuery) : page.current,
+                        limit,
                      })
                   }
                   className={styles.refresh_btn}
@@ -130,6 +132,8 @@ const Main = () => {
                   onClick={() =>
                      getMangas({
                         _updateCovers: true,
+                        page: pageQuery ? Number(pageQuery) : page.current,
+                        limit,
                      })
                   }
                   className={styles.refresh_btn}

@@ -1,13 +1,19 @@
 require('dotenv').config();
 
 import path from 'path';
-import fs from 'fs';
+import fs, { Dirent } from 'fs';
 import _ from 'lodash';
 import Jimp from 'jimp';
 import { Manga, MangaData } from '../types';
-import { randomBytes, randomInt } from 'crypto';
+import axios from 'axios';
+import { randomInt } from 'crypto';
+// import { randomBytes, randomInt } from 'crypto';
 
 const DJ_PATH = path.normalize(path.join(process.cwd(), 'DJ/'));
+const API_ENDPOINT = 'https://612dbf2be579e1001791dd78.mockapi.io/';
+const mockApi = axios.create({
+   baseURL: API_ENDPOINT,
+});
 
 async function getDirSize(filepath: string) {
    const dir = fs
@@ -18,42 +24,63 @@ async function getDirSize(filepath: string) {
 }
 
 export async function dirSync(): Promise<Manga[]> {
-   const dir = await fs.promises.readdir(DJ_PATH, {
-      withFileTypes: true,
-   });
-   const db: Manga[] = [];
-   const promiseFuncs: Promise<void>[] = [];
+   let dir: Dirent[] = [];
+   let db: Manga[] = [];
+   if (process.env.MOCK) {
+      const res = await mockApi.get<any[]>('/mangas', {
+         params: {
+            sortBy: 'createdAt',
+            order: 'asc',
+         },
+      });
+      db.push(
+         ...res.data.map((e) => {
+            e.name = e.name.join(' ');
+            e.cover = `http://lorempixel.com/${randomInt(190, 250)}/${randomInt(
+               250,
+               390
+            )}/cats`;
+            return e;
+         })
+      );
+   } else {
+      dir = await fs.promises.readdir(DJ_PATH, {
+         withFileTypes: true,
+      });
+      const promiseFuncs: Promise<void>[] = [];
 
-   for (let k = dir.length - 1; k >= 0; k--) {
-      const folder = dir[k];
-      const func = async () => {
-         if (folder.isDirectory()) {
-            const pathname = path.join('%DJ_PATH%', folder.name);
-            const realPath = pathname.replace(
-               /%DJ_PATH%/,
-               path.normalize(DJ_PATH)
-            );
-            const { birthtime } = await fs.promises.stat(realPath);
-            const size = await getDirSize(realPath);
-            const createdAt = new Date(birthtime);
-            db.push({
-               name: folder.name,
-               pathname,
-               createdAt,
-               size,
-               cover: `cdn/manga/${folder.name}/cover.jpg`,
+      for (let k = dir.length - 1; k >= 0; k--) {
+         const folder = dir[k];
+         const func = () =>
+            Promise.resolve().then(async () => {
+               if (folder.isDirectory()) {
+                  const pathname = path.join('%DJ_PATH%', folder.name);
+                  const realPath = pathname.replace(
+                     /%DJ_PATH%/,
+                     path.normalize(DJ_PATH)
+                  );
+                  const { birthtime } = await fs.promises.stat(realPath);
+                  const size = await getDirSize(realPath);
+                  const createdAt = new Date(birthtime);
+                  db.push({
+                     name: folder.name,
+                     pathname,
+                     createdAt,
+                     size,
+                     cover: `cdn/manga/${folder.name}/cover.jpg`,
+                  });
+               }
             });
-         }
-      };
-      promiseFuncs.push(func());
+         promiseFuncs.push(func());
+      }
+      await Promise.all(promiseFuncs);
+      db = _.sortBy(db, ['createdAt']).map((e, i) => {
+         e.id = i + 1;
+         return e;
+      });
    }
-   await Promise.all(promiseFuncs);
-   const newDB = _.sortBy(db, ['createdAt']).map((e, i) => {
-      e.id = i + 1;
-      return e;
-   });
    // console.log(newDB)
-   return newDB;
+   return db;
 }
 
 export async function mangaData(manga: Manga) {

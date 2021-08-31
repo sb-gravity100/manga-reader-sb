@@ -136,6 +136,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       _.forIn(pageHeaders, (val, key) => {
          res.setHeader(`x-page-${key}`, qs.stringify(val));
       });
+      results = results.skip(query.offset);
       const json = await results.exec();
       res.jsonp({
          items: json,
@@ -144,7 +145,9 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       });
    } else {
       const json = await results.exec();
-      res.jsonp(json);
+      res.jsonp({
+         items: json,
+      });
    }
 });
 route.get('/manga/:id', async (req, res) => {
