@@ -1,0 +1,27 @@
+yarn run v1.22.11
+$ nodemon dist/server.js
+[33m[nodemon] 2.0.12[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,ts[39m
+[32m[nodemon] starting `node dist/server.js`[39m
+D:\Cafe STL\DL\Manga
+2021-08-31T00:20:08.517Z RD Starting...
+2021-08-31T00:20:12.868Z RD Database ready!
+2021-08-31T00:20:12.891Z RD Server listening at 7800
+2021-08-31T00:20:27.505Z RD [0mGET /cdn/manga/Taniguchi-san%20-Tamashii-%20INSERT%20%20Last%20Update%20Zen%20COMIC%20Unreal%202016-04%20Vol.%2060%20English%20AdolfBrix/cover.jpg [32m200[0m 45.472 ms - 20901[0m
+2021-08-31T00:20:27.561Z RD [0mGET /cdn/manga/[Pintsize%20(Hozumi%20Touzi,%20TKS)]%20Dashoku%20Jutai%20Roku%20~Igyou%20Akuochi%20no%20Hanshoku%20Shimai~%20(Fire%20Emblem%20Awakening)%20[English]%20[xinsu]%20[Digital]/cover.jpg [32m200[0m 118.590 ms - 12572[0m
+2021-08-31T00:20:27.567Z RD [0mGET /cdn/manga/[Akitsuki%20Itsuki]%20Tousaku%20Saimin%20Jikken%20[Case%201]%20Perverted%20Hypnosis%20Experiment%20[Case%201]%20(COMIC%20Shingeki%202021-06)%20English]%20[Digital]%20%7BExo%20Subs%7D/cover.jpg [32m200[0m 117.292 ms - 17693[0m
+2021-08-31T00:20:27.573Z RD [0mGET /cdn/manga/[Cheese%20Company%20(Peso)]%20Hatsujou%20Nyuugyuu%20Rei%20Hyoui!%20Dosukebe%20Bakunyuu%20Youmu%20Kenzan!!%20Possessed%20By%20The%20Spirit%20Of%20A%20Milk%20Cow%20In%20Heat!%20Meeting%20Nymphomaniac%20Youmu%20With%20Huge%20Tits!!%20(Touhou%20Project)%20[English]%20[Digital]/cover.jpg [32m200[0m 114.079 ms - 11501[0m
+2021-08-31T00:20:27.710Z RD [0mGET /cdn/manga/Ameshoo%20Mikaduki%20Neko%20Touhou%20TS%20Monogatari%20~Meiling-Hen~%20Touhou%20Project%20English%20GBTRS/cover.jpg [32m200[0m 117.730 ms - 8994[0m
+2021-08-31T00:20:27.869Z RD [0mGET /cdn/manga/[Senpenbankashiki%20(DATE)]%20Tanin%20ni%20Naru%20Kusuri%202%20Medicine%20to%20Become%20Another%20Person%202%20[English]%20[Dummie]%20[Digital]/cover.jpg [32m200[0m 300.486 ms - 9702[0m
+2021-08-31T00:20:28.025Z RD [0mGET /cdn/manga/Taniguchi-san%20Kimi-iro%20Days%20EX%20COMIC%20Unreal%202014-10%20Vol.%2051%20English%20Kusanyagi/cover.jpg [32m200[0m 241.694 ms - 11313[0m
+2021-08-31T00:20:28.032Z RD [0mGET /cdn/manga/[Yakisoba%20Pants%20(Hiiragi%20Popura,%20Grand%20Deer)]%20Kako%20ni%20Modotte%20Akogare%20no%20Onee-san%20o%20Netottemita%20I%20Went%20Back%20In%20Time%20To%20Do%20NTR%20With%20My%20Beloved%20Onee-san%20[English]%20%7BDoujins%20com%7D/cover.jpg [32m200[0m 302.920 ms - 10551[0m
+2021-08-31T00:20:57.716Z RD [0mGET /cdn/manga/Taniguchi-san%20-Tamashii-%20INSERT%20%20Last%20Update%20Zen%20COMIC%20Unreal%202016-04%20Vol.%2060%20English%20AdolfBrix/cover.jpg [36m304[0m 5.577 ms - -[0m
+2021-08-31T00:20:57.766Z RD [0mGET /cdn/manga/[Pintsize%20(Hozumi%20Touzi,%20TKS)]%20Dashoku%20Jutai%20Roku%20~Igyou%20Akuochi%20no%20Hanshoku%20Shimai~%20(Fire%20Emblem%20Awakening)%20[English]%20[xinsu]%20[Digital]/cover.jpg [36m304[0m 33.954 ms - -[0m
+2021-08-31T00:20:57.771Z RD [0mGET /cdn/manga/[Akitsuki%20Itsuki]%20Tousaku%20Saimin%20Jikken%20[Case%201]%20Perverted%20Hypnosis%20Experiment%20[Case%201]%20(COMIC%20Shingeki%202021-06)%20English]%20[Digital]%20%7BExo%20Subs%7D/cover.jpg [36m304[0m 34.063 ms - -[0m
+2021-08-31T00:20:57.793Z RD [0mGET /cdn/manga/Ameshoo%20Mikaduki%20Neko%20Touhou%20TS%20Monogatari%20~Meiling-Hen~%20Touhou%20Project%20English%20GBTRS/cover.jpg [36m304[0m 16.893 ms - -[0m
+2021-08-31T00:20:57.799Z RD [0mGET /cdn/manga/[Senpenbankashiki%20(DATE)]%20Tanin%20ni%20Naru%20Kusuri%202%20Medicine%20to%20Become%20Another%20Person%202%20[English]%20[Dummie]%20[Digital]/cover.jpg [36m304[0m 15.136 ms - -[0m
+2021-08-31T00:20:57.807Z RD [0mGET /cdn/manga/[Cheese%20Company%20(Peso)]%20Hatsujou%20Nyuugyuu%20Rei%20Hyoui!%20Dosukebe%20Bakunyuu%20Youmu%20Kenzan!!%20Possessed%20By%20The%20Spirit%20Of%20A%20Milk%20Cow%20In%20Heat!%20Meeting%20Nymphomaniac%20Youmu%20With%20Huge%20Tits!!%20(Touhou%20Project)%20[English]%20[Digital]/cover.jpg [36m304[0m 16.891 ms - -[0m
+2021-08-31T00:20:57.948Z RD [0mGET /cdn/manga/Taniguchi-san%20Kimi-iro%20Days%20EX%20COMIC%20Unreal%202014-10%20Vol.%2051%20English%20Kusanyagi/cover.jpg [36m304[0m 15.663 ms - -[0m
+2021-08-31T00:20:57.951Z RD [0mGET /cdn/manga/[Yakisoba%20Pants%20(Hiiragi%20Popura,%20Grand%20Deer)]%20Kako%20ni%20Modotte%20Akogare%20no%20Onee-san%20o%20Netottemita%20I%20Went%20Back%20In%20Time%20To%20Do%20NTR%20With%20My%20Beloved%20Onee-san%20[English]%20%7BDoujins%20com%7D/cover.jpg [36m304[0m 13.594 ms - -[0m
