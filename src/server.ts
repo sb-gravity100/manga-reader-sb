@@ -7,7 +7,6 @@ import cors from 'cors';
 import logger from 'morgan';
 import compression from 'compression';
 import _ from 'lodash';
-import fs from 'fs';
 import db from './database';
 import { dirSync } from './lib/folder_lister';
 import ApiRoute from './api.route';

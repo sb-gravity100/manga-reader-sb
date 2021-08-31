@@ -18,7 +18,7 @@ const folder_lister_1 = require("./lib/folder_lister");
 const lodash_1 = __importDefault(require("lodash"));
 const fuse_js_1 = __importDefault(require("fuse.js"));
 const qs_1 = __importDefault(require("qs"));
-const route = express_1.Router();
+const route = (0, express_1.Router)();
 exports.default = route;
 route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req;
@@ -51,16 +51,16 @@ route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         yield database_1.default.remove({}, {
             multi: true,
         });
-        const mangaData = yield folder_lister_1.dirSync();
+        const mangaData = yield (0, folder_lister_1.dirSync)();
         yield database_1.default.insert(mangaData);
         results = database_1.default.find({});
     }
     if (lodash_1.default.has(query, '_updateCovers')) {
-        yield folder_lister_1.updateCovers();
+        yield (0, folder_lister_1.updateCovers)();
         yield database_1.default.remove({}, {
             multi: true,
         });
-        const mangaData = yield folder_lister_1.dirSync();
+        const mangaData = yield (0, folder_lister_1.dirSync)();
         yield database_1.default.insert(mangaData);
         results = database_1.default.find({});
     }
@@ -124,7 +124,7 @@ route.get('/manga/:id', (req, res) => __awaiter(void 0, void 0, void 0, function
         id: Number(req.params.id),
     });
     if (manga) {
-        const data = yield folder_lister_1.mangaData(manga);
+        const data = yield (0, folder_lister_1.mangaData)(manga);
         manga.data = data;
         return res.jsonp(manga);
     }
