@@ -103,7 +103,6 @@ const Main = () => {
    const isBlur = useSelector((state) => state.controls.blur);
    const [getMangas, mangas] = useLazyAllMangasQuery();
    const dispatch = useDispatch();
-   console.log(pageQuery);
 
    useEffect(() => {
       getMangas({
