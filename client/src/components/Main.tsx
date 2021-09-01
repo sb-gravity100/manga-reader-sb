@@ -56,35 +56,42 @@ const SearchBar: FC<SearchBarProps> = (props) => {
    };
    const search = useSearchQuery(searchQuery);
    return (
-      <div className="search-bar">
-         <input
-            type="text"
-            name="search"
-            placeholder="Search..."
-            onChange={handleSearchChange}
-            autoComplete="off"
-            autoCorrect="off"
-            onFocus={() => toggleFocus(true)}
-            onBlur={() => toggleFocus(false)}
-         />
-         <div
-            className="search-list"
-            style={{
-               display: 'non',
-            }}
-         >
-            {!search.isUninitialized && search.isFetching && (
-               <div className="search-loading loading-animation">
-                  Loading results...
+      <>
+         <div className="search-bar">
+            <input
+               type="text"
+               name="search"
+               placeholder="Search..."
+               onChange={handleSearchChange}
+               autoComplete="off"
+               autoCorrect="off"
+               onFocus={() => toggleFocus(true)}
+               onBlur={() => toggleFocus(false)}
+            />
+            {!!searchQuery && (
+               <div className="search-list">
+                  {!!searchQuery && search.isFetching && (
+                     <div className="search-loading loading-animation">
+                        Loading results...
+                     </div>
+                  )}
+                  {search.isSuccess &&
+                     search.data.length === 0 &&
+                     isFocused &&
+                     !search.isFetching &&
+                     !!searchQuery && (
+                        <div className="search-loading">
+                           Nothing Found! {':('}
+                        </div>
+                     )}
+                  {search.isSuccess &&
+                     search.data.map((manga) => (
+                        <SearchComponent key={manga.item.id} {...manga} />
+                     ))}
                </div>
             )}
-            {search.isSuccess && search.data.length === 0 && isFocused && (
-               <div className="search-loading">Nothing Found! {':('}</div>
-            )}
-            {search.isSuccess &&
-               search.data.map((manga) => <SearchComponent {...manga} />)}
          </div>
-      </div>
+      </>
    );
 };
 

@@ -37,6 +37,9 @@ export async function dirSync(): Promise<Manga[]> {
          ...res.data.map((e) => {
             e.name = e.name.map(_.capitalize).join(' ');
             e.id = Number(e.id);
+            e.cover = `https://picsum.photos/100/200.webp?random=${
+               Math.random() * 3
+            }`;
             return e;
          })
       );

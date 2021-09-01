@@ -53,11 +53,9 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
    let results = db.find<types.Manga>({});
    if (query.limit) {
       query.limit = Number(query.limit);
-      results.limit(query.limit);
    }
    if (query.offset) {
       query.offset = Number(query.offset);
-      results.skip(query.offset);
    }
    if (!query.sort) {
       query.sort = 'createdAt';
@@ -138,7 +136,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       _.forIn(pageHeaders, (val, key) => {
          res.setHeader(`x-page-${key}`, qs.stringify(val));
       });
-      results = results.skip(query.offset);
+      results = results.limit(query.limit).skip(query.offset);
       const json = await results.exec();
       res.jsonp({
          items: json,
@@ -146,6 +144,9 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
          total: totalPage,
       });
    } else {
+      if (_.isNumber(query.limit)) {
+         results = results.limit(query.limit);
+      }
       const json = await results.exec();
       res.jsonp({
          items: json,

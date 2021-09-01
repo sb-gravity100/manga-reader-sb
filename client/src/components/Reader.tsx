@@ -10,20 +10,36 @@ import {
    FaAngleDoubleRight,
 } from 'react-icons/fa';
 import { useHistory, useLocation } from 'react-router-dom';
-import _ from 'lodash';
-import { FC, useEffect } from 'react';
+import _, { add } from 'lodash';
+import { FC, useEffect, useState } from 'react';
 import { NavProps, ReaderProps } from './props';
 import Loading from './sub-components/Loading';
-import { useDispatch, useSelector } from '../store';
+import { useSelector } from '../store';
 import QueryString from 'qs';
-import { current } from '@reduxjs/toolkit';
-import { setPage } from '../slices/ControlSlice';
-import { useSearchParam } from 'react-use';
+
+const CurryNav = _.curry((cur: number, max: number, addUpTo: number) => {
+   const next: number[] = [];
+   const prev: number[] = [];
+   for (let i = cur; i < max - 1 && i < cur + addUpTo; i++) {
+      next.push(i + 1);
+   }
+   for (let i = cur; i > 0 && i > cur - addUpTo; i--) {
+      prev.push(i - 1);
+   }
+   return {
+      next,
+      prev: prev.reverse(),
+   };
+});
 
 const Navigation: FC<NavProps> = (props) => {
+   const addPages = 2;
    const history = useHistory();
    const location = useLocation();
    const page = useSelector((state) => state.controls.page);
+   const [navState, setNav] = useState(
+      CurryNav(Number(page.current), page.total, addPages)
+   );
    const pushPage = (_page: number) => {
       const currentParams = QueryString.parse(location.search.slice(1));
       history.push({
@@ -36,6 +52,16 @@ const Navigation: FC<NavProps> = (props) => {
             ),
       });
    };
+   useEffect(() => {
+      if (page.current === page.total - 1 || page.current === 0) {
+         setNav(CurryNav(Number(page.current), page.total, addPages + 2));
+      } else if (page.total - 1 - page.current === 1 || page.current === 1) {
+         setNav(CurryNav(Number(page.current), page.total, addPages + 1));
+      } else {
+         setNav(CurryNav(Number(page.current), page.total, addPages));
+      }
+      console.log(page.total - 1 - page.current, page.current);
+   }, [page]);
    return (
       <div className="nav">
          <button
@@ -54,6 +80,21 @@ const Navigation: FC<NavProps> = (props) => {
          >
             <FaAngleLeft />
          </button>
+         {navState.prev.map((v) => {
+            return (
+               <button key={v} onClick={() => pushPage(v)}>
+                  {v}
+               </button>
+            );
+         })}
+         <button disabled={true}>{page.current}</button>
+         {navState.next.map((v) => {
+            return (
+               <button key={v} onClick={() => pushPage(v)}>
+                  {v}
+               </button>
+            );
+         })}
          <button
             disabled={
                typeof page.next !== 'number' || page.current === page.last

@@ -94,11 +94,9 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
                 results = database_1.default.find({});
                 if (query.limit) {
                     query.limit = Number(query.limit);
-                    results.limit(query.limit);
                 }
                 if (query.offset) {
                     query.offset = Number(query.offset);
-                    results.skip(query.offset);
                 }
                 if (!query.sort) {
                     query.sort = 'createdAt';
@@ -186,13 +184,17 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
                 lodash_1.default.forIn(pageHeaders, function (val, key) {
                     res.setHeader("x-page-" + key, qs_1.default.stringify(val));
                 });
-                results = results.skip(query.offset);
+                results = results.limit(query.limit).skip(query.offset);
                 return [4 /*yield*/, results.exec()];
             case 11:
                 json = _a.sent();
                 res.jsonp(__assign(__assign({ items: json }, pageHeaders), { total: totalPage }));
                 return [3 /*break*/, 14];
-            case 12: return [4 /*yield*/, results.exec()];
+            case 12:
+                if (lodash_1.default.isNumber(query.limit)) {
+                    results = results.limit(query.limit);
+                }
+                return [4 /*yield*/, results.exec()];
             case 13:
                 json = _a.sent();
                 res.jsonp({

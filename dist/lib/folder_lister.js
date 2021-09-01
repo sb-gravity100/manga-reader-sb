@@ -111,6 +111,7 @@ function dirSync() {
                     db.push.apply(db, __spreadArray([], __read(res.data.map(function (e) {
                         e.name = e.name.map(lodash_1.default.capitalize).join(' ');
                         e.id = Number(e.id);
+                        e.cover = "https://picsum.photos/100/200.webp?random=" + Math.random() * 3;
                         return e;
                     }))));
                     return [3 /*break*/, 5];

@@ -12,7 +12,7 @@ import Footer from './Footer';
 
 const ToTopComponent: React.FC = () => {
    const location = useLocation();
-   console.log(location.pathname);
+   // console.log(location.pathname);
    return (
       <div className={styles.StickyBar}>
          <button
