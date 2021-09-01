@@ -16,9 +16,11 @@ db.json
 .env.test.local
 .env.production.local
 
-data.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.sublime-project
 *.sublime-workspace
+
+data.db
+reader.log
