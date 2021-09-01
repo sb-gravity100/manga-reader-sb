@@ -36,7 +36,7 @@ const Navigation: FC<NavProps> = (props) => {
    const addPages = 2;
    const history = useHistory();
    const location = useLocation();
-   const page = useSelector((state) => state.controls.page);
+   const { page, limit } = useSelector((state) => state.controls);
    const [navState, setNav] = useState(
       CurryNav(Number(page.current), page.total, addPages)
    );
@@ -51,6 +51,10 @@ const Navigation: FC<NavProps> = (props) => {
                })
             ),
       });
+      // props.refetch({
+      //    page: _page,
+      //    limit,
+      // });
    };
    useEffect(() => {
       if (page.current === page.total - 1 || page.current === 0) {
@@ -87,7 +91,7 @@ const Navigation: FC<NavProps> = (props) => {
                </button>
             );
          })}
-         <button disabled={true}>{page.current}</button>
+         <button className="current">{page.current}</button>
          {navState.next.map((v) => {
             return (
                <button key={v} onClick={() => pushPage(v)}>

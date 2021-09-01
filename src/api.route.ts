@@ -5,7 +5,6 @@ import { URLSearchParams } from 'url';
 import _ from 'lodash';
 import Fuse from 'fuse.js';
 import * as types from './types';
-import qs from 'qs';
 
 type IRequest<Query = any, Body = any> = Request<
    any,
@@ -26,18 +25,27 @@ interface MangasQuery {
 }
 
 const route = Router();
+let SearchIndex: types.Manga[] = [];
+let FuseIndex: types.Manga[] = [];
+const fuse = new Fuse(
+   SearchIndex,
+   {
+      includeScore: true,
+      threshold: 0.4,
+      useExtendedSearch: true,
+      keys: ['name'],
+   },
+   Fuse.createIndex(['name'], FuseIndex)
+);
 
 export default route;
 
 route.get('/search', async (req, res) => {
    const { query } = req;
-   const SearchIndex = await db.find<types.Manga>({});
-   const fuse = new Fuse(SearchIndex, {
-      keys: ['name'],
-      includeScore: true,
-      threshold: 0.5,
-      useExtendedSearch: true,
-   });
+   if (SearchIndex.length === 0) {
+      FuseIndex = SearchIndex = await db.find<types.Manga>({});
+      fuse.setCollection(SearchIndex, Fuse.createIndex(['name'], FuseIndex));
+   }
    if (_.isString(query.q)) {
       const results = fuse.search(query.q, {
          limit: 20,
@@ -73,6 +81,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       const mangaData = await dirSync();
       await db.insert(mangaData);
       results = db.find({});
+      FuseIndex = SearchIndex = await results;
    }
    if (_.has(query, '_updateCovers')) {
       await updateCovers();
@@ -110,38 +119,28 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       }
       const pageHeaders: Record<
          'last' | 'first' | 'next' | 'prev' | string,
-         string | { limit: number; page: number }
+         number
       > = {};
       if (query.page + 1 < totalPage) {
-         pageHeaders.next = {
-            page: query.page + 1,
-            limit: query.limit,
-         };
+         pageHeaders.next = query.page + 1;
       }
       if (query.page > 0 && totalPage > query.page) {
-         pageHeaders.prev = {
-            page: query.page - 1,
-            limit: query.limit,
-         };
+         pageHeaders.prev = query.page - 1;
       }
-      pageHeaders.first = {
-         page: 0,
-         limit: query.limit,
-      };
-      pageHeaders.last = {
-         page: totalPage - 1,
-         limit: query.limit,
-      };
+      pageHeaders.first = 0;
+      pageHeaders.last = totalPage - 1;
       res.setHeader('x-total-page', totalPage);
       _.forIn(pageHeaders, (val, key) => {
-         res.setHeader(`x-page-${key}`, qs.stringify(val));
+         res.setHeader(`x-page-${key}`, val);
       });
+      res.setHeader('x-page-limit', query.limit);
       results = results.limit(query.limit).skip(query.offset);
       const json = await results.exec();
       res.jsonp({
          items: json,
          ...pageHeaders,
          total: totalPage,
+         limit: query.limit,
       });
    } else {
       if (_.isNumber(query.limit)) {

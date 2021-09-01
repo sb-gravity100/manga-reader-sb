@@ -22,22 +22,10 @@ interface MangasQuery {
 }
 
 interface Meta {
-   nextPage?: {
-      limit: number;
-      page: number;
-   };
-   prevPage?: {
-      limit: number;
-      page: number;
-   };
-   firstPage?: {
-      limit: number;
-      page: number;
-   };
-   lastPage?: {
-      limit: number;
-      page: number;
-   };
+   nextPage?: number;
+   prevPage?: number;
+   firstPage?: number;
+   lastPage?: number;
 }
 
 const ApiSlice = createApi({

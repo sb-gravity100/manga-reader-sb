@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { MdRefresh } from 'react-icons/md';
 import { FC } from 'react';
 import Reader from './Reader';
@@ -21,7 +21,8 @@ import { SearchBarProps } from './props';
 import _ from 'lodash';
 import { SearchResult } from '../../../src/types';
 import classNames from 'classnames';
-import { useSearchParam, useToggle } from 'react-use';
+import { useToggle } from 'react-use';
+import QueryString from 'qs';
 
 const SearchComponent: FC<SearchResult> = (props) => (
    <Link
@@ -97,10 +98,12 @@ const SearchBar: FC<SearchBarProps> = (props) => {
 
 const Main = () => {
    const { page, limit } = useSelector((state) => state.controls);
-   const pageQuery = useSearchParam('page');
+   const location = useLocation();
+   const pageQuery = QueryString.parse(location.search.slice(1)).page;
    const isBlur = useSelector((state) => state.controls.blur);
    const [getMangas, mangas] = useLazyAllMangasQuery();
    const dispatch = useDispatch();
+   console.log(pageQuery);
 
    useEffect(() => {
       getMangas({
@@ -112,15 +115,30 @@ const Main = () => {
    useEffect(() => {
       dispatch(
          setPage({
-            current: pageQuery ? Number(pageQuery) : 0,
-            next: mangas.data?.next?.page,
-            prev: mangas.data?.prev?.page,
-            last: mangas.data?.last?.page,
-            first: mangas.data?.first?.page,
-            total: mangas.data?.total,
+            current: pageQuery ? Number(pageQuery) : page.current,
+            next:
+               typeof mangas.data?.next === 'number'
+                  ? mangas.data?.next
+                  : page.next,
+            prev:
+               typeof mangas.data?.prev === 'number'
+                  ? mangas.data?.prev
+                  : page.prev,
+            last:
+               typeof mangas.data?.last === 'number'
+                  ? mangas.data?.last
+                  : page.last,
+            first:
+               typeof mangas.data?.first === 'number'
+                  ? mangas.data?.first
+                  : page.first,
+            total:
+               typeof mangas.data?.total === 'number'
+                  ? mangas.data?.total
+                  : page.total,
          })
       );
-   }, [mangas]);
+   }, [mangas.data, pageQuery]);
 
    return (
       <div id="main">

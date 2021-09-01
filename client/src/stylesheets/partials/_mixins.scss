@@ -1,14 +1,12 @@
-@function stextcolor($bg) {
-   @if (lightness($bg) > 60) {
-      @return $x-dark;
-   } @else {
-      @return $x-light;
-   }
-}
+@use "vars";
 
-@mixin bgtext($bgcolor) {
+@mixin bgtext($bgcolor: white) {
    background-color: $bgcolor;
-   color: stextcolor($bgcolor);
+   @if (lightness($bgcolor) > 60) {
+      color: $x-dark;
+   } @else {
+      color: $x-light;
+   }
 }
 
 @mixin hoverColor($color, $bgcolor: transparent) {

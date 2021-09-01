@@ -11,12 +11,15 @@
       justify-content: center;
       gap: 10px;
 
-      button {
+      button,
+      div {
          padding: 0.5rem;
          display: flex;
          align-items: center;
          justify-content: center;
          text-align: center;
+         height: 35px;
+         width: 35px;
 
          &[disabled] {
             color: #444;
@@ -29,8 +32,12 @@
          }
 
          &.current {
-            background: transparent;
+            @include bgtext($x-secondary);
             cursor: default;
+
+            &:hover {
+               @include bgtext($x-secondary);
+            }
          }
       }
    }

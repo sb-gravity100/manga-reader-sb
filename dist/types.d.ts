@@ -15,8 +15,6 @@ export interface MangaData {
 export declare type SearchResult = Fuse.FuseResult<Manga>;
 export declare type MangasResult = {
     items: Manga[];
-    total: number;
-} & Record<'last' | 'first' | 'next' | 'prev', {
-    limit: number;
-    page: number;
-}>;
+    first: number;
+    last: number;
+} & Record<'next' | 'prev' | 'total' | 'limit', number>;

@@ -55,24 +55,29 @@ var database_1 = __importDefault(require("./database"));
 var folder_lister_1 = require("./lib/folder_lister");
 var lodash_1 = __importDefault(require("lodash"));
 var fuse_js_1 = __importDefault(require("fuse.js"));
-var qs_1 = __importDefault(require("qs"));
 var route = express_1.Router();
+var SearchIndex = [];
+var FuseIndex = [];
+var fuse = new fuse_js_1.default(SearchIndex, {
+    includeScore: true,
+    threshold: 0.4,
+    useExtendedSearch: true,
+    keys: ['name'],
+}, fuse_js_1.default.createIndex(['name'], FuseIndex));
 exports.default = route;
 route.get('/search', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var query, SearchIndex, fuse, results;
+    var query, results;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 query = req.query;
+                if (!(SearchIndex.length === 0)) return [3 /*break*/, 2];
                 return [4 /*yield*/, database_1.default.find({})];
             case 1:
-                SearchIndex = _a.sent();
-                fuse = new fuse_js_1.default(SearchIndex, {
-                    keys: ['name'],
-                    includeScore: true,
-                    threshold: 0.5,
-                    useExtendedSearch: true,
-                });
+                FuseIndex = SearchIndex = _a.sent();
+                fuse.setCollection(SearchIndex, fuse_js_1.default.createIndex(['name'], FuseIndex));
+                _a.label = 2;
+            case 2:
                 if (lodash_1.default.isString(query.q)) {
                     results = fuse.search(query.q, {
                         limit: 20,
@@ -104,7 +109,7 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
                 if (!query.order) {
                     query.order = '1';
                 }
-                if (!lodash_1.default.has(query, 'refresh')) return [3 /*break*/, 4];
+                if (!lodash_1.default.has(query, 'refresh')) return [3 /*break*/, 5];
                 return [4 /*yield*/, database_1.default.remove({}, {
                         multi: true,
                     })];
@@ -117,26 +122,29 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
             case 3:
                 _a.sent();
                 results = database_1.default.find({});
-                _a.label = 4;
+                return [4 /*yield*/, results];
             case 4:
-                if (!lodash_1.default.has(query, '_updateCovers')) return [3 /*break*/, 9];
-                return [4 /*yield*/, folder_lister_1.updateCovers()];
+                FuseIndex = SearchIndex = _a.sent();
+                _a.label = 5;
             case 5:
+                if (!lodash_1.default.has(query, '_updateCovers')) return [3 /*break*/, 10];
+                return [4 /*yield*/, folder_lister_1.updateCovers()];
+            case 6:
                 _a.sent();
                 return [4 /*yield*/, database_1.default.remove({}, {
                         multi: true,
                     })];
-            case 6:
+            case 7:
                 _a.sent();
                 return [4 /*yield*/, folder_lister_1.dirSync()];
-            case 7:
+            case 8:
                 mangaData_2 = _a.sent();
                 return [4 /*yield*/, database_1.default.insert(mangaData_2)];
-            case 8:
+            case 9:
                 _a.sent();
                 results = database_1.default.find({});
-                _a.label = 9;
-            case 9:
+                _a.label = 10;
+            case 10:
                 if (lodash_1.default.isString(query.sort) && lodash_1.default.isString(query.order)) {
                     keys = query.sort.split(',');
                     order = query.order.split(',');
@@ -146,10 +154,10 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
                     }
                 }
                 return [4 /*yield*/, database_1.default.count({})];
-            case 10:
+            case 11:
                 totalCount = _a.sent();
                 res.setHeader('x-total-count', totalCount);
-                if (!query.page) return [3 /*break*/, 12];
+                if (!query.page) return [3 /*break*/, 13];
                 query.page = Number(query.page);
                 if (!query.limit) {
                     query.limit = 10;
@@ -161,47 +169,36 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
                 }
                 pageHeaders = {};
                 if (query.page + 1 < totalPage) {
-                    pageHeaders.next = {
-                        page: query.page + 1,
-                        limit: query.limit,
-                    };
+                    pageHeaders.next = query.page + 1;
                 }
                 if (query.page > 0 && totalPage > query.page) {
-                    pageHeaders.prev = {
-                        page: query.page - 1,
-                        limit: query.limit,
-                    };
+                    pageHeaders.prev = query.page - 1;
                 }
-                pageHeaders.first = {
-                    page: 0,
-                    limit: query.limit,
-                };
-                pageHeaders.last = {
-                    page: totalPage - 1,
-                    limit: query.limit,
-                };
+                pageHeaders.first = 0;
+                pageHeaders.last = totalPage - 1;
                 res.setHeader('x-total-page', totalPage);
                 lodash_1.default.forIn(pageHeaders, function (val, key) {
-                    res.setHeader("x-page-" + key, qs_1.default.stringify(val));
+                    res.setHeader("x-page-" + key, val);
                 });
+                res.setHeader('x-page-limit', query.limit);
                 results = results.limit(query.limit).skip(query.offset);
                 return [4 /*yield*/, results.exec()];
-            case 11:
-                json = _a.sent();
-                res.jsonp(__assign(__assign({ items: json }, pageHeaders), { total: totalPage }));
-                return [3 /*break*/, 14];
             case 12:
+                json = _a.sent();
+                res.jsonp(__assign(__assign({ items: json }, pageHeaders), { total: totalPage, limit: query.limit }));
+                return [3 /*break*/, 15];
+            case 13:
                 if (lodash_1.default.isNumber(query.limit)) {
                     results = results.limit(query.limit);
                 }
                 return [4 /*yield*/, results.exec()];
-            case 13:
+            case 14:
                 json = _a.sent();
                 res.jsonp({
                     items: json,
                 });
-                _a.label = 14;
-            case 14: return [2 /*return*/];
+                _a.label = 15;
+            case 15: return [2 /*return*/];
         }
     });
 }); });
