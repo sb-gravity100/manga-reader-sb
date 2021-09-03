@@ -30,7 +30,7 @@ const initialState = {
    page: {
       current: 0,
    },
-   limit: 5,
+   limit: 10,
    brightness: 100,
    search: {
       current: '',

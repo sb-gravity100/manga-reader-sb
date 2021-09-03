@@ -65,22 +65,21 @@ img {
 }
 
 button {
-   $bgcolor: $x-primary;
-   font-size: 1rem;
-   font-family: $font;
-   @include bgtext($bgcolor);
-   border: none;
-   border-radius: 0;
-   padding: 0.5rem;
-   transition: 0.2s;
-   cursor: pointer;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-
-   &:hover {
-      color: $x-secondary;
-   }
+   @include btn(); // $bgcolor: $x-primary;
+   // font-size: 1rem;
+   // font-family: $font;
+   // @include bgtext($bgcolor);
+   // border: none;
+   // border-radius: 0;
+   // padding: 0.5rem;
+   // transition: 0.2s;
+   // cursor: pointer;
+   // display: flex;
+   // align-items: center;
+   // justify-content: center;
+   // &:hover {
+   //    color: $x-secondary;
+   // }
 }
 
 #container {

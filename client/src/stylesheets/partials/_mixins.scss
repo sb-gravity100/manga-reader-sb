@@ -2,7 +2,7 @@
 
 @mixin bgtext($bgcolor: white) {
    background-color: $bgcolor;
-   @if (lightness($bgcolor) > 60) {
+   @if (lightness($bgcolor) > 50) {
       color: $x-dark;
    } @else {
       color: $x-light;
@@ -21,4 +21,22 @@
    flex-direction: $fd;
    align-items: $ai;
    justify-content: $jc;
+}
+
+@mixin btn($bgcolor: $x-primary) {
+   font-size: 1rem;
+   font-family: $font;
+   @include bgtext($bgcolor);
+   border: none;
+   border-radius: 0;
+   padding: 0.5rem;
+   transition: 0.2s;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   &:hover {
+      color: $x-secondary;
+   }
 }

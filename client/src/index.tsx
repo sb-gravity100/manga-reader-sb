@@ -2,7 +2,12 @@ import 'intersection-observer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom';
+import {
+   BrowserRouter as Router,
+   Link,
+   useLocation,
+   useHistory,
+} from 'react-router-dom';
 import store from './store';
 import { FaAngleUp } from 'react-icons/fa';
 import App from './App';
@@ -12,6 +17,7 @@ import Footer from './Footer';
 
 const ToTopComponent: React.FC = () => {
    const location = useLocation();
+   const history = useHistory();
    // console.log(location.pathname);
    return (
       <div className={styles.StickyBar}>
@@ -26,7 +32,9 @@ const ToTopComponent: React.FC = () => {
          >
             <FaAngleUp fontSize="3rem" />
          </button>
-         {location.pathname.trim() !== '/' && <Link to="/">Go Back</Link>}
+         {location.pathname.trim() !== '/' && (
+            <a onClick={() => history.goBack()}>Go Back</a>
+         )}
       </div>
    );
 };

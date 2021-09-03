@@ -12,6 +12,7 @@ import {
 import { useHistory, useLocation } from 'react-router-dom';
 import _, { add } from 'lodash';
 import { FC, useEffect, useState } from 'react';
+import Select from 'react-select';
 import { NavProps, ReaderProps } from './props';
 import Loading from './sub-components/Loading';
 import { useSelector } from '../store';
@@ -64,7 +65,7 @@ const Navigation: FC<NavProps> = (props) => {
       } else {
          setNav(CurryNav(Number(page.current), page.total, addPages));
       }
-      console.log(page.total - 1 - page.current, page.current);
+      // console.log(page.total - 1 - page.current, page.current);
    }, [page]);
    return (
       <div className="nav">
@@ -121,10 +122,16 @@ const Navigation: FC<NavProps> = (props) => {
 
 const Reader: FC<ReaderProps> = (props) => {
    const controls = useSelector((state) => state.controls);
+   const limitOptions = _.times(10, (n) => ({
+      value: n + 5,
+      label: n + 5,
+   }));
    return (
       <div className="main-reader">
          {typeof controls.page.total === 'number' && (
-            <Navigation refetch={props.refetch} />
+            <>
+               <Navigation refetch={props.refetch} />
+            </>
          )}
          <div className="main-reader-box">
             {!props.loading && props.data ? (

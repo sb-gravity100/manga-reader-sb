@@ -3,7 +3,7 @@ import { MdRefresh } from 'react-icons/md';
 import { FC, MouseEventHandler } from 'react';
 import Reader from './Reader';
 import ErrorBlock from './sub-components/ErrorBlock';
-import { useState, useEffect, ChangeEventHandler } from 'react';
+import { useEffect, ChangeEventHandler } from 'react';
 import styles from '../style.module.scss';
 import {
    useAllMangasQuery,
@@ -55,7 +55,7 @@ const SearchBar: FC<SearchBarProps> = (props) => {
    return (
       <>
          <div className="search-bar">
-            <input
+            {/* <input
                type="text"
                name="search"
                placeholder="Search..."
@@ -91,7 +91,7 @@ const SearchBar: FC<SearchBarProps> = (props) => {
                         />
                      ))}
                </div>
-            )}
+            )} */}
          </div>
       </>
    );
