@@ -120,9 +120,12 @@ const Navigation: FC<NavProps> = (props) => {
 };
 
 const Reader: FC<ReaderProps> = (props) => {
+   const controls = useSelector((state) => state.controls);
    return (
       <div className="main-reader">
-         <Navigation refetch={props.refetch} />
+         {typeof controls.page.total === 'number' && (
+            <Navigation refetch={props.refetch} />
+         )}
          <div className="main-reader-box">
             {!props.loading && props.data ? (
                <div className={classname('main-reader-flex', 'current')}>

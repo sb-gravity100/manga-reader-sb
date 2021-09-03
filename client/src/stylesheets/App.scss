@@ -4,29 +4,3 @@
 @import 'partials/main';
 @import 'partials/viewer';
 @import 'partials/classes';
-
-.btn-flex {
-   display: flex;
-   flex-direction: row;
-}
-
-.is-blur-check {
-   display: flex;
-   align-items: center;
-   gap: 5px;
-   cursor: pointer;
-}
-
-.loading-animation {
-   animation: loadingFade 2s linear 0s infinite;
-   opacity: 1;
-}
-
-@keyframes loadingFade {
-   50% {
-      opacity: 0;
-   }
-   100% {
-      opacity: 1;
-   }
-}

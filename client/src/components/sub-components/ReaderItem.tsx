@@ -13,7 +13,7 @@ const ReaderItem: FC<ReaderItemProps> = (props) => {
       <Link className="flex-item" title={item.name} to={`/manga?id=${item.id}`}>
          {true ? (
             <img
-               className={classNames('bg-img', isBlur && 'blur-img')}
+               className={classNames('bg-img', isBlur ? 'blur-img' : 'non-blur-img')}
                src={item.cover || undefined}
             />
          ) : (

@@ -2,6 +2,36 @@
    filter: blur(0.3rem) opacity(0.2);
 
    &:hover {
-      filter: blur(0.3rem) brightness(30%);
+      filter: blur(0.3rem) brightness(30%) opacity(0.6);
+   }
+}
+.non-blur-img {
+   &:hover {
+      filter: opacity(0.4);
+   }
+}
+.btn-flex {
+   display: flex;
+   flex-direction: row;
+}
+
+.is-blur-check {
+   display: flex;
+   align-items: center;
+   gap: 5px;
+   cursor: pointer;
+}
+
+.loading-animation {
+   animation: loadingFade 2s linear 0s infinite;
+   opacity: 1;
+}
+
+@keyframes loadingFade {
+   50% {
+      opacity: 0;
+   }
+   100% {
+      opacity: 1;
    }
 }

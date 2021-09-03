@@ -24,7 +24,9 @@ interface ControlState {
 const initialState = {
    blur: true,
    zoom: 5,
-   page: {},
+   page: {
+      current: 0,
+   },
    limit: 10,
    brightness: 100,
    search: '',
