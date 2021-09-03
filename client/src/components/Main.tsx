@@ -55,7 +55,7 @@ const SearchBar: FC<SearchBarProps> = (props) => {
    return (
       <>
          <div className="search-bar">
-            {/* <input
+            <input
                type="text"
                name="search"
                placeholder="Search..."
@@ -91,7 +91,7 @@ const SearchBar: FC<SearchBarProps> = (props) => {
                         />
                      ))}
                </div>
-            )} */}
+            )}
          </div>
       </>
    );
