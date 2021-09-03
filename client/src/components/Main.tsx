@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { MdRefresh } from 'react-icons/md';
-import { FC } from 'react';
+import { FC, MouseEventHandler } from 'react';
 import Reader from './Reader';
 import ErrorBlock from './sub-components/ErrorBlock';
 import { useState, useEffect, ChangeEventHandler } from 'react';
@@ -11,12 +11,7 @@ import {
    useSearchQuery,
 } from '../slices/MangaApi';
 import { useDispatch, useSelector } from '../store';
-import {
-   clearSearch,
-   setPage,
-   setSearch,
-   toggleBlur,
-} from '../slices/ControlSlice';
+import { setPage, setSearch, toggleBlur } from '../slices/ControlSlice';
 import { SearchBarProps } from './props';
 import _ from 'lodash';
 import { SearchResult } from '../../../src/types';
@@ -24,11 +19,12 @@ import classNames from 'classnames';
 import { useToggle } from 'react-use';
 import QueryString from 'qs';
 
-const SearchComponent: FC<SearchResult> = (props) => (
+const SearchComponent: FC<SearchResult & { clickFunc: any }> = (props) => (
    <Link
       to={`/manga?id=${props.item.id}`}
       className="search-item"
       title={props.item.name}
+      onClick={props.clickFunc}
    >
       <div
          className="cover-img"
@@ -49,13 +45,13 @@ const SearchBar: FC<SearchBarProps> = (props) => {
    const [isFocused, toggleFocus] = useToggle(false);
    const dispatch = useDispatch();
    const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-      if (!e.target.value) {
-         dispatch(clearSearch());
-      } else {
-         dispatch(setSearch(e.target.value));
-      }
+      dispatch(setSearch(e.target.value));
    };
-   const search = useSearchQuery(searchQuery);
+   const handleClick: MouseEventHandler<HTMLAnchorElement> = (e) => {
+      dispatch(setSearch(''));
+   };
+   // useEffect(() => () => dispatch(setSearch()))
+   const search = useSearchQuery(searchQuery.current);
    return (
       <>
          <div className="search-bar">
@@ -68,10 +64,11 @@ const SearchBar: FC<SearchBarProps> = (props) => {
                autoCorrect="off"
                onFocus={() => toggleFocus(true)}
                onBlur={() => toggleFocus(false)}
+               defaultValue={searchQuery.current || searchQuery.prev || ''}
             />
-            {!!searchQuery && (
+            {!!searchQuery.current && (
                <div className="search-list">
-                  {!!searchQuery && search.isFetching && (
+                  {!!searchQuery.current && search.isFetching && (
                      <div className="search-loading loading-animation">
                         Loading results...
                      </div>
@@ -80,14 +77,18 @@ const SearchBar: FC<SearchBarProps> = (props) => {
                      search.data.length === 0 &&
                      isFocused &&
                      !search.isFetching &&
-                     !!searchQuery && (
+                     !!searchQuery.current && (
                         <div className="search-loading">
                            Nothing Found! {':('}
                         </div>
                      )}
                   {search.isSuccess &&
                      search.data.map((manga) => (
-                        <SearchComponent key={manga.item.id} {...manga} />
+                        <SearchComponent
+                           key={manga.item.id}
+                           clickFunc={handleClick}
+                           {...manga}
+                        />
                      ))}
                </div>
             )}
