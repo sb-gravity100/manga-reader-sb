@@ -33,7 +33,7 @@ const ToTopComponent: React.FC = () => {
             <FaAngleUp fontSize="3rem" />
          </button>
          {location.pathname.trim() !== '/' && (
-            <a onClick={() => history.goBack()}>Go Back</a>
+            <button onClick={() => history.goBack()}>Go Back</button>
          )}
       </div>
    );

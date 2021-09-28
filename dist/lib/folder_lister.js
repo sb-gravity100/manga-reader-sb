@@ -51,10 +51,14 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -66,13 +70,9 @@ var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
 var lodash_1 = __importDefault(require("lodash"));
 var jimp_1 = __importDefault(require("jimp"));
-var axios_1 = __importDefault(require("axios"));
+var faker_1 = __importDefault(require("faker"));
 // import { randomBytes, randomInt } from 'crypto';
 var DJ_PATH = path_1.default.normalize(path_1.default.join(process.cwd(), 'DJ/'));
-var API_ENDPOINT = 'https://612dbf2be579e1001791dd78.mockapi.io/';
-var mockApi = axios_1.default.create({
-    baseURL: API_ENDPOINT,
-});
 function getDirSize(filepath) {
     return __awaiter(this, void 0, void 0, function () {
         var dir, d;
@@ -92,33 +92,34 @@ function getDirSize(filepath) {
 }
 function dirSync() {
     return __awaiter(this, void 0, void 0, function () {
-        var dir, db, res, promiseFuncs, _loop_1, k;
+        var dir, db, promiseFuncs, _loop_1, k;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     dir = [];
                     db = [];
-                    if (!process.env.MOCK) return [3 /*break*/, 2];
-                    return [4 /*yield*/, mockApi.get('/mangas', {
-                            params: {
-                                sortBy: 'createdAt',
-                                order: 'asc',
-                            },
-                        })];
-                case 1:
-                    res = _a.sent();
-                    db.push.apply(db, __spreadArray([], __read(res.data.map(function (e) {
-                        e.name = e.name.map(lodash_1.default.capitalize).join(' ');
-                        e.id = Number(e.id);
-                        e.cover = "https://picsum.photos/100/200.webp?random=" + Math.random() * 3;
-                        return e;
-                    }))));
-                    return [3 /*break*/, 5];
-                case 2: return [4 /*yield*/, fs_1.default.promises.readdir(DJ_PATH, {
+                    if (!process.env.MOCK) return [3 /*break*/, 1];
+                    db.push.apply(db, __spreadArray([], __read(lodash_1.default.times(lodash_1.default.random(10, 100), function (n) {
+                        var name = faker_1.default.helpers.randomize([
+                            faker_1.default.commerce.productName(),
+                            faker_1.default.company.companyName(),
+                            faker_1.default.name.findName(),
+                        ]);
+                        return {
+                            name: name,
+                            pathname: '%DJ_PATH%/' + name,
+                            createdAt: faker_1.default.date.past(),
+                            size: lodash_1.default.random(100000, 100000000),
+                            cover: "https://picsum.photos/100/300.jpg?random=" + Math.random(),
+                            id: n++,
+                        };
+                    })), false));
+                    return [3 /*break*/, 4];
+                case 1: return [4 /*yield*/, fs_1.default.promises.readdir(DJ_PATH, {
                         withFileTypes: true,
                     })];
-                case 3:
+                case 2:
                     dir = _a.sent();
                     promiseFuncs = [];
                     _loop_1 = function (k) {
@@ -144,7 +145,7 @@ function dirSync() {
                                                 pathname: pathname,
                                                 createdAt: createdAt,
                                                 size: size,
-                                                cover: "cdn/manga/" + folder.name + "/cover.jpg",
+                                                cover: "/cdn/manga/" + folder.name + "/cover.jpg",
                                             });
                                             _a.label = 3;
                                         case 3: return [2 /*return*/];
@@ -158,14 +159,14 @@ function dirSync() {
                         _loop_1(k);
                     }
                     return [4 /*yield*/, Promise.all(promiseFuncs)];
-                case 4:
+                case 3:
                     _a.sent();
                     db = lodash_1.default.sortBy(db, ['createdAt']).map(function (e, i) {
                         e.id = i + 1;
                         return e;
                     });
-                    _a.label = 5;
-                case 5: 
+                    _a.label = 4;
+                case 4: 
                 // console.log(newDB)
                 return [2 /*return*/, db];
             }
@@ -179,6 +180,12 @@ function mangaData(manga) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    if (process.env.MOCK) {
+                        return [2 /*return*/, lodash_1.default.times(lodash_1.default.random(10, 25), function (n) { return ({
+                                name: "0" + n++ + ".jpg",
+                                path: "https://picsum.photos/300/600.jpg?random=" + Math.random(),
+                            }); })];
+                    }
                     mangaPath = manga.pathname.replace('%DJ_PATH%', path_1.default.normalize(DJ_PATH));
                     return [4 /*yield*/, fs_1.default.promises.readdir(mangaPath, {
                             withFileTypes: true,
@@ -192,7 +199,7 @@ function mangaData(manga) {
                                 path_1.default.extname(file.name).match(/^\.(jpe?g|png|svg)$/i)) {
                                 return {
                                     name: file.name,
-                                    path: "cdn/manga/" + path_1.default.basename(mangaPath) + "/" + file.name,
+                                    path: "/cdn/manga/" + path_1.default.basename(mangaPath) + "/" + file.name,
                                 };
                             }
                         }
@@ -209,9 +216,13 @@ function updateCovers() {
         var dirs, coverdirs, imagePromises, i_1, mangadir, _dir, index, i, cover, cover_file, image, chunks, i_2, chunk;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fs_1.default.promises.readdir(DJ_PATH)];
+                case 0:
+                    if (!!process.env.MOCK) return [3 /*break*/, 13];
+                    return [4 /*yield*/, fs_1.default.promises.readdir(DJ_PATH, {
+                            withFileTypes: true,
+                        })];
                 case 1:
-                    dirs = _a.sent();
+                    dirs = (_a.sent()).filter(function (e) { return e.isDirectory(); });
                     coverdirs = [];
                     imagePromises = [];
                     i_1 = 0;
@@ -219,12 +230,12 @@ function updateCovers() {
                 case 2:
                     if (!(i_1 < dirs.length)) return [3 /*break*/, 5];
                     mangadir = dirs[i_1];
-                    return [4 /*yield*/, fs_1.default.promises.readdir(path_1.default.join(DJ_PATH, mangadir))];
+                    return [4 /*yield*/, fs_1.default.promises.readdir(path_1.default.join(DJ_PATH, mangadir.name))];
                 case 3:
                     _dir = _a.sent();
                     index = _dir.findIndex(function (e) { return e.match(/\.(png|jpe?g)$/i); });
                     if (!_dir.find(function (e) { return e === 'cover.jpg'; })) {
-                        coverdirs.push(path_1.default.join(DJ_PATH, mangadir, _dir[index]));
+                        coverdirs.push(path_1.default.join(DJ_PATH, mangadir.name, _dir[index]));
                     }
                     _a.label = 4;
                 case 4:

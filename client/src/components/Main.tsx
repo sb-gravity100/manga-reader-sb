@@ -101,7 +101,6 @@ const Main = () => {
    const { page, limit } = useSelector((state) => state.controls);
    const location = useLocation();
    const pageQuery = QueryString.parse(location.search.slice(1)).page;
-   const isBlur = useSelector((state) => state.controls.blur);
    const [getMangas, mangas] = useLazyAllMangasQuery();
    const dispatch = useDispatch();
 
@@ -179,11 +178,6 @@ const Main = () => {
                   onClick={() => dispatch(toggleBlur())}
                   className={classNames('is-blur-check', styles.refresh_btn)}
                >
-                  <input
-                     type="checkbox"
-                     checked={isBlur}
-                     onChange={() => dispatch(toggleBlur())}
-                  />
                   <div>Blur</div>
                </button>
             </div>

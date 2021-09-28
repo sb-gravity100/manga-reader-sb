@@ -4,16 +4,11 @@ import path from 'path';
 import fs, { Dirent } from 'fs';
 import _ from 'lodash';
 import Jimp from 'jimp';
+import faker from 'faker';
 import { Manga, MangaData } from '../types';
-import axios from 'axios';
-import { randomInt } from 'crypto';
 // import { randomBytes, randomInt } from 'crypto';
 
 const DJ_PATH = path.normalize(path.join(process.cwd(), 'DJ/'));
-const API_ENDPOINT = 'https://612dbf2be579e1001791dd78.mockapi.io/';
-const mockApi = axios.create({
-   baseURL: API_ENDPOINT,
-});
 
 async function getDirSize(filepath: string) {
    const dir = fs
@@ -27,20 +22,21 @@ export async function dirSync(): Promise<Manga[]> {
    let dir: Dirent[] = [];
    let db: Manga[] = [];
    if (process.env.MOCK) {
-      const res = await mockApi.get<any[]>('/mangas', {
-         params: {
-            sortBy: 'createdAt',
-            order: 'asc',
-         },
-      });
       db.push(
-         ...res.data.map((e) => {
-            e.name = e.name.map(_.capitalize).join(' ');
-            e.id = Number(e.id);
-            e.cover = `https://picsum.photos/100/200.webp?random=${
-               Math.random() * 3
-            }`;
-            return e;
+         ..._.times<Manga>(_.random(10, 100), (n) => {
+            const name = faker.helpers.randomize([
+               faker.commerce.productName(),
+               faker.company.companyName(),
+               faker.name.findName(),
+            ]);
+            return {
+               name,
+               pathname: '%DJ_PATH%/' + name,
+               createdAt: faker.date.past(),
+               size: _.random(100000, 100000000),
+               cover: `https://picsum.photos/100/300.jpg?random=${Math.random()}`,
+               id: n++,
+            };
          })
       );
    } else {
@@ -67,7 +63,7 @@ export async function dirSync(): Promise<Manga[]> {
                      pathname,
                      createdAt,
                      size,
-                     cover: `cdn/manga/${folder.name}/cover.jpg`,
+                     cover: `/cdn/manga/${folder.name}/cover.jpg`,
                   });
                }
             });
@@ -84,6 +80,12 @@ export async function dirSync(): Promise<Manga[]> {
 }
 
 export async function mangaData(manga: Manga) {
+   if (process.env.MOCK) {
+      return _.times(_.random(10, 25), (n) => ({
+         name: `0${n++}.jpg`,
+         path: `https://picsum.photos/300/600.jpg?random=${Math.random()}`,
+      }));
+   }
    const mangaPath = manga.pathname.replace(
       '%DJ_PATH%',
       path.normalize(DJ_PATH)
@@ -101,7 +103,7 @@ export async function mangaData(manga: Manga) {
             ) {
                return {
                   name: file.name,
-                  path: `cdn/manga/${path.basename(mangaPath)}/${file.name}`,
+                  path: `/cdn/manga/${path.basename(mangaPath)}/${file.name}`,
                };
             }
          }
@@ -111,30 +113,37 @@ export async function mangaData(manga: Manga) {
 }
 
 export async function updateCovers() {
-   const dirs = await fs.promises.readdir(DJ_PATH);
-   const coverdirs: string[] = [];
-   const imagePromises: Promise<Jimp>[] = [];
-   for (let i = 0; i < dirs.length; i++) {
-      const mangadir = dirs[i];
-      const _dir = await fs.promises.readdir(path.join(DJ_PATH, mangadir));
-      const index = _dir.findIndex((e) => e.match(/\.(png|jpe?g)$/i));
-      if (!_dir.find((e) => e === 'cover.jpg')) {
-         coverdirs.push(path.join(DJ_PATH, mangadir, _dir[index]));
+   if (!process.env.MOCK) {
+      const dirs = (
+         await fs.promises.readdir(DJ_PATH, {
+            withFileTypes: true,
+         })
+      ).filter((e) => e.isDirectory());
+      const coverdirs: string[] = [];
+      const imagePromises: Promise<Jimp>[] = [];
+      for (let i = 0; i < dirs.length; i++) {
+         const mangadir = dirs[i];
+         const _dir = await fs.promises.readdir(
+            path.join(DJ_PATH, mangadir.name)
+         );
+         const index = _dir.findIndex((e) => e.match(/\.(png|jpe?g)$/i));
+         if (!_dir.find((e) => e === 'cover.jpg')) {
+            coverdirs.push(path.join(DJ_PATH, mangadir.name, _dir[index]));
+         }
+      }
+      console.log('Files Read!', coverdirs.length);
+      for (var i = 0; i < coverdirs.length; i++) {
+         const cover = coverdirs[i];
+         const cover_file = path.join(path.dirname(cover), 'cover.jpg');
+         const image = await Jimp.read(cover);
+         imagePromises.push(
+            image.cover(200, 270).quality(30).writeAsync(cover_file)
+         );
+      }
+      const chunks = _.chunk(imagePromises, 10);
+      for (let i = chunks.length - 1; i >= 0; i--) {
+         const chunk = chunks[i];
+         await Promise.all(chunk);
       }
    }
-   console.log('Files Read!', coverdirs.length);
-   for (var i = 0; i < coverdirs.length; i++) {
-      const cover = coverdirs[i];
-      const cover_file = path.join(path.dirname(cover), 'cover.jpg');
-      const image = await Jimp.read(cover);
-      imagePromises.push(
-         image.cover(200, 270).quality(30).writeAsync(cover_file)
-      );
-   }
-   const chunks = _.chunk(imagePromises, 10);
-   for (let i = chunks.length - 1; i >= 0; i--) {
-      const chunk = chunks[i];
-      await Promise.all(chunk);
-   }
-   return;
 }

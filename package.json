@@ -12,7 +12,9 @@
       "dotenv": "^8.2.0",
       "express": "^4.17.1",
       "express-async-errors": "^3.1.1",
+      "faker": "^5.5.3",
       "fuse.js": "^6.4.6",
+      "gsap": "^3.7.1",
       "http-errors": "^1.8.0",
       "jimp": "^0.16.1",
       "lodash": "^4.17.21",
@@ -21,8 +23,7 @@
       "qs": "^6.10.1"
    },
    "scripts": {
-      "gitpod:start": "nodemon src/server.ts",
-      "start": "nodemon dist/server.js",
+      "start": "nodemon src/server.ts",
       "prod": "SET NODE_ENV=production & node server.js",
       "deploy": "pm2 start ecosystem.config.js && pm2 save",
       "restart": "pm2 reload manga-reader"
@@ -41,6 +42,9 @@
          "client/",
          "lib/"
       ],
+      "watch": [
+         "src/"
+      ],
       "execMap": {
          "ts": "ts-node"
       },
@@ -54,6 +58,7 @@
       "@types/compression": "^1.7.1",
       "@types/cors": "^2.8.12",
       "@types/debug": "^4.1.7",
+      "@types/faker": "^5.5.8",
       "@types/http-errors": "^1.8.1",
       "@types/lodash": "^4.14.172",
       "@types/morgan": "^1.9.3",

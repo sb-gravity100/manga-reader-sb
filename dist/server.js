@@ -62,10 +62,14 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -84,14 +88,14 @@ var database_1 = __importDefault(require("./database"));
 var folder_lister_1 = require("./lib/folder_lister");
 var api_route_1 = __importDefault(require("./api.route"));
 console.log(process.cwd());
-var _a = process.env, NODE_ENV = _a.NODE_ENV, PORT = _a.PORT;
+var _a = process.env, NODE_ENV = _a.NODE_ENV, _b = _a.PORT, PORT = _b === void 0 ? 7800 : _b;
 var CWD = process.cwd();
 var Join = function () {
     var dir = [];
     for (var _i = 0; _i < arguments.length; _i++) {
         dir[_i] = arguments[_i];
     }
-    return path_1.normalize(path_1.join.apply(void 0, __spreadArray([CWD], __read(dir))));
+    return (0, path_1.normalize)(path_1.join.apply(void 0, __spreadArray([CWD], __read(dir), false)));
 };
 var DJ_PATH = Join('DJ/');
 var port = PORT;
@@ -103,7 +107,7 @@ var boot = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                app = express_1.default();
+                app = (0, express_1.default)();
                 return [4 /*yield*/, database_1.default.ensureIndex({
                         fieldName: 'id',
                         unique: true,
@@ -113,7 +117,7 @@ var boot = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, database_1.default.remove({}, { multi: true })];
             case 2:
                 _a.sent();
-                return [4 /*yield*/, folder_lister_1.dirSync()];
+                return [4 /*yield*/, (0, folder_lister_1.dirSync)()];
             case 3:
                 mangaData = _a.sent();
                 return [4 /*yield*/, database_1.default.insert(mangaData)];
@@ -130,8 +134,8 @@ var boot = function () { return __awaiter(void 0, void 0, void 0, function () {
 }); };
 boot()
     .then(function (app) {
-    app.use(cors_1.default());
-    app.use(morgan_1.default('dev', {
+    app.use((0, cors_1.default)());
+    app.use((0, morgan_1.default)('dev', {
         skip: function (req) {
             if (req.url.length > 50) {
                 return true;
@@ -142,17 +146,17 @@ boot()
             write: function (msg) { return debug(msg.trimEnd()); },
         },
     }));
-    app.use(compression_1.default());
+    app.use((0, compression_1.default)());
     app.use('/cdn/manga', express_1.default.static(DJ_PATH));
     app.use(express_1.default.static(ASSETS_PATH));
     app.get('/(*/)?', function (_req, res) {
-        return res.sendFile(path_1.join(ASSETS_PATH, 'index.html'));
+        return res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html'));
     });
     app.get('/manga', function (_req, res) {
-        return res.sendFile(path_1.join(ASSETS_PATH, 'index.html'));
+        return res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html'));
     });
     app.use('/api', api_route_1.default);
-    app.use(function (_req, _res, next) { return next(http_errors_1.default(404)); });
+    app.use(function (_req, _res, next) { return next((0, http_errors_1.default)(404)); });
     app.use(function (err, _req, res, _next) {
         var Errors = __assign({}, err);
         console.log(err);

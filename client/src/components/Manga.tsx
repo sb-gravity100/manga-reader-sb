@@ -24,7 +24,7 @@ const Manga = () => {
    const widthValue = (controls.zoom / 10 + 0.5) * 700;
    const styles = StyleSheet.create({
       main: {
-         filter: `brightness(${controls.brightness}%)`,
+         filter: controls.brightness ? 'brightness(100%)' : 'brightness(60%)',
          maxWidth: `${widthValue}px`,
          transition: '0.3s',
       },
@@ -64,11 +64,7 @@ const Manga = () => {
                      color="#50d8d7"
                   />
                )}
-               <MangaHeader
-                  manga={manga}
-                  zoomValue={controls.zoom}
-                  brightVal={controls.brightness}
-               />
+               <MangaHeader manga={manga} />
                <div className={css(styles.main)} id="viewer">
                   {!loading &&
                      manga?.data?.map((d, k: number) => (

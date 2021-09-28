@@ -6,3 +6,4 @@ node_modules
 *.db
 reader.log
 data.db
+.env

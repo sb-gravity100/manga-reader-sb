@@ -55,7 +55,7 @@ var database_1 = __importDefault(require("./database"));
 var folder_lister_1 = require("./lib/folder_lister");
 var lodash_1 = __importDefault(require("lodash"));
 var fuse_js_1 = __importDefault(require("fuse.js"));
-var route = express_1.Router();
+var route = (0, express_1.Router)();
 var SearchIndex = [];
 var FuseIndex = [];
 var fuse = new fuse_js_1.default(SearchIndex, {
@@ -115,7 +115,7 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
                     })];
             case 1:
                 _a.sent();
-                return [4 /*yield*/, folder_lister_1.dirSync()];
+                return [4 /*yield*/, (0, folder_lister_1.dirSync)()];
             case 2:
                 mangaData_1 = _a.sent();
                 return [4 /*yield*/, database_1.default.insert(mangaData_1)];
@@ -128,7 +128,7 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
                 _a.label = 5;
             case 5:
                 if (!lodash_1.default.has(query, '_updateCovers')) return [3 /*break*/, 10];
-                return [4 /*yield*/, folder_lister_1.updateCovers()];
+                return [4 /*yield*/, (0, folder_lister_1.updateCovers)()];
             case 6:
                 _a.sent();
                 return [4 /*yield*/, database_1.default.remove({}, {
@@ -136,7 +136,7 @@ route.get('/mangas', function (req, res) { return __awaiter(void 0, void 0, void
                     })];
             case 7:
                 _a.sent();
-                return [4 /*yield*/, folder_lister_1.dirSync()];
+                return [4 /*yield*/, (0, folder_lister_1.dirSync)()];
             case 8:
                 mangaData_2 = _a.sent();
                 return [4 /*yield*/, database_1.default.insert(mangaData_2)];
@@ -212,7 +212,7 @@ route.get('/manga', function (req, res) { return __awaiter(void 0, void 0, void 
             case 1:
                 manga = _a.sent();
                 if (!manga) return [3 /*break*/, 3];
-                return [4 /*yield*/, folder_lister_1.mangaData(manga)];
+                return [4 /*yield*/, (0, folder_lister_1.mangaData)(manga)];
             case 2:
                 data = _a.sent();
                 manga.data = data;

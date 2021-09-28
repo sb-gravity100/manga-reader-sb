@@ -13,7 +13,7 @@ import ApiRoute from './api.route';
 import { Debugger } from 'debug';
 console.log(process.cwd());
 
-const { NODE_ENV, PORT } = process.env;
+const { NODE_ENV, PORT = 7800 } = process.env;
 const CWD = process.cwd();
 const Join = (...dir: string[]) => normalize(join(CWD, ...dir));
 const DJ_PATH = Join('DJ/');

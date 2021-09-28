@@ -12,7 +12,7 @@ type PageProps = {
 
 interface ControlState {
    zoom: number;
-   brightness: number;
+   brightness: boolean;
    search: {
       prev: string;
       current: string;
@@ -31,7 +31,7 @@ const initialState = {
       current: 0,
    },
    limit: 10,
-   brightness: 100,
+   brightness: true,
    search: {
       current: '',
    },
@@ -44,8 +44,8 @@ const ControlSlice = createSlice({
       setZoom(state, action: PayloadAction<number>) {
          state.zoom = action.payload;
       },
-      setBrightness(state, action: PayloadAction<number>) {
-         state.brightness = action.payload;
+      toggleBrightness(state) {
+         state.brightness = !state.brightness;
       },
       setSearch(state, action: PayloadAction<string>) {
          state.search = {
@@ -80,7 +80,7 @@ const ControlSlice = createSlice({
 
 export const {
    setZoom,
-   setBrightness,
+   toggleBrightness,
    setSearch,
    toggleBlur,
    toggleCovers,

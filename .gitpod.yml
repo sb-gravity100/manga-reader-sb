@@ -1,11 +1,9 @@
 tasks:
    - init: npm i
-     before: npm i
      name: Server
 
    - name: Client
-     before: cd client && npm i
-     init: npm i
+     init: cd client && npm i
 ports:
    - port: 3000
      visibility: public
