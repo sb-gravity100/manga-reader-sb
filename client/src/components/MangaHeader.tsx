@@ -1,33 +1,27 @@
 /* eslint-disable no-restricted-globals */
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
    MdZoomIn,
    MdZoomOut,
    MdBrightnessHigh,
    MdBrightnessLow,
-   MdVolumeUp,
    MdStop,
    MdPlayCircleFilled,
 } from 'react-icons/md';
-import { FaAngleDoubleRight, FaAngleRight } from 'react-icons/fa';
-import {
-   toggleScroll,
-   setZoom,
-   toggleBrightness,
-} from '../slices/ControlSlice';
+import { setZoom, toggleBrightness } from '../slices/ControlSlice';
 import { useDispatch, useSelector } from '../store';
 import { MangaHeaderProps } from './props';
 import gsap from 'gsap';
 import _times from 'lodash/times';
+import { useToggle } from 'react-use';
 
 const snapNum = gsap.utils.snap({ values: _times(10, (n) => n++), radius: 1 });
 
 const MangaHeader: FC<MangaHeaderProps> = ({ manga }) => {
    const [scrollID, setScrollID] = useState<any>();
+   const [scrollDown, toggleScrollDown] = useToggle(false);
    const dispatch = useDispatch();
-   const { zoom, brightness, scrollDown } = useSelector(
-      (state) => state.controls
-   );
+   const { zoom, brightness } = useSelector((state) => state.controls);
    const scrollIt = (speed: number) =>
       setInterval(
          () => scrollBy({ top: speed, left: 0, behavior: 'smooth' }),
@@ -35,22 +29,33 @@ const MangaHeader: FC<MangaHeaderProps> = ({ manga }) => {
       );
 
    const handleScrollClick = () => {
-      dispatch(toggleScroll());
-      console.log(scrollDown);
+      toggleScrollDown();
+   };
+
+   useEffect(() => {
       if (scrollDown) {
-         setScrollID(scrollIt(5));
+         setScrollID(scrollIt(4));
       } else {
          clearInterval(scrollID);
          setScrollID(undefined);
       }
-   };
+      console.log(scrollDown);
+   }, [scrollDown]);
+
+   useEffect(() => () => {
+      console.log(window.location.pathname);
+      if (window.location.pathname !== '/manga') {
+         clearInterval(scrollID);
+         setScrollID(undefined);
+      }
+   });
    return (
       <header>
          <h2 className="logo">{manga?.name || '...'}</h2>
          <nav>
             <div className="speed-control" onClick={handleScrollClick}>
                <button>
-                  {!scrollDown ? <MdStop /> : <MdPlayCircleFilled />}
+                  {scrollDown ? <MdStop /> : <MdPlayCircleFilled />}
                </button>
             </div>
             <div className="bright-control">
