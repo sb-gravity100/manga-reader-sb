@@ -1,27 +1,65 @@
-import { FC } from 'react';
-import { FaPlus, FaMinus, FaSun, FaLightbulb } from 'react-icons/fa';
-import { setZoom, toggleBrightness } from '../slices/ControlSlice';
+/* eslint-disable no-restricted-globals */
+import { FC, useState } from 'react';
+import {
+   MdZoomIn,
+   MdZoomOut,
+   MdBrightnessHigh,
+   MdBrightnessLow,
+   MdVolumeUp,
+   MdStop,
+   MdPlayCircleFilled,
+} from 'react-icons/md';
+import { FaAngleDoubleRight, FaAngleRight } from 'react-icons/fa';
+import {
+   toggleScroll,
+   setZoom,
+   toggleBrightness,
+} from '../slices/ControlSlice';
 import { useDispatch, useSelector } from '../store';
 import { MangaHeaderProps } from './props';
 import gsap from 'gsap';
 import _times from 'lodash/times';
-// import styles from '../css_modules/Manga.module.scss';
 
 const snapNum = gsap.utils.snap({ values: _times(10, (n) => n++), radius: 1 });
 
 const MangaHeader: FC<MangaHeaderProps> = ({ manga }) => {
+   const [scrollID, setScrollID] = useState<any>();
    const dispatch = useDispatch();
-   const { zoom, brightness } = useSelector((state) => state.controls);
+   const { zoom, brightness, scrollDown } = useSelector(
+      (state) => state.controls
+   );
+   const scrollIt = (speed: number) =>
+      setInterval(
+         () => scrollBy({ top: speed, left: 0, behavior: 'smooth' }),
+         80
+      );
+
+   const handleScrollClick = () => {
+      dispatch(toggleScroll());
+      console.log(scrollDown);
+      if (scrollDown) {
+         setScrollID(scrollIt(5));
+      } else {
+         clearInterval(scrollID);
+         setScrollID(undefined);
+      }
+   };
    return (
       <header>
          <h2 className="logo">{manga?.name || '...'}</h2>
          <nav>
+            <div className="speed-control" onClick={handleScrollClick}>
+               <button>
+                  {!scrollDown ? <MdStop /> : <MdPlayCircleFilled />}
+               </button>
+            </div>
             <div className="bright-control">
                <button onClick={() => dispatch(toggleBrightness())}>
-                  <FaLightbulb
-                     opacity={brightness ? 1 : 0.4}
-                     fontSize="1.1rem"
-                  />
+                  {brightness ? (
+                     <MdBrightnessHigh fontSize="1.1rem" />
+                  ) : (
+                     <MdBrightnessLow fontSize="1.1rem" />
+                  )}
                </button>
             </div>
             <div className="zoom-control">
@@ -29,13 +67,13 @@ const MangaHeader: FC<MangaHeaderProps> = ({ manga }) => {
                   type="button"
                   onClick={() => dispatch(setZoom(snapNum(zoom - 1)))}
                >
-                  <FaMinus />
+                  <MdZoomOut fontSize="1.2rem" />
                </button>
                <button
                   type="button"
                   onClick={() => dispatch(setZoom(snapNum(zoom + 1)))}
                >
-                  <FaPlus />
+                  <MdZoomIn fontSize="1.2rem" />
                </button>
             </div>
          </nav>

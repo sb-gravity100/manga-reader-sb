@@ -22,6 +22,7 @@ interface ControlState {
    limit: number;
    refresh: boolean;
    _updateCovers: boolean;
+   scrollDown: boolean;
 }
 
 const initialState = {
@@ -75,11 +76,15 @@ const ControlSlice = createSlice({
                ? 0
                : action.payload;
       },
+      toggleScroll(state) {
+         state.scrollDown = !state.scrollDown;
+      },
    },
 });
 
 export const {
    setZoom,
+   toggleScroll,
    toggleBrightness,
    setSearch,
    toggleBlur,

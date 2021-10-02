@@ -135,6 +135,7 @@
    right: 1rem;
    display: flex;
    flex-direction: column;
+   z-index: 99999;
 
    button,
    a {

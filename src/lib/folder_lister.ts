@@ -83,7 +83,7 @@ export async function mangaData(manga: Manga) {
    if (process.env.MOCK) {
       return _.times(_.random(10, 25), (n) => ({
          name: `0${n++}.jpg`,
-         path: `https://picsum.photos/300/600.jpg?random=${Math.random()}`,
+         path: `https://picsum.photos/500?random=${Math.random()}`,
       }));
    }
    const mangaPath = manga.pathname.replace(
