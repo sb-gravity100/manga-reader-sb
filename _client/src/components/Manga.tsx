@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useSearchParam } from 'react-use';
-import { ProgressBar } from 'scrolling-based-progressbar';
 import MangaView from './MangaView';
 import MangaHeader from './MangaHeader';
 import ErrorBlock from './sub-components/ErrorBlock';
@@ -56,14 +55,6 @@ const Manga = () => {
             isFetching={isFetching}
          >
             <div className="wrapper">
-               {!loading && (
-                  <ProgressBar
-                     height="5px"
-                     bgColor="#1c2122"
-                     top="30px"
-                     color="#50d8d7"
-                  />
-               )}
                <MangaHeader manga={manga} />
                <div className={css(styles.main)} id="viewer">
                   {!loading &&

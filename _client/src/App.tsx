@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Main from './components/Main';
 import Manga from './components/Manga';
 import NotFound from './components/sub-components/404';
@@ -7,11 +7,12 @@ import './stylesheets/App.scss';
 
 const App = () => {
    return (
-      <Switch>
-         <Route exact path="/" component={Main} />
-         <Route path="/manga" component={Manga} />
-         <Route component={NotFound} />
-      </Switch>
+      <Routes>
+         <Route path="/" element={<Main />}>
+            <Route path="manga" element={<Manga />} />
+         </Route>
+         <Route path="*" element={<NotFound />} />
+      </Routes>
    );
 };
 
