@@ -14,7 +14,6 @@
       "express-async-errors": "^3.1.1",
       "faker": "^5.5.3",
       "fuse.js": "^6.4.6",
-      "gsap": "^3.7.1",
       "http-errors": "^1.8.0",
       "jimp": "^0.16.1",
       "lodash": "^4.17.21",
