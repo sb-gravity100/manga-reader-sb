@@ -2,25 +2,25 @@ import 'intersection-observer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, useLocation } from 'react-router-dom';
+import {
+   BrowserRouter as Router,
+   useLocation,
+   useNavigate,
+} from 'react-router-dom';
 import store from './store';
 import { FaAngleUp } from 'react-icons/fa';
 import { createBrowserHistory } from 'history';
 import App from './App';
-import styles from './style.module.scss';
 import './stylesheets/index.scss';
-import Footer from './Footer';
 import { ButtonGroup, Button } from 'react-bootstrap';
-import classNames from 'classnames';
 
 const ToTopComponent: React.FC = () => {
    const location = useLocation();
-   const history = createBrowserHistory();
+   const nav = useNavigate();
    return (
       <ButtonGroup
          vertical
-         style={{ right: '1rem', bottom: '3rem' }}
-         className="position-fixed"
+         style={{ right: '1rem', bottom: '3rem', position: 'fixed' }}
       >
          <Button
             onClick={() =>
@@ -34,7 +34,7 @@ const ToTopComponent: React.FC = () => {
             <FaAngleUp fontSize="3rem" />
          </Button>
          {location.pathname.trim() !== '/' && (
-            <Button variant="secondary" onClick={() => history.back()}>
+            <Button variant="secondary" onClick={() => nav('/')}>
                Go Back
             </Button>
          )}
@@ -47,7 +47,6 @@ ReactDOM.render(
       <Provider store={store}>
          <App />
          <ToTopComponent />
-         <Footer />
       </Provider>
    </Router>,
    document.querySelector('#container')

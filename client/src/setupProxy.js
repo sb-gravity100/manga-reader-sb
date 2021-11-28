@@ -1,10 +1,10 @@
 const { execSync } = require('child_process');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const { hostname } = require('os');
+const { platform } = require('os');
 
 let url = 'http://localhost:7800';
 
-if (hostname().match(/(seven|seven-PC)/i)) {
+if (!process.env.USER?.match(/gitpod/i)) {
    url = 'http://localhost:7800';
 } else {
    url = execSync('gp url 7800').toString().trim();

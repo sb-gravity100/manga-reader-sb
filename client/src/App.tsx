@@ -8,7 +8,7 @@ import './stylesheets/App.scss';
 const App = () => {
    return (
       <Routes>
-         <Route path="/" element={<Main />}></Route>
+         <Route path="/" caseSensitive element={<Main />} />
          <Route path="/manga" element={<Manga />} />
          <Route path="*" element={<NotFound />} />
       </Routes>

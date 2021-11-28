@@ -24,6 +24,7 @@ const debug: Debugger =
 debug('Starting...');
 
 const boot = async () => {
+   console.log(process.env.USER);
    const app = express();
    await db.ensureIndex({
       fieldName: 'id',
@@ -59,7 +60,10 @@ boot()
       );
       app.use(compression());
 
-      app.use('/cdn/manga', express.static(DJ_PATH));
+      if (!process.env.USER?.match(/gitpod/i)) {
+         app.use('/cdn/manga', express.static(DJ_PATH));
+      }
+
       app.use(express.static(ASSETS_PATH));
 
       app.get('/(*/)?', (_req, res) =>
