@@ -2,26 +2,27 @@ import 'intersection-observer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import {
-   BrowserRouter as Router,
-   Link,
-   useLocation,
-   useHistory,
-} from 'react-router-dom';
+import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import store from './store';
 import { FaAngleUp } from 'react-icons/fa';
+import { createBrowserHistory } from 'history';
 import App from './App';
 import styles from './style.module.scss';
 import './stylesheets/index.scss';
 import Footer from './Footer';
+import { ButtonGroup, Button } from 'react-bootstrap';
+import classNames from 'classnames';
 
 const ToTopComponent: React.FC = () => {
    const location = useLocation();
-   const history = useHistory();
-   // console.log(location.pathname);
+   const history = createBrowserHistory();
    return (
-      <div className={styles.StickyBar}>
-         <button
+      <ButtonGroup
+         vertical
+         style={{ right: '1rem', bottom: '3rem' }}
+         className="position-fixed"
+      >
+         <Button
             onClick={() =>
                window.scroll({
                   behavior: 'smooth',
@@ -31,11 +32,13 @@ const ToTopComponent: React.FC = () => {
             }
          >
             <FaAngleUp fontSize="3rem" />
-         </button>
+         </Button>
          {location.pathname.trim() !== '/' && (
-            <button onClick={() => history.goBack()}>Go Back</button>
+            <Button variant="secondary" onClick={() => history.back()}>
+               Go Back
+            </Button>
          )}
-      </div>
+      </ButtonGroup>
    );
 };
 

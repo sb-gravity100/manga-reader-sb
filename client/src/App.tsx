@@ -8,9 +8,8 @@ import './stylesheets/App.scss';
 const App = () => {
    return (
       <Routes>
-         <Route path="/" element={<Main />}>
-            <Route path="manga" element={<Manga />} />
-         </Route>
+         <Route path="/" element={<Main />}></Route>
+         <Route path="/manga" element={<Manga />} />
          <Route path="*" element={<NotFound />} />
       </Routes>
    );

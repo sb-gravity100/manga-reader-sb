@@ -133,22 +133,22 @@
    position: fixed;
    bottom: 3rem;
    right: 1rem;
-   display: flex;
-   flex-direction: column;
-   z-index: 99999;
+   // display: flex;
+   // flex-direction: column;
+   // z-index: 99999;
 
-   button,
-   a {
-      padding: 1rem;
-      background: #eee;
-      color: #000;
-      z-index: 9999;
-      opacity: 0.35;
-      cursor: pointer;
+   // button,
+   // a {
+   //    padding: 1rem;
+   //    background: #eee;
+   //    color: #000;
+   //    z-index: 9999;
+   //    opacity: 0.35;
+   //    cursor: pointer;
 
-      &:hover {
-         color: #000;
-         opacity: 0.9;
-      }
-   }
+   //    &:hover {
+   //       color: #000;
+   //       opacity: 0.9;
+   //    }
+   // }
 }

@@ -49,8 +49,6 @@ body {
    font-family: $font;
    line-height: 1.3;
    width: 100%;
-   color: white;
-   background: $x-dark;
    overflow-y: scroll;
    overflow-x: hidden;
 }
@@ -60,27 +58,27 @@ a {
    text-decoration: none;
 }
 
-img {
-   width: 100%;
-}
+// img {
+//    width: 100%;
+// }
 
-button {
-   @include btn(); // $bgcolor: $x-primary;
-   // font-size: 1rem;
-   // font-family: $font;
-   // @include bgtext($bgcolor);
-   // border: none;
-   // border-radius: 0;
-   // padding: 0.5rem;
-   // transition: 0.2s;
-   // cursor: pointer;
-   // display: flex;
-   // align-items: center;
-   // justify-content: center;
-   // &:hover {
-   //    color: $x-secondary;
-   // }
-}
+// button {
+//    @include btn(); // $bgcolor: $x-primary;
+//    // font-size: 1rem;
+//    // font-family: $font;
+//    // @include bgtext($bgcolor);
+//    // border: none;
+//    // border-radius: 0;
+//    // padding: 0.5rem;
+//    // transition: 0.2s;
+//    // cursor: pointer;
+//    // display: flex;
+//    // align-items: center;
+//    // justify-content: center;
+//    // &:hover {
+//    //    color: $x-secondary;
+//    // }
+// }
 
 #container {
    display: flex;
@@ -95,18 +93,5 @@ button {
       justify-content: stretch;
       align-items: stretch;
       flex-grow: 1;
-   }
-}
-
-footer {
-   padding: 0.3rem;
-   margin-top: auto;
-   p {
-      display: flex;
-      align-items: center;
-      font-size: 0.8rem;
-      svg {
-         margin-left: 10px;
-      }
    }
 }

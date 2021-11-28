@@ -9,7 +9,7 @@ import {
    FaAngleDoubleLeft,
    FaAngleDoubleRight,
 } from 'react-icons/fa';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import _, { add } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
@@ -17,6 +17,7 @@ import { NavProps, ReaderProps } from './props';
 import Loading from './sub-components/Loading';
 import { useSelector } from '../store';
 import QueryString from 'qs';
+import { createBrowserHistory } from 'history';
 
 const CurryNav = _.curry((cur: number, max: number, addUpTo: number) => {
    const next: number[] = [];
@@ -35,9 +36,9 @@ const CurryNav = _.curry((cur: number, max: number, addUpTo: number) => {
 
 const Navigation: FC<NavProps> = (props) => {
    const addPages = 2;
-   const history = useHistory();
+   const history = createBrowserHistory();
    const location = useLocation();
-   const { page, limit } = useSelector((state) => state.controls);
+   const { page } = useSelector((state) => state.controls);
    const [navState, setNav] = useState(
       CurryNav(Number(page.current), page.total, addPages)
    );
