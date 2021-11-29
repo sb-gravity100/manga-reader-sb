@@ -1,151 +1,120 @@
 /* eslint-disable no-script-url */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
-import ReaderItem from './sub-components/ReaderItem';
-import classname from 'classnames';
-import {
-   FaAngleLeft,
-   FaAngleRight,
-   FaAngleDoubleLeft,
-   FaAngleDoubleRight,
-} from 'react-icons/fa';
-import { useLocation } from 'react-router-dom';
-import _, { add } from 'lodash';
+import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
-import Select from 'react-select';
-import { NavProps, ReaderProps } from './props';
-import Loading from './sub-components/Loading';
-import { useSelector } from '../store';
-import QueryString from 'qs';
-import { createBrowserHistory } from 'history';
+import {
+   Card,
+   Col,
+   Container,
+   Placeholder,
+   Pagination,
+   Stack,
+} from 'react-bootstrap';
+import { Link, useSearchParams } from 'react-router-dom';
+import img from '../img/404.jpg';
+import { setPage } from '../slices/ControlSlice';
+import { useAllMangasQuery } from '../slices/MangaApi';
+import { useDispatch, useSelector } from '../store';
 
-const CurryNav = _.curry((cur: number, max: number, addUpTo: number) => {
-   const next: number[] = [];
-   const prev: number[] = [];
-   for (let i = cur; i < max - 1 && i < cur + addUpTo; i++) {
-      next.push(i + 1);
-   }
-   for (let i = cur; i > 0 && i > cur - addUpTo; i--) {
-      prev.push(i - 1);
-   }
-   return {
-      next,
-      prev: prev.reverse(),
-   };
-});
+interface PPage {
+   page: any;
+   next: any;
+}
 
-const Navigation: FC<NavProps> = (props) => {
-   const addPages = 2;
-   const history = createBrowserHistory();
-   const location = useLocation();
-   const { page } = useSelector((state) => state.controls);
-   const [navState, setNav] = useState(
-      CurryNav(Number(page.current), page.total, addPages)
-   );
-   const pushPage = (_page: number) => {
-      const currentParams = QueryString.parse(location.search.slice(1));
-      history.push({
-         search:
-            '?' +
-            QueryString.stringify(
-               Object.assign(currentParams, {
-                  page: _page,
-               })
-            ),
-      });
-      // props.refetch({
-      //    page: _page,
-      //    limit,
-      // });
-   };
-   useEffect(() => {
-      if (page.current === page.total - 1 || page.current === 0) {
-         setNav(CurryNav(Number(page.current), page.total, addPages + 2));
-      } else if (page.total - 1 - page.current === 1 || page.current === 1) {
-         setNav(CurryNav(Number(page.current), page.total, addPages + 1));
-      } else {
-         setNav(CurryNav(Number(page.current), page.total, addPages));
-      }
-      // console.log(page.total - 1 - page.current, page.current);
-   }, [page]);
+const PageNav: FC<PPage> = ({ page, next }) => {
    return (
-      <div className="nav">
-         <button
-            disabled={
-               typeof page.first !== 'number' || page.current === page.first
+      <Pagination className="justify-content-center m-0">
+         <Pagination.First
+            onClick={() =>
+               next(
+                  new URLSearchParams({
+                     page: page.first as any,
+                  })
+               )
             }
-            onClick={() => pushPage(page.first)}
-         >
-            <FaAngleDoubleLeft />
-         </button>
-         <button
-            disabled={
-               typeof page.prev !== 'number' || page.current === page.first
+         />
+         <Pagination.Prev
+            onClick={() =>
+               next(
+                  new URLSearchParams({
+                     page: page.prev as any,
+                  })
+               )
             }
-            onClick={() => pushPage(page.prev)}
-         >
-            <FaAngleLeft />
-         </button>
-         {navState.prev.map((v) => {
-            return (
-               <button key={v} onClick={() => pushPage(v)}>
-                  {v}
-               </button>
-            );
-         })}
-         <button className="current">{page.current}</button>
-         {navState.next.map((v) => {
-            return (
-               <button key={v} onClick={() => pushPage(v)}>
-                  {v}
-               </button>
-            );
-         })}
-         <button
-            disabled={
-               typeof page.next !== 'number' || page.current === page.last
-            }
-            onClick={() => pushPage(page.next)}
-         >
-            <FaAngleRight />
-         </button>
-         <button
-            disabled={
-               typeof page.last !== 'number' || page.current === page.last
-            }
-            onClick={() => pushPage(page.last)}
-         >
-            <FaAngleDoubleRight />
-         </button>
-      </div>
+         />
+         {_.times(10, (n) => (
+            <Pagination.Item
+               onClick={() =>
+                  next(
+                     new URLSearchParams({
+                        page: n as any,
+                     })
+                  )
+               }
+               key={n}
+               active={page.current === n}
+            >
+               {n + 1}
+            </Pagination.Item>
+         ))}
+         <Pagination.Next />
+         <Pagination.Last />
+      </Pagination>
    );
 };
 
-const Reader: FC<ReaderProps> = (props) => {
-   const controls = useSelector((state) => state.controls);
-   const limitOptions = _.times(10, (n) => ({
-      value: n + 5,
-      label: n + 5,
-   }));
+const Reader: FC = () => {
+   const [params, next] = useSearchParams(
+      new URLSearchParams({
+         page: '0',
+      })
+   );
+   const mangas = useAllMangasQuery({
+      page: Number(params.get('page') || 0),
+   });
+   const dispatch = useDispatch();
+   const page = useSelector((store) => store.controls.page);
+   useEffect(() => {
+      dispatch(
+         setPage({
+            first: mangas.data?.first as number,
+            last: mangas.data?.last as number,
+            next: mangas.data?.next as number,
+            prev: mangas.data?.prev as number,
+            total: mangas.data?.total as number,
+            current: Number(params.get('page') || 0),
+         })
+      );
+   }, [params]);
    return (
-      <div className="main-reader">
-         {typeof controls.page.total === 'number' && (
-            <>
-               <Navigation refetch={props.refetch} />
-            </>
-         )}
-         <div className="main-reader-box">
-            {!props.loading && props.data ? (
-               <div className={classname('main-reader-flex', 'current')}>
-                  {props.data?.map((item) => (
-                     <ReaderItem key={item.id} item={item} />
-                  ))}
-               </div>
-            ) : (
-               <Loading />
-            )}
+      <Container className="d-flex flex-column gap-3">
+         <PageNav next={next} page={page} />
+         <div className="d-flex h-auto flex-wrap gap-2 align-items-center justify-content-between">
+            {mangas.isSuccess &&
+               mangas.data?.items.map((n) => (
+                  <Link to={'/manga/' + n.id}>
+                     <Card
+                        key={n.id}
+                        className="bg-light"
+                        style={{ width: '12rem' }}
+                     >
+                        <Card.Img
+                           variant="top"
+                           height="180"
+                           src={n.cover || img}
+                        />
+                        <Card.Body className="py-1 px-2">
+                           <Card.Title className="fs-6 text-dark text-center text-truncate">
+                              {n.name}
+                           </Card.Title>
+                        </Card.Body>
+                     </Card>
+                  </Link>
+               ))}
          </div>
-      </div>
+         <PageNav next={next} page={page} />
+      </Container>
    );
 };
 

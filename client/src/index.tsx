@@ -20,7 +20,7 @@ const ToTopComponent: React.FC = () => {
    return (
       <ButtonGroup
          vertical
-         style={{ right: '1rem', bottom: '3rem', position: 'fixed' }}
+         style={{ right: '2rem', bottom: '3rem', position: 'fixed' }}
       >
          <Button
             onClick={() =>

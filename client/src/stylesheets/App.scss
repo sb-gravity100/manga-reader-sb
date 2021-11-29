@@ -1,5 +1,13 @@
+@import '~bootstrap/scss/functions';
+
+$dark: #051923;
+$secondary: #263c41;
+$light: #f8f2dc;
+$bg-color: #d9d9d9;
+$primary: #4ecdc4;
+
 @import '~bootstrap/scss/bootstrap';
 
-// @import '~bootstrap/scss/variables';
-// @import '~bootstrap/scss/mixins';
-// @import '~bootstrap/scss/root';
+img {
+   object-fit: cover;
+}

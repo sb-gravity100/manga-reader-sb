@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import classNames from 'classnames';
+import React, { useCallback, useRef } from 'react';
 import {
    Button,
    Container,
@@ -28,16 +29,15 @@ const Header: React.FC = () => {
                   <img
                      alt=""
                      src="/favicon.png"
-                     width="30"
-                     height="30"
+                     width="50"
+                     height="50"
                      className="d-inline-block align-top"
-                  />{' '}
-                  <Navbar.Text className="text-light">Za Warudo</Navbar.Text>
+                  />
                </Navbar.Brand>
             </Link>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse className="justify-content-md-end">
-               <Form className="d-flex">
+            <Navbar.Collapse className="justify-content-md-end py-2">
+               <Form className={classNames('d-flex')}>
                   <InputGroup>
                      <FormControl
                         type="search"
@@ -47,7 +47,7 @@ const Header: React.FC = () => {
                         ref={searchRef as any}
                         onChange={changedSearch}
                      />
-                     <Button variant="outline-secondary">Search</Button>
+                     <Button variant="outline-light">Search</Button>
                   </InputGroup>
                </Form>
             </Navbar.Collapse>
