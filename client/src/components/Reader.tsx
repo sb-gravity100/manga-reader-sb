@@ -19,7 +19,7 @@ const Reader: FC = () => {
       })
    );
    const mangas = useAllMangasQuery({
-      page: Number(params.get('page') || 0),
+      page: isNaN(Number(params.get('page'))) ? Number(params.get('page')) : 0,
    });
    const dispatch = useDispatch();
    const page = useSelector((store) => store.controls.page);
