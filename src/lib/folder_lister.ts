@@ -9,6 +9,7 @@ import { Manga, MangaData } from '../types';
 // import { randomBytes, randomInt } from 'crypto';
 
 const DJ_PATH = path.normalize(path.join(process.cwd(), 'DJ/'));
+const isGitpod = /gitpod/i.test(process.env.USER as string);
 
 async function getDirSize(filepath: string) {
    const dir = fs
@@ -21,7 +22,7 @@ async function getDirSize(filepath: string) {
 export async function dirSync(): Promise<Manga[]> {
    let dir: Dirent[] = [];
    let db: Manga[] = [];
-   if (process.env.MOCK) {
+   if (isGitpod) {
       db.push(
          ..._.times<Manga>(_.random(10, 100), (n) => {
             const name = faker.helpers.randomize([
@@ -80,7 +81,7 @@ export async function dirSync(): Promise<Manga[]> {
 }
 
 export async function mangaData(manga: Manga) {
-   if (process.env.MOCK) {
+   if (isGitpod) {
       return _.times(_.random(10, 25), (n) => ({
          name: `0${n++}.jpg`,
          path: `https://picsum.photos/500?random=${Math.random()}`,

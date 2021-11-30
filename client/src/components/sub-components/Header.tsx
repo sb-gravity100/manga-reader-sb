@@ -29,8 +29,7 @@ const Header: React.FC = () => {
                   <img
                      alt=""
                      src="/favicon.png"
-                     width="50"
-                     height="50"
+                     height="70"
                      className="d-inline-block align-top"
                   />
                </Navbar.Brand>

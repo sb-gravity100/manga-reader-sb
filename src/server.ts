@@ -22,9 +22,10 @@ const ASSETS_PATH = Join('public/');
 const debug: Debugger =
    NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
+const isGitpod = /gitpod/i.test(process.env.USER as string);
 
 const boot = async () => {
-   console.log(process.env.USER);
+   console.log(isGitpod);
    const app = express();
    await db.ensureIndex({
       fieldName: 'id',
@@ -60,7 +61,7 @@ boot()
       );
       app.use(compression());
 
-      if (!process.env.USER?.match(/gitpod/i)) {
+      if (!isGitpod) {
          app.use('/cdn/manga', express.static(DJ_PATH));
       }
 
