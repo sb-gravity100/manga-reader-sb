@@ -24,7 +24,7 @@ export async function dirSync(): Promise<Manga[]> {
    let db: Manga[] = [];
    if (isGitpod) {
       db.push(
-         ..._.times<Manga>(_.random(10, 100), (n) => {
+         ..._.times<Manga>(_.random(120, 200), (n) => {
             const name = faker.helpers.randomize([
                faker.commerce.productName(),
                faker.company.companyName(),

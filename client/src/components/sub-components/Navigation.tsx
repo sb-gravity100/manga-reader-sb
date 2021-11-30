@@ -1,22 +1,27 @@
 import _ from 'lodash';
 import { FC } from 'react';
 import { Pagination, PageItemProps } from 'react-bootstrap';
+import { MdRefresh } from 'react-icons/md';
 
 interface PPage {
    page: any;
    next: any;
+   refresh?: any;
 }
 
-const PaginationComponent: FC<PPage> = ({ page, next }) => {
+const PaginationComponent: FC<PPage> = ({ page, next, refresh }) => {
    var renderPages = () => {
       var pages: JSX.Element[] = [];
-      var start = page.current - 5;
+      var start = page.current;
       var end = page.current + 5;
-      if (start < 0) start = 0;
-      if (end > page.total) end = page.total;
-      if (page.total < 10) {
-         start = 0
+      start -= 4;
+      if (end > page.total) {
          end = page.total;
+         start -= 5 - (page.total - page.current);
+      }
+      if (start < 0) {
+         start = 0;
+         end += 5 - page.current - 1;
       }
       for (let n = start; n < end; n++) {
          pages.push(
@@ -39,6 +44,9 @@ const PaginationComponent: FC<PPage> = ({ page, next }) => {
    };
    return (
       <Pagination className="justify-content-center m-0">
+         <Pagination.Item onClick={refresh} className="me-3">
+            <MdRefresh />
+         </Pagination.Item>
          <Pagination.First
             onClick={() =>
                next(

@@ -15,7 +15,9 @@ export interface MangaData {
    path: string;
 }
 
-export type SearchResult = Fuse.FuseResult<Manga>;
+export type SearchResult = {
+   item: Manga;
+};
 
 export type MangasResult = {
    items: Manga[];

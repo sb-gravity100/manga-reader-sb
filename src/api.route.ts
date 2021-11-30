@@ -20,7 +20,6 @@ interface MangasQuery {
    order?: string | string[] | any[];
    sort?: string | string[];
    refresh?: any;
-   _updateCovers?: any;
    page?: number;
 }
 
@@ -65,18 +64,8 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
    if (!query.order) {
       query.order = '1';
    }
-   if (_.has(query, 'refresh')) {
-      await db.remove(
-         {},
-         {
-            multi: true,
-         }
-      );
-      const mangaData = await dirSync();
-      await db.insert(mangaData);
-      results = db.find({});
-   }
-   if (_.has(query, '_updateCovers')) {
+   if (_.has(query, 'refresh') && query.refresh) {
+      console.log('refresh');
       await updateCovers();
       await db.remove(
          {},

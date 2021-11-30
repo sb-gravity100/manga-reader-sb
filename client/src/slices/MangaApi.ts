@@ -1,14 +1,5 @@
-import {
-   BaseQueryFn,
-   createApi,
-   FetchArgs,
-   fetchBaseQuery,
-   FetchBaseQueryError,
-   FetchBaseQueryMeta,
-} from '@reduxjs/toolkit/query/react';
-import axios, { AxiosRequestConfig, AxiosError } from 'axios';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import _ from 'lodash';
-import qs from 'qs';
 import { Manga, SearchResult, MangasResult } from '../../../src/types';
 
 interface MangasQuery {
@@ -17,7 +8,6 @@ interface MangasQuery {
    order?: any;
    sort?: string | string[];
    refresh?: any;
-   _updateCovers?: any;
    page?: number;
 }
 
