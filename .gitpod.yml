@@ -1,9 +1,14 @@
 tasks:
-   - command: yarn
+   - command: |
+        yarn
+        yarn start:dev
      name: Server
 
    - name: Client
-     command: cd client && yarn
+     command: |
+        cd client
+        yarn
+        yarn start
 ports:
    - port: 3000
      visibility: public
