@@ -9,7 +9,7 @@ import {
    Navbar,
    ListGroup,
    Card,
-   Image
+   Image,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Manga } from '../../../../src/types';
@@ -20,11 +20,13 @@ interface PSearch {
 }
 
 const SearchResult: React.FC<PSearch> = (props) => {
-   return <ListGroup.Item>
-      <Link to={`/manga/${props.item.id}`}>
-         <Image src={props.item.cover} thumbnail />
-      </Link>
-   </ListGroup.Item>;
+   return (
+      <ListGroup.Item>
+         <Link to={`/manga/${props.item.id}`}>
+            <Image src={props.item.cover} thumbnail />
+         </Link>
+      </ListGroup.Item>
+   );
 };
 
 const Header: React.FC = () => {
