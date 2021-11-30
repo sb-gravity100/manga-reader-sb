@@ -39,15 +39,17 @@ const App = () => {
    return (
       <Routes>
          <Route path="/" caseSensitive element={<Main />} />
-         <Route
-            path="/manga"
-            element={
-               <>
-                  <Manga />
-                  <ToTopComponent />
-               </>
-            }
-         />
+         <Route path="/manga">
+            <Route
+               path=":id"
+               element={
+                  <>
+                     <Manga />
+                     <ToTopComponent />
+                  </>
+               }
+            />
+         </Route>
          <Route path="*" element={<NotFound />} />
       </Routes>
    );

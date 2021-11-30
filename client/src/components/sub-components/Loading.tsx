@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { FC } from 'react';
-import { Card, Placeholder } from 'react-bootstrap';
+import { Card, Container, Placeholder, Spinner } from 'react-bootstrap';
 
 export const LoadingMangas: FC = () => (
    <>
@@ -15,4 +15,17 @@ export const LoadingMangas: FC = () => (
          </Card>
       ))}
    </>
+);
+
+export const LoadingScreen: FC = () => (
+   <div
+      style={
+         { height: '100vh', '--bs-bg-opacity': '.5', width: '100vh' } as any
+      }
+      className="d-flex position-fixed top-0 start-0 bg-secondary w-100 align-items-center justify-content-center"
+   >
+      <Spinner animation="border" role="status">
+         <span className="visually-hidden">Loading...</span>
+      </Spinner>
+   </div>
 );

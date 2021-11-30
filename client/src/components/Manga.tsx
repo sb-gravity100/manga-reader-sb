@@ -5,10 +5,14 @@ import { useGetMangaQuery } from '../slices/MangaApi';
 import { useSelector } from '../store';
 // import classNames from 'classnames';
 import { StyleSheet, css } from 'aphrodite';
-// import Loading from './sub-components/Loading';
+import { LoadingScreen } from './sub-components/Loading';
 
 const Manga = () => {
-   return <div className="container"></div>;
+   return (
+      <div className="container">
+         <LoadingScreen />
+      </div>
+   );
 };
 
 export default Manga;
