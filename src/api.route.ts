@@ -25,24 +25,21 @@ interface MangasQuery {
 }
 
 const route = Router();
-let SearchIndex: types.Manga[] = [];
-let FuseIndex = Fuse.createIndex(['name'], SearchIndex);
-const fuse = new Fuse(SearchIndex, {
-   includeScore: true,
-   threshold: 0.34,
-   useExtendedSearch: true,
-   keys: ['name'],
-});
 
 export default route;
 
 route.get('/search', async (req, res) => {
    const { query } = req;
-   if (SearchIndex.length === 0) {
-      SearchIndex = await db.find<types.Manga>({});
-      FuseIndex.setSources(SearchIndex);
-      fuse.setCollection(SearchIndex, FuseIndex);
-   }
+   let SearchIndex = await db.find<types.Manga>({});
+   let FuseIndex = Fuse.createIndex(['name'], SearchIndex);
+   const fuse = new Fuse(SearchIndex, {
+      includeScore: true,
+      threshold: 0.35,
+      useExtendedSearch: true,
+      keys: ['name'],
+   });
+   FuseIndex.setSources(SearchIndex);
+   fuse.setCollection(SearchIndex, FuseIndex);
    if (_.isString(query.q)) {
       const results = fuse.search(query.q, {
          limit: 15,
@@ -78,9 +75,6 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       const mangaData = await dirSync();
       await db.insert(mangaData);
       results = db.find({});
-      SearchIndex = await results;
-      FuseIndex.setSources(SearchIndex);
-      fuse.setCollection(SearchIndex, FuseIndex);
    }
    if (_.has(query, '_updateCovers')) {
       await updateCovers();
@@ -140,6 +134,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
          ...pageHeaders,
          total: totalPage,
          limit: query.limit,
+         current: query.page,
       });
    } else {
       if (_.isNumber(query.limit)) {

@@ -25,9 +25,6 @@ interface ControlState {
 const initialState = {
    blur: true,
    zoom: 5,
-   page: {
-      current: 0,
-   },
    limit: 10,
    brightness: true,
    search: '',
@@ -55,19 +52,6 @@ const ControlSlice = createSlice({
       toggleCovers(state) {
          state._updateCovers = !state._updateCovers;
       },
-      setPage(state, action?: PayloadAction<PageProps>) {
-         if (action) {
-            state.page = action.payload;
-         }
-      },
-      gotoPage(state, action: PayloadAction<number>) {
-         state.page.current =
-            action.payload > state.page.total - 1
-               ? 9
-               : action.payload < 0
-               ? 0
-               : action.payload;
-      },
       toggleScroll(state) {
          state.scrollDown = !state.scrollDown;
       },
@@ -82,8 +66,6 @@ export const {
    toggleBlur,
    toggleCovers,
    toggleRefresh,
-   setPage,
-   gotoPage,
 } = ControlSlice.actions;
 
 export default ControlSlice.reducer;

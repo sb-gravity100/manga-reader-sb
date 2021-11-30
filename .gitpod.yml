@@ -1,9 +1,9 @@
 tasks:
-   - command: npm i
+   - command: yarn
      name: Server
 
    - name: Client
-     command: cd client && npm i
+     command: cd client && yarn
 ports:
    - port: 3000
      visibility: public

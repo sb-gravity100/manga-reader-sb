@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import Image from 'react-cool-img';
-import errorImg from '../img/404.jpg';
 import { MangaViewProps } from './props';
 
 const MangaView: FC<MangaViewProps> = ({ panelImg }) => (
@@ -8,7 +7,7 @@ const MangaView: FC<MangaViewProps> = ({ panelImg }) => (
       <Image
          src={panelImg.path}
          alt={panelImg.name}
-         error={errorImg}
+         error={'/404.jpg'}
          style={!panelImg ? { background: '#444', height: '500px' } : {}}
       />
    </div>
