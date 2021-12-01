@@ -39,7 +39,7 @@ const App = () => {
    return (
       <Routes>
          <Route path="/" caseSensitive element={<Main />} />
-         <Route path="/manga">
+         <Route path="manga">
             <Route
                path=":id"
                element={

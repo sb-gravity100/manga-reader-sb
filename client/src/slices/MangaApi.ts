@@ -35,7 +35,7 @@ const ApiSlice = createApi({
             };
          },
       }),
-      getManga: builder.query<Manga, number>({
+      getManga: builder.query<Manga, number | string>({
          query(id) {
             return {
                url: `/manga`,

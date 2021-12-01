@@ -8,10 +8,7 @@ import {
    MdStop,
    MdPlayCircleFilled,
 } from 'react-icons/md';
-import { setZoom, toggleBrightness } from '../slices/ControlSlice';
-import { useDispatch, useSelector } from '../store';
 import { MangaHeaderProps } from './props';
-import _times from 'lodash/times';
 import { useToggle } from 'react-use';
 
 const MangaHeader: FC<MangaHeaderProps> = ({ manga }) => {
