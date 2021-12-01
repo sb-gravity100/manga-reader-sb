@@ -1,14 +1,14 @@
 import { FC } from 'react';
 import Image from 'react-cool-img';
-import { MangaViewProps } from './props';
+import { MangaViewProps } from '../props';
 
 const MangaView: FC<MangaViewProps> = ({ panelImg }) => (
-   <div className="panel">
+   <div>
       <Image
          src={panelImg.path}
          alt={panelImg.name}
-         error={'/404.jpg'}
-         style={!panelImg ? { background: '#444', height: '500px' } : {}}
+         error={'/kono_dio_da.png'}
+         style={{ width: '100%' }}
       />
    </div>
 );
