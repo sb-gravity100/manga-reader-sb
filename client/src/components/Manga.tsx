@@ -1,78 +1,35 @@
-import { useEffect } from 'react';
-import { useSearchParam } from 'react-use';
-import { ProgressBar } from 'scrolling-based-progressbar';
-import MangaView from './MangaView';
-import MangaHeader from './MangaHeader';
-import ErrorBlock from './sub-components/ErrorBlock';
+import { useEffect, useState } from 'react';
 import { useGetMangaQuery } from '../slices/MangaApi';
-import { useSelector } from '../store';
 // import classNames from 'classnames';
-import { StyleSheet, css } from 'aphrodite';
-import Loading from './sub-components/Loading';
+import NotFound from './sub-components/404';
+import { LoadingScreen } from './sub-components/Loading';
+import { useParams } from 'react-router';
+import { Image } from 'react-bootstrap';
+import MangaHeader from './sub-components/MangaHeader';
+import MangaView from './sub-components/MangaView';
 
 const Manga = () => {
-   const mangaID = useSearchParam('id') || '';
-   const {
-      data: manga,
-      isLoading: loading,
-      error,
-      refetch,
-      isFetching,
-      isError,
-   } = useGetMangaQuery(Number(mangaID));
-   const controls = useSelector((state) => state.controls);
-   const widthValue = (controls.zoom / 10 + 0.5) * 700;
-   const styles = StyleSheet.create({
-      main: {
-         filter: controls.brightness ? 'brightness(100%)' : 'brightness(60%)',
-         maxWidth: `${widthValue}px`,
-         transition: '0.3s',
-      },
-   });
-   useEffect(() => {
-      if (loading) {
-         document.title = 'Loading...';
-      } else {
-         if (manga) {
-            document.title = manga?.name;
-         }
-      }
-   });
+   var { id } = useParams();
+   var manga = useGetMangaQuery(id as string);
+   var [zoomValue, setZoom] = useState('');
+   var [brightValue, setBright] = useState('');
 
-   useEffect(() => {
-      window.scroll({
-         top: 0,
-         left: 0,
-      });
-   }, []);
-
+   if (typeof id === 'undefined' || manga.isError) {
+      return <NotFound />;
+   }
    return (
-      <div className="manga-container">
-         {loading && <Loading />}
-         <ErrorBlock
-            hasErrors={isError}
-            errors={error}
-            retry={refetch}
-            isFetching={isFetching}
+      <div className="container-fluid" style={{ height: '100vh' }}>
+         {manga.isLoading && <LoadingScreen />}
+         <MangaHeader setZoom={setZoom} setBright={setBright} />
+         <div
+            style={{ width: zoomValue, filter: brightValue }}
+            className="mx-auto d-flex flex-column align-items-center"
          >
-            <div className="wrapper">
-               {!loading && (
-                  <ProgressBar
-                     height="5px"
-                     bgColor="#1c2122"
-                     top="30px"
-                     color="#50d8d7"
-                  />
-               )}
-               <MangaHeader manga={manga} />
-               <div className={css(styles.main)} id="viewer">
-                  {!loading &&
-                     manga?.data?.map((d, k: number) => (
-                        <MangaView key={k} panelImg={d} />
-                     ))}
-               </div>
-            </div>
-         </ErrorBlock>
+            {manga.isSuccess &&
+               manga.data.data?.map((e) => (
+                  <MangaView key={e.name} panelImg={e} />
+               ))}
+         </div>
       </div>
    );
 };

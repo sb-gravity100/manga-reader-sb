@@ -4,12 +4,10 @@ import {
    useSelector as useReduxSelector,
    TypedUseSelectorHook,
 } from 'react-redux';
-import ControlReducer from './slices/ControlSlice';
 import ApiSlice from './slices/MangaApi';
 
 const store = configureStore({
    reducer: {
-      controls: ControlReducer,
       [ApiSlice.reducerPath]: ApiSlice.reducer,
    },
    middleware: (getDefMid) => getDefMid().concat(ApiSlice.middleware),

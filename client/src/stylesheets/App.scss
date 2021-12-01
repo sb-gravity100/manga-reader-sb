@@ -1,6 +1,32 @@
-@import 'partials/vars';
-@import 'partials/mixins';
+@import '~bootstrap/scss/functions';
 
-@import 'partials/main';
-@import 'partials/viewer';
-@import 'partials/classes';
+$dark: #051923;
+$secondary: #263c41;
+$light: #f8f2dc;
+$bg-color: #d9d9d9;
+$primary: #4ecdc4;
+$enable-cssgrid: true;
+$pagination-color: $bg-color;
+$pagination-bg: $dark;
+$pagination-border-color: lighten($secondary, 10);
+$pagination-focus-color: $primary;
+$pagination-focus-bg: $secondary;
+$pagination-focus-box-shadow: lighten($secondary, 10);
+
+$pagination-hover-color: $primary;
+$pagination-hover-bg: $secondary;
+$pagination-hover-border-color: lighten($secondary, 10);
+
+$pagination-active-color: $primary;
+$pagination-active-bg: $secondary;
+
+$pagination-disabled-color: darkgray;
+$pagination-disabled-bg: lighten($secondary, 10);
+$pagination-disabled-border-color: lighten($secondary, 10);
+
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/bootstrap-grid';
+
+img {
+   object-fit: cover;
+}

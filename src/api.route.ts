@@ -20,35 +20,28 @@ interface MangasQuery {
    order?: string | string[] | any[];
    sort?: string | string[];
    refresh?: any;
-   _updateCovers?: any;
    page?: number;
 }
 
 const route = Router();
-let SearchIndex: types.Manga[] = [];
-let FuseIndex: types.Manga[] = [];
-const fuse = new Fuse(
-   SearchIndex,
-   {
-      includeScore: true,
-      threshold: 0.4,
-      useExtendedSearch: true,
-      keys: ['name'],
-   },
-   Fuse.createIndex(['name'], FuseIndex)
-);
 
 export default route;
 
 route.get('/search', async (req, res) => {
    const { query } = req;
-   if (SearchIndex.length === 0) {
-      FuseIndex = SearchIndex = await db.find<types.Manga>({});
-      fuse.setCollection(SearchIndex, Fuse.createIndex(['name'], FuseIndex));
-   }
+   let SearchIndex = await db.find<types.Manga>({});
+   let FuseIndex = Fuse.createIndex(['name'], SearchIndex);
+   const fuse = new Fuse(SearchIndex, {
+      includeScore: true,
+      threshold: 0.35,
+      useExtendedSearch: true,
+      keys: ['name'],
+   });
+   FuseIndex.setSources(SearchIndex);
+   fuse.setCollection(SearchIndex, FuseIndex);
    if (_.isString(query.q)) {
       const results = fuse.search(query.q, {
-         limit: 20,
+         limit: 15,
       });
       return res.json(results);
    }
@@ -71,19 +64,8 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
    if (!query.order) {
       query.order = '1';
    }
-   if (_.has(query, 'refresh')) {
-      await db.remove(
-         {},
-         {
-            multi: true,
-         }
-      );
-      const mangaData = await dirSync();
-      await db.insert(mangaData);
-      results = db.find({});
-      FuseIndex = SearchIndex = await results;
-   }
-   if (_.has(query, '_updateCovers')) {
+   if (_.has(query, 'refresh') && query.refresh) {
+      console.log('refresh');
       await updateCovers();
       await db.remove(
          {},
@@ -141,6 +123,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
          ...pageHeaders,
          total: totalPage,
          limit: query.limit,
+         current: query.page,
       });
    } else {
       if (_.isNumber(query.limit)) {
