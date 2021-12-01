@@ -22,9 +22,9 @@ export const LoadingScreen: FC = () => (
       style={
          { height: '100vh', '--bs-bg-opacity': '.5', width: '100vh' } as any
       }
-      className="d-flex position-fixed top-0 start-0 bg-secondary w-100 align-items-center justify-content-center"
+      className="d-flex position-fixed top-0 start-0 w-100 align-items-center justify-content-center"
    >
-      <Spinner animation="border" role="status">
+      <Spinner variant="primary" animation="border" role="status">
          <span className="visually-hidden">Loading...</span>
       </Spinner>
    </div>

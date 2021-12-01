@@ -18,24 +18,22 @@ const folder_lister_1 = require("./lib/folder_lister");
 const lodash_1 = __importDefault(require("lodash"));
 const fuse_js_1 = __importDefault(require("fuse.js"));
 const route = (0, express_1.Router)();
-let SearchIndex = [];
-let FuseIndex = [];
-const fuse = new fuse_js_1.default(SearchIndex, {
-    includeScore: true,
-    threshold: 0.4,
-    useExtendedSearch: true,
-    keys: ['name'],
-}, fuse_js_1.default.createIndex(['name'], FuseIndex));
 exports.default = route;
 route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req;
-    if (SearchIndex.length === 0) {
-        FuseIndex = SearchIndex = yield database_1.default.find({});
-        fuse.setCollection(SearchIndex, fuse_js_1.default.createIndex(['name'], FuseIndex));
-    }
+    let SearchIndex = yield database_1.default.find({});
+    let FuseIndex = fuse_js_1.default.createIndex(['name'], SearchIndex);
+    const fuse = new fuse_js_1.default(SearchIndex, {
+        includeScore: true,
+        threshold: 0.35,
+        useExtendedSearch: true,
+        keys: ['name'],
+    });
+    FuseIndex.setSources(SearchIndex);
+    fuse.setCollection(SearchIndex, FuseIndex);
     if (lodash_1.default.isString(query.q)) {
         const results = fuse.search(query.q, {
-            limit: 20,
+            limit: 15,
         });
         return res.json(results);
     }
@@ -57,16 +55,8 @@ route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     if (!query.order) {
         query.order = '1';
     }
-    if (lodash_1.default.has(query, 'refresh')) {
-        yield database_1.default.remove({}, {
-            multi: true,
-        });
-        const mangaData = yield (0, folder_lister_1.dirSync)();
-        yield database_1.default.insert(mangaData);
-        results = database_1.default.find({});
-        FuseIndex = SearchIndex = yield results;
-    }
-    if (lodash_1.default.has(query, '_updateCovers')) {
+    if (lodash_1.default.has(query, 'refresh') && query.refresh) {
+        console.log('refresh');
         yield (0, folder_lister_1.updateCovers)();
         yield database_1.default.remove({}, {
             multi: true,
@@ -111,7 +101,7 @@ route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.setHeader('x-page-limit', query.limit);
         results = results.limit(query.limit).skip(query.offset);
         const json = yield results.exec();
-        res.jsonp(Object.assign(Object.assign({ items: json }, pageHeaders), { total: totalPage, limit: query.limit }));
+        res.jsonp(Object.assign(Object.assign({ items: json }, pageHeaders), { total: totalPage, limit: query.limit, current: query.page }));
     }
     else {
         if (lodash_1.default.isNumber(query.limit)) {
