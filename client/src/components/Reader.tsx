@@ -50,12 +50,12 @@ const Reader: FC = () => {
                               className="stretched-link"
                               to={'/manga/' + n.id}
                            >
-                              <Card.Text
+                              <Card.Title
                                  style={{ fontSize: '13px' }}
                                  className="text-center text-truncate"
                               >
                                  {n.name}
-                              </Card.Text>
+                              </Card.Title>
                            </Link>
                         </OverlayTrigger>
                      </Card.Body>
