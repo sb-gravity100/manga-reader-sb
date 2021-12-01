@@ -33,7 +33,9 @@ const port = PORT;
 const ASSETS_PATH = Join('public/');
 const debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
+const isGitpod = /gitpod/i.test(process.env.USER);
 const boot = () => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(isGitpod);
     const app = (0, express_1.default)();
     yield database_1.default.ensureIndex({
         fieldName: 'id',
@@ -62,7 +64,9 @@ boot()
         },
     }));
     app.use((0, compression_1.default)());
-    app.use('/cdn/manga', express_1.default.static(DJ_PATH));
+    if (!isGitpod) {
+        app.use('/cdn/manga', express_1.default.static(DJ_PATH));
+    }
     app.use(express_1.default.static(ASSETS_PATH));
     app.get('/(*/)?', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
     app.get('/manga', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));

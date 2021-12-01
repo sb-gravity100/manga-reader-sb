@@ -47,7 +47,7 @@ const Header: React.FC = () => {
    // console.log(search);
 
    return (
-      <Navbar bg="dark" expand="lg">
+      <Navbar expand="lg">
          <Container>
             <Link to="/">
                <Navbar.Brand>

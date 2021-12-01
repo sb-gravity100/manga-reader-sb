@@ -1,4 +1,3 @@
-import Fuse from 'fuse.js';
 export interface Manga {
     id?: string | number;
     name: string;
@@ -12,9 +11,11 @@ export interface MangaData {
     name: string;
     path: string;
 }
-export declare type SearchResult = Fuse.FuseResult<Manga>;
+export declare type SearchResult = {
+    item: Manga;
+};
 export declare type MangasResult = {
     items: Manga[];
     first: number;
     last: number;
-} & Record<'next' | 'prev' | 'total' | 'limit', number>;
+} & Record<'next' | 'prev' | 'total' | 'limit' | 'current', number>;

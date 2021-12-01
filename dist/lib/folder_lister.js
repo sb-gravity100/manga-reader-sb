@@ -21,6 +21,7 @@ const jimp_1 = __importDefault(require("jimp"));
 const faker_1 = __importDefault(require("faker"));
 // import { randomBytes, randomInt } from 'crypto';
 const DJ_PATH = path_1.default.normalize(path_1.default.join(process.cwd(), 'DJ/'));
+const isGitpod = /gitpod/i.test(process.env.USER);
 function getDirSize(filepath) {
     return __awaiter(this, void 0, void 0, function* () {
         const dir = fs_1.default
@@ -34,8 +35,8 @@ function dirSync() {
     return __awaiter(this, void 0, void 0, function* () {
         let dir = [];
         let db = [];
-        if (process.env.MOCK) {
-            db.push(...lodash_1.default.times(lodash_1.default.random(10, 100), (n) => {
+        if (isGitpod) {
+            db.push(...lodash_1.default.times(lodash_1.default.random(120, 200), (n) => {
                 const name = faker_1.default.helpers.randomize([
                     faker_1.default.commerce.productName(),
                     faker_1.default.company.companyName(),
@@ -89,7 +90,7 @@ function dirSync() {
 exports.dirSync = dirSync;
 function mangaData(manga) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (process.env.MOCK) {
+        if (isGitpod) {
             return lodash_1.default.times(lodash_1.default.random(10, 25), (n) => ({
                 name: `0${n++}.jpg`,
                 path: `https://picsum.photos/500?random=${Math.random()}`,
