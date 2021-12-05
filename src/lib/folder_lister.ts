@@ -30,12 +30,14 @@ export async function dirSync(): Promise<Manga[]> {
                faker.company.companyName(),
                faker.name.findName(),
             ]);
+            const id = faker.datatype.number({ min: 1001, max: 1100 });
             return {
                name,
                pathname: '%DJ_PATH%/' + name,
                createdAt: faker.date.past(),
                size: _.random(100000, 100000000),
-               cover: `https://picsum.photos/100/300.jpg?random=${Math.random()}`,
+               cover: `https://picsum.photos/id/${id}/300/300`,
+               blur: `https://picsum.photos/id/${id}/300/300?blur=8`,
                id: n++,
             };
          })
@@ -65,6 +67,7 @@ export async function dirSync(): Promise<Manga[]> {
                      createdAt,
                      size,
                      cover: `/cdn/manga/${folder.name}/cover.jpg`,
+                     blur: `/cdn/manga/${folder.name}/cover_blur.jpg`,
                   });
                }
             });
@@ -84,7 +87,7 @@ export async function mangaData(manga: Manga) {
    if (isGitpod) {
       return _.times(_.random(10, 25), (n) => ({
          name: `0${n++}.jpg`,
-         path: `https://picsum.photos/500?random=${Math.random()}`,
+         path: `https://picsum.photos/500?random=${n}`,
       }));
    }
    const mangaPath = manga.pathname.replace(
@@ -128,7 +131,7 @@ export async function updateCovers() {
             path.join(DJ_PATH, mangadir.name)
          );
          const index = _dir.findIndex((e) => e.match(/\.(png|jpe?g)$/i));
-         if (!_dir.find((e) => e === 'cover.jpg')) {
+         if (!_dir.find((e) => e.match(/cover|blur/i))) {
             coverdirs.push(path.join(DJ_PATH, mangadir.name, _dir[index]));
          }
       }
@@ -136,9 +139,12 @@ export async function updateCovers() {
       for (var i = 0; i < coverdirs.length; i++) {
          const cover = coverdirs[i];
          const cover_file = path.join(path.dirname(cover), 'cover.jpg');
-         const image = await Jimp.read(cover);
+         const blur_file = path.join(path.dirname(cover), 'cover_blur.jpg');
+         var image = await Jimp.read(cover);
+         image = image.cover(300, 300).quality(30);
          imagePromises.push(
-            image.cover(200, 270).quality(30).writeAsync(cover_file)
+            image.writeAsync(cover_file),
+            image.blur(5).writeAsync(blur_file)
          );
       }
       const chunks = _.chunk(imagePromises, 10);

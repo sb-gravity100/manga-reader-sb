@@ -1,15 +1,16 @@
 import _ from 'lodash';
 import { FC } from 'react';
-import { Pagination, PageItemProps } from 'react-bootstrap';
-import { MdRefresh } from 'react-icons/md';
+import { Pagination } from 'react-bootstrap';
+import { MdRefresh, MdBlurOn, MdBlurOff } from 'react-icons/md';
 
 interface PPage {
    page: any;
    next: any;
    refresh?: any;
+   blur?: any[];
 }
 
-const PaginationComponent: FC<PPage> = ({ page, next, refresh }) => {
+const PaginationComponent: FC<PPage> = ({ page, next, refresh, blur }) => {
    var renderPages = () => {
       var pages: JSX.Element[] = [];
       var start = page.current;
@@ -46,6 +47,16 @@ const PaginationComponent: FC<PPage> = ({ page, next, refresh }) => {
       <Pagination className="justify-content-center m-0">
          <Pagination.Item onClick={refresh} className="me-3">
             <MdRefresh />
+         </Pagination.Item>
+         <Pagination.Item
+            onClick={() => {
+               if (blur) {
+                  blur[1]();
+               }
+            }}
+            className="me-3"
+         >
+            {blur?.slice()[0] ? <MdBlurOn /> : <MdBlurOff />}
          </Pagination.Item>
          <Pagination.First
             onClick={() =>

@@ -1,5 +1,3 @@
-import Fuse from 'fuse.js';
-
 export interface Manga {
    id?: string | number;
    name: string;
@@ -8,6 +6,7 @@ export interface Manga {
    size: number;
    data?: Array<MangaData>;
    cover?: string;
+   blur?: string;
 }
 
 export interface MangaData {

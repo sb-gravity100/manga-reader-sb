@@ -90,7 +90,7 @@ const Manga = () => {
                   );
                   // console.log('end');
                }}
-               className="mx-auto d-flex flex-column align-items-stretch"
+               className="mx-auto d-flex flex-column align-items-stretch gap-2 mt-2"
             >
                {manga.isSuccess &&
                   manga.data.data?.map((e) => (

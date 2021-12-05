@@ -101,6 +101,7 @@ route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.setHeader('x-page-limit', query.limit);
         results = results.limit(query.limit).skip(query.offset);
         const json = yield results.exec();
+        // console.log(json[0]);
         res.jsonp(Object.assign(Object.assign({ items: json }, pageHeaders), { total: totalPage, limit: query.limit, current: query.page }));
     }
     else {

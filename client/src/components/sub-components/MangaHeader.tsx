@@ -7,16 +7,26 @@ import {
    MdBrightnessLow,
    MdStop,
    MdPlayCircleFilled,
+   MdArrowLeft,
+   MdArrowRight,
 } from 'react-icons/md';
-import { useToggle, useRafLoop, useCounter } from 'react-use';
+import { useToggle, useRafLoop, useCounter, useEvent } from 'react-use';
 import { Button, Card } from 'react-bootstrap';
 
 const MangaHeader: FC<any> = (props) => {
    var [isSlide, toggleSlide] = useToggle(false);
+   var [showPanel, togglePanel] = useToggle(true);
    var [isBright, toggleBright] = useToggle(true);
    var [zoomValue, zoom] = useCounter(600, 900, 300);
    var [stopLoop, startLoop] = useRafLoop(() => {
-      window.scrollBy(0, 1);
+      if (window.scrollY < document.body.scrollHeight) {
+         window.scrollBy(
+            0,
+            document.body.scrollHeight * 0.1 * 0.1 * 0.08 * 0.4
+         );
+      } else {
+         toggleSlide(false);
+      }
    }, isSlide);
 
    useEffect(() => {
@@ -39,56 +49,72 @@ const MangaHeader: FC<any> = (props) => {
       props.setZoom(`${zoomValue || 600}px`);
    }, [zoomValue, props]);
    return (
-      <Card
-         style={{ zIndex: 9999 }}
-         className="bg-secondary position-fixed me-3 end-0 top-0 mt-3 text-center"
+      <div
+         style={{ zIndex: 9999, height: '6rem' }}
+         className="d-flex gap-2 position-fixed me-3 end-0 top-0 mt-3 "
       >
-         <Card.Header className="text-info">
-            {props.manga?.name || '...'}
-         </Card.Header>
-         <Card.Body className="p-2 d-flex flex-wrap gap-2">
-            <Button
-               onClick={() => {
-                  zoom.inc(50);
-               }}
-               variant="outline-primary"
-               className="px-2 py-1"
-            >
-               <MdZoomIn alignmentBaseline="central" />
-            </Button>
-            <Button
-               onClick={() => {
-                  zoom.dec(50);
-               }}
-               variant="outline-primary"
-               className="px-2 py-1"
-            >
-               <MdZoomOut alignmentBaseline="central" />
-            </Button>
-            <Button
-               onClick={() => toggleBright()}
-               variant="outline-primary"
-               className="px-2 py-1"
-            >
-               {isBright ? (
-                  <MdBrightnessHigh alignmentBaseline="central" />
-               ) : (
-                  <MdBrightnessLow alignmentBaseline="central" />
-               )}
-            </Button>
-            <Button
-               onClick={() => toggleSlide()}
-               variant="outline-primary"
-               className="px-2 py-1"
-            >
-               {isSlide === false ? (
-                  <MdPlayCircleFilled alignmentBaseline="central" />
-               ) : (
-                  <MdStop alignmentBaseline="central" />
-               )}
-            </Button>
-         </Card.Body>
-      </Card>
+         <Card
+            style={{
+               width: showPanel ? '0' : '21rem',
+               overflowX: 'hidden',
+               transition: '0.2s',
+            }}
+            className="bg-secondary text-center"
+         >
+            <Card.Header className="text-info text-truncate">
+               {props.manga?.name || '...'}
+            </Card.Header>
+            <Card.Body className="p-2 d-flex flex-wrap gap-2">
+               <Button
+                  onClick={() => {
+                     zoom.inc(50);
+                  }}
+                  variant="outline-primary"
+                  className="px-2 py-1"
+               >
+                  <MdZoomIn alignmentBaseline="central" />
+               </Button>
+               <Button
+                  onClick={() => {
+                     zoom.dec(50);
+                  }}
+                  variant="outline-primary"
+                  className="px-2 py-1"
+               >
+                  <MdZoomOut alignmentBaseline="central" />
+               </Button>
+               <Button
+                  onClick={() => toggleBright()}
+                  variant="outline-primary"
+                  className="px-2 py-1"
+               >
+                  {isBright ? (
+                     <MdBrightnessHigh alignmentBaseline="central" />
+                  ) : (
+                     <MdBrightnessLow alignmentBaseline="central" />
+                  )}
+               </Button>
+               <Button
+                  onClick={() => toggleSlide()}
+                  variant="outline-primary"
+                  className="px-2 py-1"
+               >
+                  {isSlide === false ? (
+                     <MdPlayCircleFilled alignmentBaseline="central" />
+                  ) : (
+                     <MdStop alignmentBaseline="central" />
+                  )}
+               </Button>
+            </Card.Body>
+         </Card>
+         <Button onClick={togglePanel} className="p-0">
+            {showPanel ? (
+               <MdArrowRight fontSize="2rem" />
+            ) : (
+               <MdArrowLeft fontSize="2rem" />
+            )}
+         </Button>
+      </div>
    );
 };
 

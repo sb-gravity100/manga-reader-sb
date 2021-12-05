@@ -118,6 +118,7 @@ route.get('/mangas', async (req: IRequest<MangasQuery>, res) => {
       res.setHeader('x-page-limit', query.limit);
       results = results.limit(query.limit).skip(query.offset);
       const json = await results.exec();
+      // console.log(json[0]);
       res.jsonp({
          items: json,
          ...pageHeaders,

@@ -5,12 +5,14 @@ import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { Card, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useToggle } from 'react-use';
 import { useAllMangasQuery } from '../slices/MangaApi';
 import { LoadingMangas } from './sub-components/Loading';
 import PaginationComponent from './sub-components/Navigation';
 
 const Reader: FC = () => {
    const [refresh, setRefresh] = useState('');
+   const blur = useToggle(true);
    const [params, next] = useSearchParams(
       new URLSearchParams({
          page: '0',
@@ -34,6 +36,7 @@ const Reader: FC = () => {
             }}
             next={next}
             page={mangas.data}
+            blur={blur}
          />
          <div className="d-flex flex-wrap gap-2 justify-content-between">
             {mangas.isSuccess && !mangas.isFetching ? (
@@ -43,9 +46,16 @@ const Reader: FC = () => {
                      className="bg-secondary"
                      style={{ width: '12rem' }}
                   >
-                     <Card.Img variant="top" height="200" src={n.cover} />
+                     <Card.Img
+                        variant="top"
+                        height="200"
+                        src={blur[0] ? n.blur : n.cover}
+                     />
                      <Card.Body className="pb-0 pt-1">
-                        <OverlayTrigger overlay={<Tooltip>{n.name}</Tooltip>}>
+                        <OverlayTrigger
+                           placement="bottom"
+                           overlay={<Tooltip>{n.name}</Tooltip>}
+                        >
                            <Link
                               className="stretched-link"
                               to={'/manga/' + n.id}
@@ -72,6 +82,7 @@ const Reader: FC = () => {
             }}
             next={next}
             page={mangas.data}
+            blur={blur}
          />
       </Container>
    );

@@ -6,6 +6,7 @@ export interface Manga {
     size: number;
     data?: Array<MangaData>;
     cover?: string;
+    blur?: string;
 }
 export interface MangaData {
     name: string;
