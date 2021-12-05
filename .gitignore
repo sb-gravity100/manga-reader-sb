@@ -7,3 +7,4 @@ node_modules
 reader.log
 data.db
 .env
+yarn.lock
