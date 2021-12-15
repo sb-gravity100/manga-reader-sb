@@ -1,10 +1,10 @@
 import { Router, Request } from 'express';
-import db from './database';
+import db, { db2 } from './database';
 import { dirSync, mangaData, updateCovers } from './lib/folder_lister';
-import { URLSearchParams } from 'url';
 import _ from 'lodash';
 import Fuse from 'fuse.js';
 import * as types from './types';
+import * as doujin from './lib/doujin';
 
 type IRequest<Query = any, Body = any> = Request<
    any,
@@ -148,3 +148,21 @@ route.get('/manga', async (req, res) => {
       res.status(404).json(null);
    }
 });
+
+
+route.post('/add', async (req, res) => {
+   var exist = await db2.findOne({
+      id: Number(req.body.id)
+   })
+   console.log(exist)
+   if (exist) {
+      return res.status(400).json(false)
+   }
+   await doujin.add(req.body.id)
+   res.status(201).json(true)
+})
+
+route.post('/remove', async (req, res) => {
+   var _res = await doujin.remove(req.body.id)
+   res.status(_res ? 200 : 204).json(_res)
+})

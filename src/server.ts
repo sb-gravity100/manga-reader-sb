@@ -7,7 +7,7 @@ import cors from 'cors';
 import logger from 'morgan';
 import compression from 'compression';
 import _ from 'lodash';
-import db from './database';
+import db, { db2 } from './database';
 import { dirSync } from './lib/folder_lister';
 import ApiRoute from './api.route';
 import { Debugger } from 'debug';
@@ -27,14 +27,15 @@ const isGitpod = /gitpod/i.test(process.env.USER as string);
 const boot = async () => {
    console.log(isGitpod);
    const app = express();
-   await db.ensureIndex({
+   await db2.load()
+   await db2.ensureIndex({
       fieldName: 'id',
       unique: true,
    });
-   await db.remove({}, { multi: true });
-   const mangaData = await dirSync();
-   await db.insert(mangaData);
-   debug('Database ready!');
+   // await db.remove({}, { multi: true });
+   // const mangaData = await dirSync();
+   // await db.insert(mangaData);
+   // debug('Database ready!');
 
    await new Promise<void>((res) => app.listen(Number(PORT), res));
 
@@ -46,6 +47,8 @@ const boot = async () => {
 boot()
    .then((app) => {
       app.use(cors());
+      app.use(express.json())
+      app.use(express.urlencoded({ extended: false }))
       app.use(
          logger('dev', {
             skip: (req) => {

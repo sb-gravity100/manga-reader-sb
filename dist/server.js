@@ -21,8 +21,7 @@ const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const compression_1 = __importDefault(require("compression"));
 const lodash_1 = __importDefault(require("lodash"));
-const database_1 = __importDefault(require("./database"));
-const folder_lister_1 = require("./lib/folder_lister");
+const database_1 = require("./database");
 const api_route_1 = __importDefault(require("./api.route"));
 console.log(process.cwd());
 const { NODE_ENV, PORT = 7800 } = process.env;
@@ -37,14 +36,15 @@ const isGitpod = /gitpod/i.test(process.env.USER);
 const boot = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(isGitpod);
     const app = (0, express_1.default)();
-    yield database_1.default.ensureIndex({
+    yield database_1.db2.load();
+    yield database_1.db2.ensureIndex({
         fieldName: 'id',
         unique: true,
     });
-    yield database_1.default.remove({}, { multi: true });
-    const mangaData = yield (0, folder_lister_1.dirSync)();
-    yield database_1.default.insert(mangaData);
-    debug('Database ready!');
+    // await db.remove({}, { multi: true });
+    // const mangaData = await dirSync();
+    // await db.insert(mangaData);
+    // debug('Database ready!');
     yield new Promise((res) => app.listen(Number(PORT), res));
     debug(`Server listening at %s`, port);
     return app;
@@ -52,6 +52,8 @@ const boot = () => __awaiter(void 0, void 0, void 0, function* () {
 boot()
     .then((app) => {
     app.use((0, cors_1.default)());
+    app.use(express_1.default.json());
+    app.use(express_1.default.urlencoded({ extended: false }));
     app.use((0, morgan_1.default)('dev', {
         skip: (req) => {
             if (req.url.length > 50) {
