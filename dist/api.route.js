@@ -34,28 +34,127 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const database_1 = __importDefault(require("./database"));
 const doujin = __importStar(require("./lib/doujin"));
-const route = (0, express_1.Router)();
+const http_errors_1 = __importDefault(require("http-errors"));
+var route = (0, express_1.Router)();
+var online = (0, express_1.Router)();
 exports.default = route;
+route.use('/online', online);
+route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var query = req.query.q;
+    var by = req.query.by;
+    var result = [];
+    if (!query) {
+        throw new http_errors_1.default.Forbidden('No Input');
+    }
+    var reg = new RegExp(query, 'ig');
+    if (by === 'tag') {
+        result = yield database_1.default.find({
+            'tags.all': {
+                $elemMatch: {
+                    type: 'tag',
+                    name: reg
+                }
+            }
+        }, { raw: 0 });
+    }
+    else if (by === 'artist') {
+        result = yield database_1.default.find({
+            'tags.all': {
+                $elemMatch: {
+                    type: 'artist',
+                    name: reg
+                }
+            }
+        }, { raw: 0 });
+    }
+    else {
+        result = yield database_1.default.find({
+            $or: [{
+                    'titles.japanese': reg
+                }, {
+                    'titles.pretty': reg
+                }, {
+                    'titles.english': reg
+                },]
+        }, { raw: 0 });
+    }
+    res.json(result);
+}));
+route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var { limit = 10, page = 1 } = req.query;
+    var mangas = database_1.default.find({}, { raw: 0 });
+    var total = yield database_1.default.count({});
+    if (limit) {
+        limit = Number(limit);
+        mangas = mangas.limit(limit);
+    }
+    if (page) {
+        page = Number(page);
+        mangas = mangas.skip(limit * (page - 1));
+    }
+    res.json({
+        doujins: yield mangas.exec(),
+        doujinsPerPage: limit,
+        numPages: Math.ceil(total / limit)
+    });
+}));
 route.get('/manga', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var exist = yield database_1.default.findOne({
         id: Number(req.query.id)
-    });
+    }, { raw: 0 });
     if (exist) {
+        res.json(exist);
+    }
+    else {
+        throw new http_errors_1.default.NotFound('Manga not found!');
     }
 }));
 route.get('/save', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var exist = yield database_1.default.findOne({
         id: Number(req.query.id)
-    });
-    console.log(exist);
+    }, { raw: 0 });
     if (exist) {
-        return res.status(400).json(false);
+        throw new http_errors_1.default.Conflict('Already exist');
     }
     yield doujin.add(req.query.id);
-    res.status(201).json(true);
+    exist = yield database_1.default.findOne({
+        id: Number(req.query.id)
+    }, { raw: 0 });
+    res.status(201).json(exist);
 }));
 route.get('/remove', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _res = yield doujin.remove(req.query.id);
-    res.status(_res ? 200 : 204).json(_res);
+    if (_res) {
+        res.json(_res);
+    }
+    else {
+        throw new http_errors_1.default.NotFound(_res);
+    }
+}));
+online.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var { q, page, sort } = req.query;
+    if (!q) {
+        throw new http_errors_1.default.Forbidden('No Input');
+    }
+    var search = yield doujin.api.search(q, page, sort);
+    res.json(search);
+}));
+online.get('/manga', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var { id } = req.query;
+    if (!id) {
+        throw new http_errors_1.default.Forbidden('No Input');
+    }
+    var manga = yield doujin.api.fetchDoujin(id);
+    if (!manga) {
+        throw new http_errors_1.default.NotFound('Manga not found');
+    }
+    var isOffline = yield database_1.default.find({ id: manga.id });
+    delete manga.raw;
+    res.json(Object.assign(Object.assign({}, manga), { availableOffline: Boolean(isOffline) }));
+}));
+online.get('/homepage', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var { page, sort } = req.query;
+    var search = yield doujin.api.fetchHomepage(page, sort);
+    res.json(search);
 }));
 //# sourceMappingURL=api.route.js.map

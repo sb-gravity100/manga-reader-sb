@@ -1,19 +1,83 @@
 import { Router } from 'express';
 import db from './database';
 import _ from 'lodash';
-import Fuse from 'fuse.js';
+import nhentai from 'nhentai'
 import * as types from './types';
 import * as doujin from './lib/doujin';
+import errors from 'http-errors'
 
-const route = Router();
+var route = Router();
+var online = Router()
 
 export default route;
+route.use('/online', online)
+
+route.get('/search', async (req, res) => {
+   var query = req.query.q as string
+   var by = req.query.by as string
+   var result = [] as any
+   if (!query) {
+      throw new errors.Forbidden('No Input')
+   }
+   var reg = new RegExp(query, 'ig')
+   if (by === 'tag') {
+      result = await db.find({
+         'tags.all': {
+            $elemMatch: {
+               type: 'tag',
+               name: reg
+            }
+         }
+      }, { raw: 0 })
+   } else if (by === 'artist') {
+      result = await db.find({
+         'tags.all': {
+            $elemMatch: {
+               type: 'artist',
+               name: reg
+            }
+         }
+      }, { raw: 0 })
+   } else {
+      result = await db.find({
+         $or: [{
+            'titles.japanese': reg
+         },{
+            'titles.pretty': reg
+         },{
+            'titles.english': reg
+         },]
+      }, { raw: 0 })
+   }
+   res.json(result)
+})
+route.get('/mangas', async (req, res) => {
+   var { limit = 10, page = 1 } = req.query as any
+   var mangas = db.find({}, { raw: 0 })
+   var total = await db.count({})
+   if (limit) {
+      limit = Number(limit)
+      mangas = mangas.limit(limit)
+   }
+   if (page) {
+      page = Number(page)
+      mangas = mangas.skip(limit * (page - 1))
+   }
+   res.json({
+      doujins: await mangas.exec() as any,
+      doujinsPerPage: limit,
+      numPages: Math.ceil(total / limit)
+   } as nhentai.SearchResult)
+})
 
 route.get('/manga', async (req, res) => {
    var exist = await db.findOne({
       id: Number(req.query.id)
-   })
+   }, { raw: 0 })
    if (exist) {
+      res.json(exist)
+   } else {
+      throw new errors.NotFound('Manga not found!')
       
    }
 })
@@ -21,16 +85,51 @@ route.get('/manga', async (req, res) => {
 route.get('/save', async (req, res) => {
    var exist = await db.findOne({
       id: Number(req.query.id)
-   })
-   console.log(exist)
+   }, { raw: 0 })
    if (exist) {
-      return res.status(400).json(false)
+      throw new errors.Conflict('Already exist')
    }
    await doujin.add(req.query.id)
-   res.status(201).json(true)
+   exist = await db.findOne({
+      id: Number(req.query.id)
+   }, { raw: 0 })
+   res.status(201).json(exist)
 })
 
 route.get('/remove', async (req, res) => {
    var _res = await doujin.remove(req.query.id)
-   res.status(_res ? 200 : 204).json(_res)
+   if (_res) {
+      res.json(_res)
+   } else {
+      throw new errors.NotFound(_res as any)
+   }
+})
+
+online.get('/search', async (req, res) => {
+   var { q, page, sort } = req.query
+   if (!q) {
+      throw new errors.Forbidden('No Input')
+   }
+   var search = await doujin.api.search(q as string, page as string, sort as any)
+   res.json(search)
+})
+
+online.get('/manga', async (req, res) => {
+   var { id } = req.query
+   if (!id) {
+      throw new errors.Forbidden('No Input')
+   }
+   var manga = await doujin.api.fetchDoujin(id as any) as any
+   if (!manga) {
+      throw new errors.NotFound('Manga not found')
+   }
+   var isOffline = await db.find({ id: manga.id })
+   delete manga.raw
+   res.json({ ...manga, availableOffline: Boolean(isOffline) })
+})
+
+online.get('/homepage', async (req, res) => {
+   var { page, sort } = req.query
+   var search = await doujin.api.fetchHomepage(page as string, sort as any)
+   res.json(search)
 })

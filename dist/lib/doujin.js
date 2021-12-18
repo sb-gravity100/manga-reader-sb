@@ -31,28 +31,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.remove = exports.add = void 0;
+exports.remove = exports.add = exports.api = void 0;
 const nhentai = __importStar(require("nhentai"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const del_1 = __importDefault(require("del"));
 const database_1 = __importDefault(require("../database"));
-var api = new nhentai.API();
+exports.api = new nhentai.API();
 var doujinPath = path_1.default.join(process.cwd(), '../_dj');
 function add(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        var res = yield api.fetchDoujin(id);
+        var res = yield exports.api.fetchDoujin(id);
         var promiseMap = [];
-        yield database_1.default.insert(Object.assign(Object.assign({}, res === null || res === void 0 ? void 0 : res.raw), { _id: res === null || res === void 0 ? void 0 : res.id }));
+        yield database_1.default.insert(Object.assign(Object.assign({}, res), { _id: res === null || res === void 0 ? void 0 : res.id }));
         yield fs_1.default.promises.mkdir(path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString()), {
             recursive: true,
         });
         res === null || res === void 0 ? void 0 : res.pages.forEach(e => {
             var filename = path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString(), `${e.pageNumber}.${e.extension}`);
-            promiseMap.push(e.fetch().then(e => fs_1.default.promises.writeFile(filename, e)));
+            var done = () => __awaiter(this, void 0, void 0, function* () {
+                var d = yield e.fetch();
+                yield fs_1.default.promises.writeFile(filename, d);
+            });
+            promiseMap.push(done());
         });
         yield Promise.all(promiseMap);
-        return true;
     });
 }
 exports.add = add;
@@ -61,10 +64,16 @@ function remove(id) {
         var res = yield database_1.default.remove({
             id: Number(id),
         }, {});
-        yield (0, del_1.default)(`${doujinPath}/${id}/`, {
-            force: true,
-        });
-        return Boolean(res);
+        if (fs_1.default.existsSync(`${doujinPath}/${id}/`)) {
+            var paths = yield (0, del_1.default)(`${doujinPath}/${id}/`, {
+                force: true,
+            });
+            console.log('Deleted:', ...paths);
+        }
+        if (!res) {
+            return false;
+        }
+        return Number(id);
     });
 }
 exports.remove = remove;

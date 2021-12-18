@@ -1,2 +1,2 @@
-declare const route: import("express-serve-static-core").Router;
+declare var route: import("express-serve-static-core").Router;
 export default route;

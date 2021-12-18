@@ -31,7 +31,6 @@ const boot = async () => {
       fieldName: 'id',
       unique: true,
    });
-   // await db.remove({}, { multi: true });
    // const mangaData = await dirSync();
    // await db.insert(mangaData);
    // debug('Database ready!');
@@ -45,7 +44,7 @@ const boot = async () => {
 
 boot()
    .then((app) => {
-      app.use(cors());
+      app.use(cors() as any);
       app.use(express.json())
       app.use(express.urlencoded({ extended: false }))
       app.use(
@@ -80,9 +79,12 @@ boot()
             res: express.Response,
             _next: express.NextFunction
          ) => {
-            const Errors = { ...err };
-            console.log(err);
-            res.status(err.status || 500).json(Errors);
+            var error = {} as typeof err
+            for (var x in err) {
+               error[x] = err[x]
+            }
+            // console.log(err);
+            res.status(err.status || 500).send(error);
          }
       );
    })
