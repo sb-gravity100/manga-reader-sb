@@ -20,8 +20,7 @@ const http_errors_1 = __importDefault(require("http-errors"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const compression_1 = __importDefault(require("compression"));
-const lodash_1 = __importDefault(require("lodash"));
-const database_1 = require("./database");
+const database_1 = __importDefault(require("./database"));
 const api_route_1 = __importDefault(require("./api.route"));
 console.log(process.cwd());
 const { NODE_ENV, PORT = 7800 } = process.env;
@@ -36,8 +35,8 @@ const isGitpod = /gitpod/i.test(process.env.USER);
 const boot = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(isGitpod);
     const app = (0, express_1.default)();
-    yield database_1.db2.load();
-    yield database_1.db2.ensureIndex({
+    yield database_1.default.load();
+    yield database_1.default.ensureIndex({
         fieldName: 'id',
         unique: true,
     });
@@ -66,12 +65,9 @@ boot()
         },
     }));
     app.use((0, compression_1.default)());
-    if (!isGitpod) {
-        app.use('/cdn/manga', express_1.default.static(DJ_PATH));
-    }
+    app.use('/cdn/manga', express_1.default.static(DJ_PATH));
     app.use(express_1.default.static(ASSETS_PATH));
     app.get('/(*/)?', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
-    app.get('/manga', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
     app.use('/api', api_route_1.default);
     app.use((_req, _res, next) => next((0, http_errors_1.default)(404)));
     app.use((err, _req, res, _next) => {
@@ -80,14 +76,5 @@ boot()
         res.status(err.status || 500).json(Errors);
     });
 })
-    .catch((e) => {
-    if (lodash_1.default.has(e, 'sql')) {
-        lodash_1.default.unset(e, 'sql');
-        lodash_1.default.unset(e, 'parent');
-        lodash_1.default.unset(e, 'stack');
-        lodash_1.default.unset(e, 'original');
-    }
-    console.log(e);
-    process.exit();
-});
+    .catch(console.log);
 //# sourceMappingURL=server.js.map

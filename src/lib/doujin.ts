@@ -2,7 +2,7 @@ import * as nhentai from 'nhentai';
 import path from 'path';
 import fs from 'fs';
 import del from 'del'
-import { db2 } from '../database';
+import db2 from '../database';
 
 var api = new nhentai.API();
 var doujinPath = path.join(process.cwd(), '../_dj');

@@ -1,25 +1,6 @@
-export interface Manga {
-   id?: string | number;
-   name: string;
-   pathname: string;
-   createdAt: Date;
-   size: number;
-   data?: Array<MangaData>;
-   cover?: string;
-   blur?: string;
-}
+import type { APIDoujin, APIImage, APITag } from 'nhentai'
 
-export interface MangaData {
-   name: string;
-   path: string;
-}
-
-export type SearchResult = {
-   item: Manga;
-};
-
-export type MangasResult = {
-   items: Manga[];
-   first: number;
-   last: number;
-} & Record<'next' | 'prev' | 'total' | 'limit' | 'current', number>;
+export interface Manga extends APIDoujin {}
+export interface MangaData extends APIImage {}
+export interface MangaTag extends APITag {}
+export type { SearchResult } from 'nhentai'

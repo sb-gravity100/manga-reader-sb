@@ -1,7 +1,5 @@
-const nhentai = require('nhentai');
-const fs = require('fs');
-const api = new nhentai.API();
+var nhentai = require('nhentai');
+var fs = require('fs');
+var api = new nhentai.API();
 
-api.randomDoujin().then(e => {
-   console.log(e.pages[0])
-})
+console.log(nhentai.API)

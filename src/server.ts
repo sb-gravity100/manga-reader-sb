@@ -7,8 +7,7 @@ import cors from 'cors';
 import logger from 'morgan';
 import compression from 'compression';
 import _ from 'lodash';
-import db, { db2 } from './database';
-import { dirSync } from './lib/folder_lister';
+import db2 from './database';
 import ApiRoute from './api.route';
 import { Debugger } from 'debug';
 console.log(process.cwd());
@@ -64,16 +63,11 @@ boot()
       );
       app.use(compression());
 
-      if (!isGitpod) {
-         app.use('/cdn/manga', express.static(DJ_PATH));
-      }
+      app.use('/cdn/manga', express.static(DJ_PATH));
 
       app.use(express.static(ASSETS_PATH));
 
       app.get('/(*/)?', (_req, res) =>
-         res.sendFile(join(ASSETS_PATH, 'index.html'))
-      );
-      app.get('/manga', (_req, res) =>
          res.sendFile(join(ASSETS_PATH, 'index.html'))
       );
 
@@ -92,13 +86,4 @@ boot()
          }
       );
    })
-   .catch((e) => {
-      if (_.has(e, 'sql')) {
-         _.unset(e, 'sql');
-         _.unset(e, 'parent');
-         _.unset(e, 'stack');
-         _.unset(e, 'original');
-      }
-      console.log(e);
-      process.exit();
-   });
+   .catch(console.log);

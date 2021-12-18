@@ -36,14 +36,14 @@ const nhentai = __importStar(require("nhentai"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const del_1 = __importDefault(require("del"));
-const database_1 = require("../database");
+const database_1 = __importDefault(require("../database"));
 var api = new nhentai.API();
 var doujinPath = path_1.default.join(process.cwd(), '../_dj');
 function add(id) {
     return __awaiter(this, void 0, void 0, function* () {
         var res = yield api.fetchDoujin(id);
         var promiseMap = [];
-        yield database_1.db2.insert(Object.assign(Object.assign({}, res === null || res === void 0 ? void 0 : res.raw), { _id: res === null || res === void 0 ? void 0 : res.id }));
+        yield database_1.default.insert(Object.assign(Object.assign({}, res === null || res === void 0 ? void 0 : res.raw), { _id: res === null || res === void 0 ? void 0 : res.id }));
         yield fs_1.default.promises.mkdir(path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString()), {
             recursive: true,
         });
@@ -58,7 +58,7 @@ function add(id) {
 exports.add = add;
 function remove(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        var res = yield database_1.db2.remove({
+        var res = yield database_1.default.remove({
             id: Number(id),
         }, {});
         yield (0, del_1.default)(`${doujinPath}/${id}/`, {
