@@ -31,31 +31,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const database_1 = __importDefault(require("./database"));
-const doujin = __importStar(require("./lib/doujin"));
-const route = (0, express_1.Router)();
-exports.default = route;
-route.get('/manga', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var exist = yield database_1.default.findOne({
-        id: Number(req.query.id)
+exports.remove = exports.add = void 0;
+const nhentai = __importStar(require("nhentai"));
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
+const del_1 = __importDefault(require("del"));
+const database_1 = __importDefault(require("../database"));
+var api = new nhentai.API();
+var doujinPath = path_1.default.join(process.cwd(), '../_dj');
+function add(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var res = yield api.fetchDoujin(id);
+        var promiseMap = [];
+        yield database_1.default.insert(Object.assign(Object.assign({}, res === null || res === void 0 ? void 0 : res.raw), { _id: res === null || res === void 0 ? void 0 : res.id }));
+        yield fs_1.default.promises.mkdir(path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString()), {
+            recursive: true,
+        });
+        res === null || res === void 0 ? void 0 : res.pages.forEach(e => {
+            var filename = path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString(), `${e.pageNumber}.${e.extension}`);
+            promiseMap.push(e.fetch().then(e => fs_1.default.promises.writeFile(filename, e)));
+        });
+        yield Promise.all(promiseMap);
+        return true;
     });
-    if (exist) {
-    }
-}));
-route.get('/save', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var exist = yield database_1.default.findOne({
-        id: Number(req.query.id)
+}
+exports.add = add;
+function remove(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var res = yield database_1.default.remove({
+            id: Number(id),
+        }, {});
+        yield (0, del_1.default)(`${doujinPath}/${id}/`, {
+            force: true,
+        });
+        return Boolean(res);
     });
-    console.log(exist);
-    if (exist) {
-        return res.status(400).json(false);
-    }
-    yield doujin.add(req.query.id);
-    res.status(201).json(true);
-}));
-route.get('/remove', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _res = yield doujin.remove(req.query.id);
-    res.status(_res ? 200 : 204).json(_res);
-}));
-//# sourceMappingURL=api.route.js.map
+}
+exports.remove = remove;
+//# sourceMappingURL=doujin.js.map

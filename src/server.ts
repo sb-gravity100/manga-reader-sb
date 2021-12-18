@@ -7,8 +7,7 @@ import cors from 'cors';
 import logger from 'morgan';
 import compression from 'compression';
 import _ from 'lodash';
-import db from './database';
-import { dirSync } from './lib/folder_lister';
+import db2 from './database';
 import ApiRoute from './api.route';
 import { Debugger } from 'debug';
 console.log(process.cwd());
@@ -27,14 +26,15 @@ const isGitpod = /gitpod/i.test(process.env.USER as string);
 const boot = async () => {
    console.log(isGitpod);
    const app = express();
-   await db.ensureIndex({
+   await db2.load()
+   await db2.ensureIndex({
       fieldName: 'id',
       unique: true,
    });
-   await db.remove({}, { multi: true });
-   const mangaData = await dirSync();
-   await db.insert(mangaData);
-   debug('Database ready!');
+   // await db.remove({}, { multi: true });
+   // const mangaData = await dirSync();
+   // await db.insert(mangaData);
+   // debug('Database ready!');
 
    await new Promise<void>((res) => app.listen(Number(PORT), res));
 
@@ -46,6 +46,8 @@ const boot = async () => {
 boot()
    .then((app) => {
       app.use(cors());
+      app.use(express.json())
+      app.use(express.urlencoded({ extended: false }))
       app.use(
          logger('dev', {
             skip: (req) => {
@@ -61,16 +63,11 @@ boot()
       );
       app.use(compression());
 
-      if (!isGitpod) {
-         app.use('/cdn/manga', express.static(DJ_PATH));
-      }
+      app.use('/cdn/manga', express.static(DJ_PATH));
 
       app.use(express.static(ASSETS_PATH));
 
       app.get('/(*/)?', (_req, res) =>
-         res.sendFile(join(ASSETS_PATH, 'index.html'))
-      );
-      app.get('/manga', (_req, res) =>
          res.sendFile(join(ASSETS_PATH, 'index.html'))
       );
 
@@ -89,13 +86,4 @@ boot()
          }
       );
    })
-   .catch((e) => {
-      if (_.has(e, 'sql')) {
-         _.unset(e, 'sql');
-         _.unset(e, 'parent');
-         _.unset(e, 'stack');
-         _.unset(e, 'original');
-      }
-      console.log(e);
-      process.exit();
-   });
+   .catch(console.log);
