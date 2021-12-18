@@ -9,8 +9,8 @@ if (!process.env.USER?.match(/gitpod/i)) {
 } else {
    url = execSync('gp url 7800').toString().trim();
 }
+// url = 'http://localhost:7800';
 console.log(url);
-// process.exit();
 
 module.exports = (app) => {
    app.use(
