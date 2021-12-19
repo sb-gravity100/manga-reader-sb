@@ -1,8 +1,8 @@
-import type { APIDoujin, APIImage, APITag } from 'nhentai';
-export interface Manga extends APIDoujin {
+import type { Doujin, Image, Tag } from 'nhentai';
+export interface Manga extends Doujin {
 }
-export interface MangaData extends APIImage {
+export interface MangaData extends Image {
 }
-export interface MangaTag extends APITag {
+export interface MangaTag extends Tag {
 }
-export type { SearchResult } from 'nhentai';
+export type { SearchResult, SortMethods } from 'nhentai';

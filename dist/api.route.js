@@ -39,6 +39,7 @@ var route = (0, express_1.Router)();
 var online = (0, express_1.Router)();
 exports.default = route;
 route.use('/online', online);
+var searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
 route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var query = req.query.q;
     var by = req.query.by;
@@ -47,35 +48,29 @@ route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         throw new http_errors_1.default.Forbidden('No Input');
     }
     var reg = new RegExp(query, 'ig');
-    if (by === 'tag') {
+    if (by && searchByValues.includes(by.toLowerCase())) {
         result = yield database_1.default.find({
             'tags.all': {
                 $elemMatch: {
-                    type: 'tag',
-                    name: reg
-                }
-            }
-        }, { raw: 0 });
-    }
-    else if (by === 'artist') {
-        result = yield database_1.default.find({
-            'tags.all': {
-                $elemMatch: {
-                    type: 'artist',
-                    name: reg
-                }
-            }
+                    type: by.toLowerCase(),
+                    name: reg,
+                },
+            },
         }, { raw: 0 });
     }
     else {
         result = yield database_1.default.find({
-            $or: [{
-                    'titles.japanese': reg
-                }, {
-                    'titles.pretty': reg
-                }, {
-                    'titles.english': reg
-                },]
+            $or: [
+                {
+                    'titles.japanese': reg,
+                },
+                {
+                    'titles.pretty': reg,
+                },
+                {
+                    'titles.english': reg,
+                },
+            ],
         }, { raw: 0 });
     }
     res.json(result);
@@ -93,14 +88,14 @@ route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         mangas = mangas.skip(limit * (page - 1));
     }
     res.json({
-        doujins: yield mangas.exec(),
+        doujins: (yield mangas.exec()),
         doujinsPerPage: limit,
-        numPages: Math.ceil(total / limit)
+        numPages: Math.ceil(total / limit),
     });
 }));
 route.get('/manga', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var exist = yield database_1.default.findOne({
-        id: Number(req.query.id)
+        id: Number(req.query.id),
     }, { raw: 0 });
     if (exist) {
         res.json(exist);
@@ -110,15 +105,16 @@ route.get('/manga', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 }));
 route.get('/save', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var id = Number(req.query.id);
     var exist = yield database_1.default.findOne({
-        id: Number(req.query.id)
+        id,
     }, { raw: 0 });
     if (exist) {
         throw new http_errors_1.default.Conflict('Already exist');
     }
-    yield doujin.add(req.query.id);
+    yield doujin.add(id);
     exist = yield database_1.default.findOne({
-        id: Number(req.query.id)
+        id,
     }, { raw: 0 });
     res.status(201).json(exist);
 }));
@@ -144,7 +140,7 @@ online.get('/manga', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     if (!id) {
         throw new http_errors_1.default.Forbidden('No Input');
     }
-    var manga = yield doujin.api.fetchDoujin(id);
+    var manga = (yield doujin.api.fetchDoujin(id));
     if (!manga) {
         throw new http_errors_1.default.NotFound('Manga not found');
     }

@@ -8,7 +8,7 @@ export var api = new nhentai.API();
 var doujinPath = path.join(process.cwd(), '../_dj');
 
 export async function add(id) {
-   var res = await api.fetchDoujin(id);
+   var res = await api.fetchDoujin(id) as nhentai.Doujin;
    var promiseMap = [] as any[];
    await db2.insert({
       ...res,
@@ -20,15 +20,17 @@ export async function add(id) {
          recursive: true,
       }
    );
-   async function fetchCovers() {
-      var a = await res?.thumbnail.fetch();
-      var b = await res?.cover.fetch();
+   var fetchCovers = async () => {
+      var a = await res.thumbnail.fetch();
+      var b = await res.cover.fetch();
       var filenameA = path.join(
          doujinPath,
-         path.basename(res?.thumbnail.url as string)
+         res.id.toString(),
+         path.basename(res.thumbnail.url as string)
       );
       var filenameB = path.join(
          doujinPath,
+         res.id.toString(),
          path.basename(res?.cover.url as string)
       );
       await fs.promises.writeFile(filenameA, a);
@@ -37,7 +39,7 @@ export async function add(id) {
    res?.pages.forEach((e) => {
       var filename = path.join(
          doujinPath,
-         res?.id.toString() as any,
+         res.id.toString(),
          `${e.pageNumber}.${e.extension}`
       );
       var done = async () => {
@@ -46,7 +48,8 @@ export async function add(id) {
       };
       promiseMap.push(done());
    });
-   await Promise.all(promiseMap.concat(fetchCovers()));
+   await fetchCovers()
+   await Promise.all(promiseMap);
 }
 
 export async function remove(id) {

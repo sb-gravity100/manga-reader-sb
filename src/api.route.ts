@@ -12,7 +12,7 @@ var online = Router();
 export default route;
 route.use('/online', online);
 
-var searchByValues = ['artist', 'tag', 'language', 'category'];
+var searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
 
 route.get('/search', async (req, res) => {
    var query = req.query.q as string;

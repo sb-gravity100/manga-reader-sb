@@ -47,14 +47,23 @@ function add(id) {
         yield fs_1.default.promises.mkdir(path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString()), {
             recursive: true,
         });
-        res === null || res === void 0 ? void 0 : res.pages.forEach(e => {
-            var filename = path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString(), `${e.pageNumber}.${e.extension}`);
+        var fetchCovers = () => __awaiter(this, void 0, void 0, function* () {
+            var a = yield res.thumbnail.fetch();
+            var b = yield res.cover.fetch();
+            var filenameA = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res.thumbnail.url));
+            var filenameB = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res === null || res === void 0 ? void 0 : res.cover.url));
+            yield fs_1.default.promises.writeFile(filenameA, a);
+            yield fs_1.default.promises.writeFile(filenameB, b);
+        });
+        res === null || res === void 0 ? void 0 : res.pages.forEach((e) => {
+            var filename = path_1.default.join(doujinPath, res.id.toString(), `${e.pageNumber}.${e.extension}`);
             var done = () => __awaiter(this, void 0, void 0, function* () {
                 var d = yield e.fetch();
                 yield fs_1.default.promises.writeFile(filename, d);
             });
             promiseMap.push(done());
         });
+        yield fetchCovers();
         yield Promise.all(promiseMap);
     });
 }

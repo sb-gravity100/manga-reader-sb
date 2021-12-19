@@ -26,7 +26,7 @@ console.log(process.cwd());
 const { NODE_ENV, PORT = 7800 } = process.env;
 const CWD = process.cwd();
 const Join = (...dir) => (0, path_1.normalize)((0, path_1.join)(CWD, ...dir));
-const DJ_PATH = Join('DJ/');
+const DJ_PATH = Join('../_dj/');
 const port = PORT;
 const ASSETS_PATH = Join('public/');
 const debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
@@ -64,7 +64,7 @@ boot()
         },
     }));
     app.use((0, compression_1.default)());
-    app.use('/cdn/manga', express_1.default.static(DJ_PATH));
+    app.use('/gallery', express_1.default.static(DJ_PATH));
     app.use(express_1.default.static(ASSETS_PATH));
     app.get('/(*/)?', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
     app.use('/api', api_route_1.default);
