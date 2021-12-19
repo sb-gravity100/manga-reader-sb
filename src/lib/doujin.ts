@@ -20,19 +20,33 @@ export async function add(id) {
          recursive: true,
       }
    );
-   res?.pages.forEach(e => {
+   async function fetchCovers() {
+      var a = await res?.thumbnail.fetch();
+      var b = await res?.cover.fetch();
+      var filenameA = path.join(
+         doujinPath,
+         path.basename(res?.thumbnail.url as string)
+      );
+      var filenameB = path.join(
+         doujinPath,
+         path.basename(res?.cover.url as string)
+      );
+      await fs.promises.writeFile(filenameA, a);
+      await fs.promises.writeFile(filenameB, b);
+   }
+   res?.pages.forEach((e) => {
       var filename = path.join(
          doujinPath,
          res?.id.toString() as any,
          `${e.pageNumber}.${e.extension}`
       );
       var done = async () => {
-         var d = await e.fetch()
-         await fs.promises.writeFile(filename, d)
-      }
+         var d = await e.fetch();
+         await fs.promises.writeFile(filename, d);
+      };
       promiseMap.push(done());
    });
-   await Promise.all(promiseMap)
+   await Promise.all(promiseMap.concat(fetchCovers()));
 }
 
 export async function remove(id) {
@@ -41,15 +55,15 @@ export async function remove(id) {
          id: Number(id),
       },
       {}
-   )
+   );
    if (fs.existsSync(`${doujinPath}/${id}/`)) {
       var paths = await del(`${doujinPath}/${id}/`, {
          force: true,
       });
-      console.log('Deleted:', ...paths)
+      console.log('Deleted:', ...paths);
    }
    if (!res) {
-      return false
+      return false;
    }
    return Number(id);
 }

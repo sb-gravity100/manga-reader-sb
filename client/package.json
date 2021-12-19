@@ -17,6 +17,7 @@
       "history": "^5.1.0",
       "http-proxy-middleware": "^2.0.1",
       "intersection-observer": "^0.12.0",
+      "nhentai": "^3.0.0",
       "react": "^17.0.2",
       "react-bootstrap": "^2.0.2",
       "react-cool-img": "^1.2.12",

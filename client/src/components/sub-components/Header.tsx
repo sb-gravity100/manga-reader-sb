@@ -28,14 +28,14 @@ const SearchResult: React.FC<PSearch> = (props) => {
       >
          <Image
             className="flex-shrink-0 me-2 rounded"
-            src={props.item.cover}
+            src={`/gallery/${props.item.id}/`}
             width="60"
          />
          <Link
             className="d-inline-block text-truncate stretched-link"
             to={`/manga/${props.item.id}`}
          >
-            {props.item.name}
+            {props.item.titles.pretty}
          </Link>
       </ListGroup.Item>
    );

@@ -1,31 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import _ from 'lodash';
-import { Manga, SearchResult } from '../../../src/types';
-
-interface MangasQuery {
-   limit?: number;
-   page?: number;
-}
+import { Manga, SearchResult, SortMethods } from '../../../src/types';
 
 interface SearchQuery {
    q: string;
-   by?: 'tag' | 'artist' | 'language' | 'category';
+   page?: any;
+   sort?: SortMethods;
 }
+
+interface HomepageQuery extends Omit<SearchQuery, 'q'> {}
 
 const ApiSlice = createApi({
    reducerPath: 'MangaApi',
    baseQuery: fetchBaseQuery({
-      baseUrl: '/api',
+      baseUrl: '/api/online',
    }),
    endpoints: (builder) => ({
-      allMangas: builder.query<SearchResult, MangasQuery | void>({
-         query(opts) {
-            return {
-               url: '/mangas',
-               params: opts as any,
-            };
-         },
-      }),
       getManga: builder.query<Manga, number | string>({
          query(id) {
             return {
@@ -49,23 +39,11 @@ const ApiSlice = createApi({
             };
          },
       }),
-      saveManga: builder.query<Manga, string>({
-         query(id) {
+      getHomepage: builder.query<SearchResult, HomepageQuery | void>({
+         query(q) {
             return {
-               url: '/save',
-               params: {
-                  id,
-               },
-            };
-         },
-      }),
-      removeManga: builder.query<number, string>({
-         query(id) {
-            return {
-               url: '/remove',
-               params: {
-                  id,
-               },
+               url: '/homepage',
+               params: q as any,
             };
          },
       }),
@@ -75,15 +53,11 @@ const ApiSlice = createApi({
 export default ApiSlice;
 
 export const {
-   useAllMangasQuery,
+   useGetHomepageQuery,
    useGetMangaQuery,
-   useLazySearchQuery,
-   useSearchQuery,
-   useLazyAllMangasQuery,
+   useLazyGetHomepageQuery,
    useLazyGetMangaQuery,
+   useLazySearchQuery,
    usePrefetch,
-   useLazySaveMangaQuery,
-   useSaveMangaQuery,
-   useLazyRemoveMangaQuery,
-   useRemoveMangaQuery,
+   useSearchQuery,
 } = ApiSlice;

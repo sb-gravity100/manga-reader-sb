@@ -5,12 +5,15 @@ import {
    TypedUseSelectorHook,
 } from 'react-redux';
 import ApiSlice from './slices/MangaApi';
+import HentaiSlice from './slices/HentaiApi';
 
 const store = configureStore({
    reducer: {
       [ApiSlice.reducerPath]: ApiSlice.reducer,
+      [HentaiSlice.reducerPath]: HentaiSlice.reducer,
    },
-   middleware: (getDefMid) => getDefMid().concat(ApiSlice.middleware),
+   middleware: (getDefMid) =>
+      getDefMid().concat(ApiSlice.middleware, HentaiSlice.middleware) as any,
 });
 
 export type RootState = ReturnType<typeof store.getState>;
