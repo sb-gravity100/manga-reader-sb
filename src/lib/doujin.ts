@@ -5,7 +5,7 @@ import del from "del";
 import db2 from "../database";
 
 export var api = new nhentai.API();
-var doujinPath = path.join(process.cwd(), process.env.DJ_PATH);
+var doujinPath = path.join(process.cwd(), process.env.DJ_PATH || 'dj');
 
 export async function write(id) {
   var res = (await api.fetchDoujin(id)) as nhentai.Doujin;
