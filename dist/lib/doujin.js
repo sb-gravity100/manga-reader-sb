@@ -38,33 +38,43 @@ const fs_1 = __importDefault(require("fs"));
 const del_1 = __importDefault(require("del"));
 const database_1 = __importDefault(require("../database"));
 exports.api = new nhentai.API();
-var doujinPath = path_1.default.join(process.cwd(), '../_dj');
+var doujinPath = path_1.default.join(process.cwd(), "../_dj");
 function add(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        var res = yield exports.api.fetchDoujin(id);
-        var promiseMap = [];
-        yield database_1.default.insert(Object.assign(Object.assign({}, res), { _id: res === null || res === void 0 ? void 0 : res.id }));
-        yield fs_1.default.promises.mkdir(path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString()), {
-            recursive: true,
-        });
-        var fetchCovers = () => __awaiter(this, void 0, void 0, function* () {
-            var a = yield res.thumbnail.fetch();
-            var b = yield res.cover.fetch();
-            var filenameA = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res.thumbnail.url));
-            var filenameB = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res === null || res === void 0 ? void 0 : res.cover.url));
-            yield fs_1.default.promises.writeFile(filenameA, a);
-            yield fs_1.default.promises.writeFile(filenameB, b);
-        });
-        res === null || res === void 0 ? void 0 : res.pages.forEach((e) => {
-            var filename = path_1.default.join(doujinPath, res.id.toString(), `${e.pageNumber}.${e.extension}`);
-            var done = () => __awaiter(this, void 0, void 0, function* () {
-                var d = yield e.fetch();
-                yield fs_1.default.promises.writeFile(filename, d);
+        try {
+            var res = (yield exports.api.fetchDoujin(id));
+            var promiseMap = [];
+            yield fs_1.default.promises.mkdir(path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString()), {
+                recursive: true,
             });
-            promiseMap.push(done());
-        });
-        yield fetchCovers();
-        yield Promise.all(promiseMap);
+            var fetchCovers = () => __awaiter(this, void 0, void 0, function* () {
+                var a = yield res.thumbnail.fetch();
+                var b = yield res.cover.fetch();
+                var filenameA = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res.thumbnail.url));
+                var filenameB = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res === null || res === void 0 ? void 0 : res.cover.url));
+                yield fs_1.default.promises.writeFile(filenameA, a);
+                yield fs_1.default.promises.writeFile(filenameB, b);
+            });
+            res === null || res === void 0 ? void 0 : res.pages.forEach((e) => {
+                var filename = path_1.default.join(doujinPath, res.id.toString(), `${e.pageNumber}.${e.extension}`);
+                var done = () => __awaiter(this, void 0, void 0, function* () {
+                    var d = yield e.fetch();
+                    yield fs_1.default.promises.writeFile(filename, d);
+                });
+                promiseMap.push(done());
+            });
+            yield fetchCovers();
+            yield Promise.all(promiseMap);
+            res.thumbnail.url = `/gallery/${res.id}/thumb.${res.thumbnail.extension}`;
+            res.cover.url = `/gallery/${res.id}/cover.${res.cover.extension}`;
+            yield database_1.default.insert(Object.assign(Object.assign({}, res), { pages: res.pages.map((e) => {
+                    e.url = `/gallery/${res.id}/${e.pageNumber}.${e.extension}`;
+                    return e;
+                }), _id: res === null || res === void 0 ? void 0 : res.id }));
+        }
+        catch (e) {
+            yield remove(id);
+        }
     });
 }
 exports.add = add;
@@ -77,7 +87,7 @@ function remove(id) {
             var paths = yield (0, del_1.default)(`${doujinPath}/${id}/`, {
                 force: true,
             });
-            console.log('Deleted:', ...paths);
+            console.log("Deleted:", ...paths);
         }
         if (!res) {
             return false;

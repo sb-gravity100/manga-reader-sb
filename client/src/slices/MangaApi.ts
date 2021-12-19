@@ -9,7 +9,7 @@ interface MangasQuery {
 
 interface SearchQuery {
    q: string;
-   by?: 'tag' | 'artist' | 'language' | 'category';
+   by?: 'artist' | 'tag' | 'language' | 'category' | 'parody';
 }
 
 const ApiSlice = createApi({
@@ -17,7 +17,7 @@ const ApiSlice = createApi({
    baseQuery: fetchBaseQuery({
       baseUrl: '/api',
    }),
-   endpoints: (builder) => ({
+   endpoints: builder => ({
       allMangas: builder.query<SearchResult, MangasQuery | void>({
          query(opts) {
             return {
