@@ -123,7 +123,8 @@ route.get('/doujin', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         if (!manga) {
             throw new http_errors_1.default.NotFound('Manga not found');
         }
-        var isOffline = yield database_1.default.find({ id: manga.id });
+        var isOffline = yield database_1.default.findOne({ id: manga.id });
+        console.log(isOffline);
         res.json(Object.assign(Object.assign({}, manga), { availableOffline: Boolean(isOffline) }));
     }
 }));

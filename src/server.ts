@@ -53,6 +53,9 @@ boot()
                if (req.url.length > 50) {
                   return true;
                }
+               if (req.url.match(/gallery/i)) {
+                  return true;
+               }
                return false;
             },
             stream: {
