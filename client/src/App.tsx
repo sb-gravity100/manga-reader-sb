@@ -50,6 +50,7 @@ const App = () => {
                }
             />
          </Route>
+         <Route path="online" />
          <Route path="*" element={<NotFound />} />
       </Routes>
    );
