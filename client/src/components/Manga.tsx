@@ -41,9 +41,9 @@ const Manga = () => {
 
    useEffect(() => {
       if (manga.isSuccess) {
-         document.title = manga.data.name;
+         document.title = manga.data.titles.english;
       }
-   }, [manga.data?.name, manga.isSuccess]);
+   }, [manga.data?.titles, manga.isSuccess]);
 
    if (typeof id === 'undefined' || manga.isError) {
       return <NotFound />;
@@ -93,9 +93,10 @@ const Manga = () => {
                className="mx-auto d-flex flex-column align-items-stretch gap-2 mt-2"
             >
                {manga.isSuccess &&
-                  manga.data.data?.map((e) => (
-                     <MangaView key={e.name} panelImg={e} />
-                  ))}
+                  manga.data.pages?.map((e) => {
+                     var src = `/gallery/${manga?.data?.id}/${e.pageNumber}.${e.extension}`;
+                     return <MangaView key={e.pageNumber} img={e} src={src} />;
+                  })}
             </div>
          </div>
       </>

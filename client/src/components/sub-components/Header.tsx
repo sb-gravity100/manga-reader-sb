@@ -12,6 +12,7 @@ import {
    Image,
    Spinner,
 } from 'react-bootstrap';
+import path from 'path';
 import { Link } from 'react-router-dom';
 import { Manga } from '../../../../src/types';
 import { useSearchQuery } from '../../slices/MangaApi';
@@ -21,6 +22,9 @@ interface PSearch {
 }
 
 const SearchResult: React.FC<PSearch> = (props) => {
+   var thumbnail = `/gallery/${props.item.id}/${path.basename(
+      props.item.thumbnail.url
+   )}`;
    return (
       <ListGroup.Item
          style={{ height: '90px' }}
@@ -28,7 +32,7 @@ const SearchResult: React.FC<PSearch> = (props) => {
       >
          <Image
             className="flex-shrink-0 me-2 rounded"
-            src={`/gallery/${props.item.id}/`}
+            src={thumbnail}
             width="60"
          />
          <Link
@@ -90,14 +94,15 @@ const Header: React.FC = () => {
                               </Spinner>
                            </ListGroup.Item>
                         )}
-                        {!search.isFetching && search?.data?.length === 0 && (
-                           <ListGroup.Item className="d-flex align-items-center justify-content-center bg-secondary position-relative">
-                              Nothing Found :(
-                           </ListGroup.Item>
-                        )}
+                        {!search.isFetching &&
+                           search?.data?.doujins.length === 0 && (
+                              <ListGroup.Item className="d-flex align-items-center justify-content-center bg-secondary position-relative">
+                                 Nothing Found :(
+                              </ListGroup.Item>
+                           )}
                         {search.isSuccess &&
-                           search.data.map((e, i) => (
-                              <SearchResult key={i} item={e.item} />
+                           search.data?.doujins.map((e, i) => (
+                              <SearchResult key={e.id} item={e} />
                            ))}
                      </ListGroup>
                   </Card>

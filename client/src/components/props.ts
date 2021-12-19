@@ -13,7 +13,8 @@ export interface ReaderItemProps {
 }
 
 export interface MangaViewProps {
-   panelImg: MangaData;
+   img: MangaData;
+   src: string;
 }
 
 export interface ReaderProps {

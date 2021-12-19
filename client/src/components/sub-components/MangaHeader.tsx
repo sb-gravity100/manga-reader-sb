@@ -22,7 +22,7 @@ const MangaHeader: FC<any> = (props) => {
       if (window.scrollY < document.body.scrollHeight) {
          window.scrollBy(
             0,
-            document.body.scrollHeight * 0.1 * 0.1 * 0.08 * 0.4
+            (document.body.scrollHeight / props.manga?.pages.length) * 0.01
          );
       } else {
          toggleSlide(false);
@@ -55,14 +55,14 @@ const MangaHeader: FC<any> = (props) => {
       >
          <Card
             style={{
-               width: showPanel ? '0' : '21rem',
+               maxWidth: showPanel ? '0' : '21rem',
                overflowX: 'hidden',
                transition: '0.2s',
             }}
             className="bg-secondary text-center"
          >
             <Card.Header className="text-info text-truncate">
-               {props.manga?.name || '...'}
+               {props.manga?.titles.english || '...'}
             </Card.Header>
             <Card.Body className="p-2 d-flex flex-wrap gap-2">
                <Button

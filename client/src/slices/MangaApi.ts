@@ -3,8 +3,8 @@ import _ from 'lodash';
 import { Manga, SearchResult } from '../../../src/types';
 
 interface MangasQuery {
-   limit?: number;
-   page?: number;
+   limit?: any;
+   page?: any;
 }
 
 interface SearchQuery {

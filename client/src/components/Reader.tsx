@@ -6,84 +6,80 @@ import { FC, useEffect, useState } from 'react';
 import { Card, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useToggle } from 'react-use';
+import path from 'path';
 import { useAllMangasQuery } from '../slices/MangaApi';
 import { LoadingMangas } from './sub-components/Loading';
 import PaginationComponent from './sub-components/Navigation';
 
 const Reader: FC = () => {
-   const [refresh, setRefresh] = useState('');
    const blur = useToggle(true);
    const [params, next] = useSearchParams(
       new URLSearchParams({
-         page: '0',
-         refresh,
+         page: '1',
       })
    );
    const mangas = useAllMangasQuery({
-      page: Number(params.get('page')) || 0,
-      refresh,
+      page: params.get('page') || 1,
    });
-   useEffect(() => {
-      setRefresh('');
-      console.log('done refresh');
-   }, [refresh]);
+   var PageComp = () => (
+      <PaginationComponent
+         refresh={() => {
+            mangas.refetch();
+         }}
+         next={next}
+         page={mangas.data}
+         blur={blur}
+      />
+   );
    return (
       <Container className="d-flex flex-column gap-2 py-2">
-         <PaginationComponent
-            refresh={() => {
-               setRefresh('true');
-               mangas.refetch();
-            }}
-            next={next}
-            page={mangas.data}
-            blur={blur}
-         />
+         <PageComp />
          <div className="d-flex flex-wrap gap-2 justify-content-between">
             {mangas.isSuccess && !mangas.isFetching ? (
-               mangas.data?.items.map((n) => (
-                  <Card
-                     key={n.id}
-                     className="bg-secondary"
-                     style={{ width: '12rem' }}
-                  >
-                     <Card.Img
-                        variant="top"
-                        height="200"
-                        src={blur[0] ? n.blur : n.cover}
-                     />
-                     <Card.Body className="pb-0 pt-1">
-                        <OverlayTrigger
-                           placement="bottom"
-                           overlay={<Tooltip>{n.name}</Tooltip>}
-                        >
-                           <Link
-                              className="stretched-link"
-                              to={'/manga/' + n.id}
+               mangas.data?.doujins.map((n) => {
+                  var thumbnail = `/galleries/${n.id}/${path.basename(
+                     n.thumbnail.url
+                  )}`;
+                  var cover = `/galleries/${n.id}/${path.basename(
+                     n.cover.url
+                  )}`;
+                  return (
+                     <Card
+                        key={n.id}
+                        className="bg-secondary"
+                        style={{ width: '12rem' }}
+                     >
+                        <Card.Img
+                           variant="top"
+                           height="200"
+                           src={blur[0] ? thumbnail : cover}
+                        />
+                        <Card.Body className="pb-0 pt-1">
+                           <OverlayTrigger
+                              placement="bottom"
+                              overlay={<Tooltip>{n.titles.pretty}</Tooltip>}
                            >
-                              <Card.Title
-                                 style={{ fontSize: '13px' }}
-                                 className="text-center text-truncate"
+                              <Link
+                                 className="stretched-link"
+                                 to={'/manga/' + n.id}
                               >
-                                 {n.name}
-                              </Card.Title>
-                           </Link>
-                        </OverlayTrigger>
-                     </Card.Body>
-                  </Card>
-               ))
+                                 <Card.Title
+                                    style={{ fontSize: '13px' }}
+                                    className="text-center text-truncate"
+                                 >
+                                    {n.titles.pretty}
+                                 </Card.Title>
+                              </Link>
+                           </OverlayTrigger>
+                        </Card.Body>
+                     </Card>
+                  );
+               })
             ) : (
                <LoadingMangas />
             )}
          </div>
-         <PaginationComponent
-            refresh={() => {
-               setRefresh('true');
-               mangas.refetch();
-            }}
-            next={next}
-            page={mangas.data}
-            blur={blur}
-         />
+         <PageComp />
       </Container>
    );
 };
