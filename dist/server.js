@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-require("dotenv").config();
-require("express-async-errors");
+require('dotenv').config();
+require('express-async-errors');
 const express_1 = __importDefault(require("express"));
 const path_1 = require("path");
 const http_errors_1 = __importDefault(require("http-errors"));
@@ -24,24 +24,24 @@ const morgan_1 = __importDefault(require("morgan"));
 const database_1 = __importDefault(require("./database"));
 const api_route_1 = __importDefault(require("./api.route"));
 console.log(process.cwd());
-const { NODE_ENV, PORT = 7800 } = process.env;
-const CWD = process.cwd();
-const Join = (...dir) => (0, path_1.normalize)((0, path_1.join)(CWD, ...dir));
-const DJ_PATH = Join("../_dj/");
-const port = PORT;
-const ASSETS_PATH = Join("public/");
-const debug = NODE_ENV === "development" ? require("debug")("RD") : console.log;
-debug("Starting...");
-const isGitpod = /gitpod/i.test(process.env.USER);
-const boot = () => __awaiter(void 0, void 0, void 0, function* () {
+var { NODE_ENV, PORT = 7800, DJ_PATH = 'gallery' } = process.env;
+var CWD = process.cwd();
+var Join = (...dir) => (0, path_1.normalize)((0, path_1.join)(CWD, ...dir));
+DJ_PATH = Join(DJ_PATH);
+var port = PORT;
+var ASSETS_PATH = Join('public/');
+var debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
+debug('Starting...');
+var isGitpod = /gitpod/i.test(process.env.USER);
+var boot = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(isGitpod);
-    const app = (0, express_1.default)();
+    var app = (0, express_1.default)();
     yield database_1.default.load();
     yield database_1.default.ensureIndex({
-        fieldName: "id",
+        fieldName: 'id',
         unique: true,
     });
-    // const mangaData = await dirSync();
+    // var mangaData = await dirSync();
     // await db.insert(mangaData);
     // debug('Database ready!');
     yield new Promise((res) => app.listen(Number(PORT), res));
@@ -53,7 +53,7 @@ boot()
     app.use((0, cors_1.default)());
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: false }));
-    app.use((0, morgan_1.default)("dev", {
+    app.use((0, morgan_1.default)('dev', {
         skip: (req) => {
             if (req.url.length > 50) {
                 return true;
@@ -65,10 +65,10 @@ boot()
         },
     }));
     // app.use(compression());
-    app.use("/gallery", express_1.default.static(DJ_PATH));
+    app.use('/gallery', express_1.default.static(DJ_PATH));
     app.use(express_1.default.static(ASSETS_PATH));
-    app.get("/(*/)?", (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, "index.html")));
-    app.use("/api", api_route_1.default);
+    app.get('/(*/)?', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
+    app.use('/api', api_route_1.default);
     app.use((_req, _res, next) => next((0, http_errors_1.default)(404)));
     app.use((err, _req, res, _next) => {
         var error = {};

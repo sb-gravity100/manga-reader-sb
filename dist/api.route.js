@@ -109,6 +109,10 @@ route.get("/manga", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         throw new http_errors_1.default.NotFound("Manga not found!");
     }
 }));
+route.get('/refresh', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield doujin.write(req.query.id);
+    res.status(200).send();
+}));
 route.get("/save", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     q.push((cb) => __awaiter(void 0, void 0, void 0, function* () {
         var id = Number(req.query.id);
