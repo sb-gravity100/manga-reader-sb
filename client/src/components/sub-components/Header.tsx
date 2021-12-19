@@ -11,6 +11,7 @@ import {
    Card,
    Image,
    Spinner,
+   Nav,
 } from 'react-bootstrap';
 import path from 'path';
 import { Link } from 'react-router-dom';
@@ -65,6 +66,9 @@ const Header: React.FC = () => {
             </Link>
             <Navbar.Toggle className="bg-light" aria-controls="nav" />
             <Navbar.Collapse id="nav" className="justify-content-md-end py-2">
+               <Link className="nav-link" to="/online">
+                  Online Mode
+               </Link>
                <Form className="position-relative">
                   <FormControl
                      type="search"
@@ -94,14 +98,13 @@ const Header: React.FC = () => {
                               </Spinner>
                            </ListGroup.Item>
                         )}
-                        {!search.isFetching &&
-                           search?.data?.doujins.length === 0 && (
-                              <ListGroup.Item className="d-flex align-items-center justify-content-center bg-secondary position-relative">
-                                 Nothing Found :(
-                              </ListGroup.Item>
-                           )}
+                        {!search.isFetching && search?.data?.length === 0 && (
+                           <ListGroup.Item className="d-flex align-items-center justify-content-center bg-secondary position-relative">
+                              Nothing Found :(
+                           </ListGroup.Item>
+                        )}
                         {search.isSuccess &&
-                           search.data?.doujins.map((e, i) => (
+                           search.data?.map((e, i) => (
                               <SearchResult key={e.id} item={e} />
                            ))}
                      </ListGroup>

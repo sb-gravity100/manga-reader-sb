@@ -5,6 +5,7 @@ import nhentai from 'nhentai';
 import * as doujin from './lib/doujin';
 import errors from 'http-errors';
 import Queue from 'queue';
+import axios from 'axios';
 
 var route = Router();
 var online = Router();
@@ -14,9 +15,21 @@ var q = new Queue({
 });
 
 export default route;
-route.use('/online', online);
+route.use('/onlineapi', online);
 
 var searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
+
+route.get('/fetch', async (req, res) => {
+   if (req.query.url) {
+      var resp = await axios.get(req.query.url as string, {
+         responseType: 'arraybuffer',
+      });
+      res.setHeader('content-type', resp.headers['content-type']);
+      res.send(resp.data);
+   } else {
+      res.send();
+   }
+});
 
 route.get('/search', async (req, res) => {
    var query = req.query.q as string;
@@ -71,7 +84,7 @@ route.get('/mangas', async (req, res) => {
    } as nhentai.SearchResult);
 });
 
-route.get('/manga', async (req, res) => {
+route.get('/doujin', async (req, res) => {
    var exist = await db.findOne(
       {
          id: Number(req.query.id),
@@ -81,7 +94,12 @@ route.get('/manga', async (req, res) => {
    if (exist) {
       res.json(exist);
    } else {
-      throw new errors.NotFound('Manga not found!');
+      var manga = (await doujin.api.fetchDoujin(req.query.id as any)) as any;
+      if (!manga) {
+         throw new errors.NotFound('Manga not found');
+      }
+      var isOffline = await db.find({ id: manga.id });
+      res.json({ ...manga, availableOffline: Boolean(isOffline) });
    }
 });
 
@@ -137,7 +155,7 @@ online.get('/search', async (req, res) => {
    res.json(search);
 });
 
-online.get('/manga', async (req, res) => {
+online.get('/doujin', async (req, res) => {
    var { id } = req.query;
    if (!id) {
       throw new errors.Forbidden('No Input');

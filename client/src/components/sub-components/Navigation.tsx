@@ -1,28 +1,36 @@
 import _ from 'lodash';
+import { SearchResult } from 'nhentai';
 import { FC } from 'react';
 import { Pagination } from 'react-bootstrap';
 import { MdRefresh, MdBlurOn, MdBlurOff } from 'react-icons/md';
 
 interface PPage {
-   page: any;
+   page?: any;
    next: any;
+   current: any;
    refresh?: any;
    blur?: any[];
 }
 
-const PaginationComponent: FC<PPage> = ({ page, next, refresh, blur }) => {
+const PaginationComponent: FC<PPage> = ({
+   page,
+   next,
+   refresh,
+   blur,
+   current,
+}) => {
    var renderPages = () => {
       var pages: JSX.Element[] = [];
-      var start = page.current;
-      var end = page.current + 5;
+      var start = current;
+      var end = current + 5;
       start -= 4;
-      if (end > page.total) {
-         end = page.total;
-         start -= 5 - (page.total - page.current);
+      if (end > page?.numPages) {
+         end = page?.numPages;
+         start -= 5 - (page?.numPages - current);
       }
       if (start < 0) {
          start = 0;
-         end += 5 - page.current - 1;
+         end += 5 - current - 1;
       }
       for (let n = start; n < end; n++) {
          pages.push(
@@ -30,12 +38,12 @@ const PaginationComponent: FC<PPage> = ({ page, next, refresh, blur }) => {
                onClick={() =>
                   next(
                      new URLSearchParams({
-                        page: n as any,
+                        page: (n + 1) as any,
                      })
                   )
                }
-               key={n}
-               active={page?.current === n}
+               key={n + 1}
+               active={current === n + 1}
             >
                {n + 1}
             </Pagination.Item>
@@ -48,56 +56,58 @@ const PaginationComponent: FC<PPage> = ({ page, next, refresh, blur }) => {
          <Pagination.Item onClick={refresh} className="me-3">
             <MdRefresh />
          </Pagination.Item>
-         <Pagination.Item
-            onClick={() => {
-               if (blur) {
-                  blur[1]();
-               }
-            }}
-            className="me-3"
-         >
-            {blur?.slice()[0] ? <MdBlurOn /> : <MdBlurOff />}
-         </Pagination.Item>
+         {blur && (
+            <Pagination.Item
+               onClick={() => {
+                  if (blur) {
+                     blur[1]();
+                  }
+               }}
+               className="me-3"
+            >
+               {blur.slice()[0] ? <MdBlurOn /> : <MdBlurOff />}
+            </Pagination.Item>
+         )}
          <Pagination.First
             onClick={() =>
                next(
                   new URLSearchParams({
-                     page: page?.first as any,
+                     page: '1',
                   })
                )
             }
-            disabled={page?.first === page?.current}
+            disabled={1 === current}
          />
          <Pagination.Prev
             onClick={() =>
                next(
                   new URLSearchParams({
-                     page: page?.prev as any,
+                     page: (current - 1) as any,
                   })
                )
             }
-            disabled={page?.first === page?.current}
+            disabled={1 === current}
          />
          {page && renderPages()}
          <Pagination.Next
             onClick={() =>
                next(
                   new URLSearchParams({
-                     page: page?.next as any,
+                     page: (current + 1) as any,
                   })
                )
             }
-            disabled={page?.last === page?.current}
+            disabled={page?.numPages === current}
          />
          <Pagination.Last
             onClick={() =>
                next(
                   new URLSearchParams({
-                     page: page?.last as any,
+                     page: page?.numPages as any,
                   })
                )
             }
-            disabled={page?.last === page?.current}
+            disabled={page?.numPages === current}
          />
       </Pagination>
    );

@@ -4,6 +4,7 @@ import { FaAngleUp } from 'react-icons/fa';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Main from './components/Main';
 import Manga from './components/Manga';
+import Online from './components/Online';
 import NotFound from './components/sub-components/404';
 import './stylesheets/App.scss';
 
@@ -39,7 +40,7 @@ const App = () => {
    return (
       <Routes>
          <Route path="/" caseSensitive element={<Main />} />
-         <Route path="manga">
+         <Route path="/manga" caseSensitive>
             <Route
                path=":id"
                element={
@@ -50,7 +51,7 @@ const App = () => {
                }
             />
          </Route>
-         <Route path="online" />
+         <Route path="/online" element={<Online />} />
          <Route path="*" element={<NotFound />} />
       </Routes>
    );

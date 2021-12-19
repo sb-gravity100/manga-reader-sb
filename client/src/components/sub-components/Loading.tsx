@@ -2,9 +2,9 @@ import _ from 'lodash';
 import { FC } from 'react';
 import { Card, Container, Placeholder, Spinner } from 'react-bootstrap';
 
-export const LoadingMangas: FC = () => (
+export const LoadingMangas: FC<any> = (props) => (
    <>
-      {_.times(10, (n) => (
+      {_.times(props.num || 10, (n) => (
          <Card key={n} className="bg-light" style={{ width: '12rem' }}>
             <Card.Img variant="top" height="190" src="/loading.gif" />
             <Card.Body className="py-1 px-2">

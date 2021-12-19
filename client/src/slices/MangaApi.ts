@@ -17,7 +17,7 @@ const ApiSlice = createApi({
    baseQuery: fetchBaseQuery({
       baseUrl: '/api',
    }),
-   endpoints: builder => ({
+   endpoints: (builder) => ({
       allMangas: builder.query<SearchResult, MangasQuery | void>({
          query(opts) {
             return {
@@ -29,14 +29,14 @@ const ApiSlice = createApi({
       getManga: builder.query<Manga, number | string>({
          query(id) {
             return {
-               url: `/manga`,
+               url: `/doujin`,
                params: {
                   id,
                },
             };
          },
       }),
-      search: builder.query<SearchResult, SearchQuery | string>({
+      search: builder.query<Manga[], SearchQuery | string>({
          query(q) {
             return {
                url: '/search',

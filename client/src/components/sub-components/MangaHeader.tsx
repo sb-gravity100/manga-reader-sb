@@ -20,10 +20,12 @@ const MangaHeader: FC<any> = (props) => {
    var [zoomValue, zoom] = useCounter(600, 900, 300);
    var [stopLoop, startLoop] = useRafLoop(() => {
       if (window.scrollY < document.body.scrollHeight) {
-         window.scrollBy(
-            0,
-            (document.body.scrollHeight / props.manga?.pages.length) * 0.01
-         );
+         window.scrollBy({
+            left: 0,
+            top:
+               (document.body.scrollHeight / props.manga?.pages.length) * 0.004,
+            behavior: 'smooth',
+         });
       } else {
          toggleSlide(false);
       }

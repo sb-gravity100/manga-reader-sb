@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
 import _ from 'lodash';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { Card, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useToggle } from 'react-use';
@@ -27,8 +27,9 @@ const Reader: FC = () => {
             mangas.refetch();
          }}
          next={next}
-         page={mangas.data}
+         page={mangas?.data}
          blur={blur}
+         current={Number(params.get('page') || 1)}
       />
    );
    return (
@@ -37,12 +38,7 @@ const Reader: FC = () => {
          <div className="d-flex flex-wrap gap-2 justify-content-between">
             {mangas.isSuccess && !mangas.isFetching ? (
                mangas.data?.doujins.map((n) => {
-                  var thumbnail = `/galleries/${n.id}/${path.basename(
-                     n.thumbnail.url
-                  )}`;
-                  var cover = `/galleries/${n.id}/${path.basename(
-                     n.cover.url
-                  )}`;
+                  var cover = n.cover.url;
                   return (
                      <Card
                         key={n.id}
@@ -52,11 +48,15 @@ const Reader: FC = () => {
                         <Card.Img
                            variant="top"
                            height="200"
-                           src={blur[0] ? thumbnail : cover}
+                           src={cover}
+                           style={{
+                              filter: blur[0] ? 'blur(2px)' : undefined,
+                              overflow: 'hidden',
+                           }}
                         />
                         <Card.Body className="pb-0 pt-1">
                            <OverlayTrigger
-                              placement="bottom"
+                              placement="auto"
                               overlay={<Tooltip>{n.titles.pretty}</Tooltip>}
                            >
                               <Link

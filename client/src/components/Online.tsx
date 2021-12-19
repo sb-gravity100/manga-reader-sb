@@ -1,7 +1,17 @@
-
+import Header from './online/Header';
+import Homepage from './online/Homepage';
 
 const Online: React.FC = (props) => {
-   return <></>
-}
+   return (
+      <div
+         style={{
+            height: '100vh',
+         }}
+      >
+         <Header />
+         <Homepage />
+      </div>
+   );
+};
 
-export default Online
+export default Online;

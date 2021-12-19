@@ -36,3 +36,11 @@ export interface NavProps {
 }
 
 export interface SearchBarProps {}
+
+export function getSearchParams(p: URLSearchParams) {
+   var keys = {} as any;
+   p.forEach((v, k) => {
+      keys[k] = v;
+   });
+   return keys;
+}

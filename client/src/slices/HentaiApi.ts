@@ -11,15 +11,15 @@ interface SearchQuery {
 interface HomepageQuery extends Omit<SearchQuery, 'q'> {}
 
 const ApiSlice = createApi({
-   reducerPath: 'MangaApi',
+   reducerPath: 'HentaiApi',
    baseQuery: fetchBaseQuery({
-      baseUrl: '/api/online',
+      baseUrl: '/api/onlineapi',
    }),
    endpoints: (builder) => ({
       getManga: builder.query<Manga, number | string>({
          query(id) {
             return {
-               url: `/manga`,
+               url: `/doujins`,
                params: {
                   id,
                },
