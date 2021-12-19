@@ -4,9 +4,7 @@ const { platform } = require('os');
 
 let url = 'http://localhost:7800';
 
-if (!process.env.USER?.match(/gitpod/i)) {
-   url = 'http://localhost:7800';
-} else {
+if (process.env.USER?.match(/gitpod/i)) {
    url = execSync('gp url 7800').toString().trim();
 }
 console.log(url);
