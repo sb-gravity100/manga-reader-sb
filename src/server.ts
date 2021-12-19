@@ -12,26 +12,26 @@ import ApiRoute from "./api.route";
 import { Debugger } from "debug";
 console.log(process.cwd());
 
-const { NODE_ENV, PORT = 7800 } = process.env;
-const CWD = process.cwd();
-const Join = (...dir: string[]) => normalize(join(CWD, ...dir));
-const DJ_PATH = Join("../_dj/");
-const port = PORT;
-const ASSETS_PATH = Join("public/");
-const debug: Debugger =
+var { NODE_ENV, PORT = 7800, DJ_PATH = 'dj' } = process.env;
+var CWD = process.cwd();
+var Join = (...dir: string[]) => normalize(join(CWD, ...dir));
+DJ_PATH = Join(DJ_PATH);
+var port = PORT;
+var ASSETS_PATH = Join("public/");
+var debug: Debugger =
   NODE_ENV === "development" ? require("debug")("RD") : console.log;
 debug("Starting...");
-const isGitpod = /gitpod/i.test(process.env.USER as string);
+var isGitpod = /gitpod/i.test(process.env.USER as string);
 
-const boot = async () => {
+var boot = async () => {
   console.log(isGitpod);
-  const app = express();
+  var app = express();
   await db2.load();
   await db2.ensureIndex({
     fieldName: "id",
     unique: true,
   });
-  // const mangaData = await dirSync();
+  // var mangaData = await dirSync();
   // await db.insert(mangaData);
   // debug('Database ready!');
 

@@ -85,6 +85,12 @@ route.get("/manga", async (req, res) => {
   }
 });
 
+route.get('/refresh', async (req, res) => {
+  await doujin.write(req.query.id)
+  res.status(200).send()
+
+})
+
 route.get("/save", async (req, res) => {
   q.push(async (cb: any) => {
     var id = Number(req.query.id);
