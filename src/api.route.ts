@@ -67,7 +67,7 @@ route.get('/search', async (req, res) => {
 });
 route.get('/mangas', async (req, res) => {
    var { limit = 10, page = 1 } = req.query as any;
-   var mangas = db.find({}, { raw: 0 });
+   var mangas = db.find({}, { raw: 0 }).sort({ createdAt: 1 });
    var total = await db.count({});
    if (limit) {
       limit = Number(limit);
@@ -78,7 +78,10 @@ route.get('/mangas', async (req, res) => {
       mangas = mangas.skip(limit * (page - 1));
    }
    res.json({
-      doujins: (await mangas.exec()) as any,
+      doujins: ((await mangas.exec()) as any).map((e) => {
+         e.availableOffline = true;
+         return e;
+      }),
       doujinsPerPage: limit,
       numPages: Math.ceil(total / limit),
    } as nhentai.SearchResult);
@@ -92,7 +95,7 @@ route.get('/doujin', async (req, res) => {
       { raw: 0 }
    );
    if (exist) {
-      res.json(exist);
+      res.json({ ...exist, availableOffline: true });
    } else {
       var manga = (await doujin.api.fetchDoujin(req.query.id as any)) as any;
       if (!manga) {
@@ -153,6 +156,15 @@ online.get('/search', async (req, res) => {
       page as string,
       sort as any
    );
+   Object.defineProperty(search, 'doujins', {
+      value: search.doujins.map(async (e) => {
+         const exist = await db.findOne({
+            id: e.id,
+         });
+         e['availableOffline'] = !!exist;
+         return e;
+      }),
+   });
    res.json(search);
 });
 

@@ -94,9 +94,10 @@ const Manga = () => {
             >
                {manga.isSuccess &&
                   manga.data.pages?.map((e) => {
-                     var src = `/gallery/${manga?.data?.id}/${e.pageNumber}.${e.extension}`;
-                     if (!(manga.data as any)?.availableOffline) {
-                        src = `/api/fetch?url=${e.url}`;
+                     var src = `/api/fetch?url=${e.url}`;
+                     if (manga.data?.availableOffline) {
+                        src = `/gallery/${manga?.data?.id}/${e.pageNumber}.${e.extension}`;
+                        console.log('offline manga');
                      }
                      return <MangaView key={e.pageNumber} img={e} src={src} />;
                   })}

@@ -95,7 +95,7 @@ route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* (
 }));
 route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var { limit = 10, page = 1 } = req.query;
-    var mangas = database_1.default.find({}, { raw: 0 });
+    var mangas = database_1.default.find({}, { raw: 0 }).sort({ createdAt: 1 });
     var total = yield database_1.default.count({});
     if (limit) {
         limit = Number(limit);
@@ -106,7 +106,10 @@ route.get('/mangas', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         mangas = mangas.skip(limit * (page - 1));
     }
     res.json({
-        doujins: (yield mangas.exec()),
+        doujins: (yield mangas.exec()).map((e) => {
+            e.availableOffline = true;
+            return e;
+        }),
         doujinsPerPage: limit,
         numPages: Math.ceil(total / limit),
     });
@@ -116,7 +119,7 @@ route.get('/doujin', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         id: Number(req.query.id),
     }, { raw: 0 });
     if (exist) {
-        res.json(exist);
+        res.json(Object.assign(Object.assign({}, exist), { availableOffline: true }));
     }
     else {
         var manga = (yield doujin.api.fetchDoujin(req.query.id));
@@ -171,6 +174,15 @@ online.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         throw new http_errors_1.default.Forbidden('No Input');
     }
     var search = yield doujin.api.search(q, page, sort);
+    Object.defineProperty(search, 'doujins', {
+        value: search.doujins.map((e) => __awaiter(void 0, void 0, void 0, function* () {
+            const exist = yield database_1.default.findOne({
+                id: e.id,
+            });
+            e['availableOffline'] = !!exist;
+            return e;
+        })),
+    });
     res.json(search);
 }));
 online.get('/doujin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

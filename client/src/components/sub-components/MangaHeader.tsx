@@ -72,7 +72,7 @@ const MangaHeader: FC<any> = (props) => {
                      zoom.inc(50);
                   }}
                   variant="outline-primary"
-                  className="px-2 py-1"
+                  className="px-2 py-1 align-middle"
                >
                   <MdZoomIn alignmentBaseline="central" />
                </Button>
@@ -81,14 +81,14 @@ const MangaHeader: FC<any> = (props) => {
                      zoom.dec(50);
                   }}
                   variant="outline-primary"
-                  className="px-2 py-1"
+                  className="px-2 py-1 align-middle"
                >
                   <MdZoomOut alignmentBaseline="central" />
                </Button>
                <Button
                   onClick={() => toggleBright()}
                   variant="outline-primary"
-                  className="px-2 py-1"
+                  className="px-2 py-1 align-middle"
                >
                   {isBright ? (
                      <MdBrightnessHigh alignmentBaseline="central" />
@@ -99,7 +99,7 @@ const MangaHeader: FC<any> = (props) => {
                <Button
                   onClick={() => toggleSlide()}
                   variant="outline-primary"
-                  className="px-2 py-1"
+                  className="px-2 py-1 align-middle"
                >
                   {isSlide === false ? (
                      <MdPlayCircleFilled alignmentBaseline="central" />

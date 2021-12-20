@@ -5,12 +5,14 @@ import {
    TypedUseSelectorHook,
 } from 'react-redux';
 import ApiSlice from './slices/MangaApi';
+import DownloadSlice from './slices/DownloadSlice';
 import HentaiSlice from './slices/HentaiApi';
 
 const store = configureStore({
    reducer: {
       [ApiSlice.reducerPath]: ApiSlice.reducer,
       [HentaiSlice.reducerPath]: HentaiSlice.reducer,
+      downloads: DownloadSlice.reducer,
    },
    middleware: (getDefMid) =>
       getDefMid().concat(ApiSlice.middleware, HentaiSlice.middleware) as any,

@@ -1,8 +1,9 @@
 import { Doujin, Image, Tag } from 'nhentai';
-export declare class Manga extends Doujin {
+export interface Manga extends Doujin {
+    availableOffline?: boolean;
 }
-export declare class MangaData extends Image {
+export interface MangaData extends Image {
 }
-export declare class MangaTag extends Tag {
+export interface MangaTag extends Tag {
 }
 export { SearchResult, SortMethods } from 'nhentai';

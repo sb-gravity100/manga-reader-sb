@@ -73,6 +73,20 @@ const Homepage: React.FC = (props) => {
                doujins.data?.doujins.map((n) => {
                   return <DoujinCard key={n.id} doujin={n} blur={blur} />;
                })
+            ) : doujins.isError ? (
+               <>
+                  <div className="h-100 d-flex align-items-center justify-content-center flex-column mx-auto my-5">
+                     <h1>something went wrong...</h1>
+                     <Button
+                        className="w-100"
+                        onClick={() => {
+                           doujins.refetch();
+                        }}
+                     >
+                        Retry?
+                     </Button>
+                  </div>
+               </>
             ) : (
                <LoadingMangas num={10} />
             )}

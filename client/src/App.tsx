@@ -6,6 +6,7 @@ import Main from './components/Main';
 import Manga from './components/Manga';
 import Online from './components/Online';
 import DoujinPage from './components/online/Doujin';
+import DownloadPage from './components/online/Downloads';
 import Header from './components/online/Header';
 import SearchPage from './components/online/SearchPage';
 import NotFound from './components/sub-components/404';
@@ -41,40 +42,51 @@ const ToTopComponent: React.FC = () => {
 
 const App = () => {
    return (
-      <Routes>
-         <Route path="/" caseSensitive element={<Main />} />
-         <Route path="/manga" caseSensitive>
+      <>
+         <Routes>
+            <Route path="/" caseSensitive element={<Main />} />
+            <Route path="/manga" caseSensitive>
+               <Route
+                  path=":id"
+                  element={
+                     <>
+                        <Manga />
+                        <ToTopComponent />
+                     </>
+                  }
+               />
+            </Route>
+            <Route path="/online" caseSensitive element={<Online />}></Route>
             <Route
-               path=":id"
+               path="/online/search"
                element={
                   <>
-                     <Manga />
-                     <ToTopComponent />
+                     <Header />
+                     <SearchPage />
                   </>
                }
             />
-         </Route>
-         <Route path="/online" caseSensitive element={<Online />}></Route>
-         <Route
-            path="/online/search"
-            element={
-               <>
-                  <Header />
-                  <SearchPage />
-               </>
-            }
-         />
-         <Route
-            path="/online/:id"
-            element={
-               <>
-                  <Header />
-                  <DoujinPage />
-               </>
-            }
-         />
-         <Route path="*" element={<NotFound />} />
-      </Routes>
+            <Route
+               path="/online/:id"
+               element={
+                  <>
+                     <Header />
+                     <DoujinPage />
+                  </>
+               }
+            />
+            <Route
+               path="/online/downloads"
+               element={
+                  <>
+                     <Header />
+                     <DownloadPage />
+                  </>
+               }
+            />
+            <Route path="*" element={<NotFound />} />
+         </Routes>
+      </>
    );
 };
 

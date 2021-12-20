@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { FC } from 'react';
-import { Card, Container, Placeholder, Spinner } from 'react-bootstrap';
+import { Card, Placeholder, Spinner } from 'react-bootstrap';
 
 export const LoadingMangas: FC<any> = (props) => (
    <>

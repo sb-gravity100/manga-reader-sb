@@ -1,12 +1,8 @@
-/* eslint-disable no-script-url */
-/* eslint-disable no-unused-vars */
-/* eslint-disable jsx-a11y/alt-text */
 import _ from 'lodash';
 import { FC } from 'react';
-import { Card, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
 import { useToggle } from 'react-use';
-import path from 'path';
 import { useAllMangasQuery } from '../slices/MangaApi';
 import { LoadingMangas } from './sub-components/Loading';
 import PaginationComponent from './sub-components/Navigation';
@@ -36,7 +32,7 @@ const Reader: FC = () => {
    return (
       <Container className="d-flex flex-column gap-2 py-2">
          <PageComp />
-         <div className="d-flex flex-wrap gap-2 justify-content-between">
+         <div className="d-flex flex-wrap gap-2 justify-content-center">
             {mangas.isSuccess && !mangas.isFetching ? (
                mangas.data?.doujins.map((n) => {
                   return <DoujinCard key={n.id} doujin={n} blur={blur} />;

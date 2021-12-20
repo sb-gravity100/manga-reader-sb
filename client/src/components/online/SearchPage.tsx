@@ -53,6 +53,7 @@ const SearchPage: React.FC = (props) => {
    return (
       <Container className="d-flex flex-column gap-3 py-2">
          <Form
+            className="container"
             onSubmit={(e) => {
                e.preventDefault();
                next({
