@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import _ from 'lodash';
+import { Doujin } from 'nhentai';
 import { Manga, SearchResult, SortMethods } from '../../../src/types';
 
 interface SearchQuery {
@@ -16,10 +17,10 @@ const ApiSlice = createApi({
       baseUrl: '/api/onlineapi',
    }),
    endpoints: (builder) => ({
-      getManga: builder.query<Manga, number | string>({
+      getDoujin: builder.query<Manga, number | string>({
          query(id) {
             return {
-               url: `/doujins`,
+               url: `/doujin`,
                params: {
                   id,
                },
@@ -54,9 +55,9 @@ export default ApiSlice;
 
 export const {
    useGetHomepageQuery,
-   useGetMangaQuery,
+   useGetDoujinQuery,
    useLazyGetHomepageQuery,
-   useLazyGetMangaQuery,
+   useLazyGetDoujinQuery,
    useLazySearchQuery,
    usePrefetch,
    useSearchQuery,

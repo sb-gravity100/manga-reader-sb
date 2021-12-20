@@ -19,7 +19,7 @@ const path_1 = require("path");
 const http_errors_1 = __importDefault(require("http-errors"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
-// import compression from "compression";
+const compression_1 = __importDefault(require("compression"));
 // import _ from "lodash";
 const database_1 = __importDefault(require("./database"));
 const api_route_1 = __importDefault(require("./api.route"));
@@ -34,7 +34,7 @@ var debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
 var isGitpod = /gitpod/i.test(process.env.USER);
 var boot = () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(isGitpod);
+    // console.log(isGitpod);
     var app = (0, express_1.default)();
     yield database_1.default.load();
     yield database_1.default.ensureIndex({
@@ -67,7 +67,7 @@ boot()
             write: (msg) => debug(msg.trimEnd()),
         },
     }));
-    // app.use(compression());
+    app.use((0, compression_1.default)());
     app.use('/gallery', express_1.default.static(DJ_PATH));
     app.use(express_1.default.static(ASSETS_PATH));
     app.get('/(*/)?', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));

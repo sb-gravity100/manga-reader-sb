@@ -5,7 +5,7 @@ import { normalize, join } from 'path';
 import createError, { HttpError } from 'http-errors';
 import cors from 'cors';
 import logger from 'morgan';
-// import compression from "compression";
+import compression from 'compression';
 // import _ from "lodash";
 import db2 from './database';
 import ApiRoute from './api.route';
@@ -24,7 +24,7 @@ debug('Starting...');
 var isGitpod = /gitpod/i.test(process.env.USER as string);
 
 var boot = async () => {
-   console.log(isGitpod);
+   // console.log(isGitpod);
    var app = express();
    await db2.load();
    await db2.ensureIndex({
@@ -63,7 +63,7 @@ boot()
             },
          })
       );
-      // app.use(compression());
+      app.use(compression());
 
       app.use('/gallery', express.static(DJ_PATH));
 

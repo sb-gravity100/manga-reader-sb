@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import _ from 'lodash';
+import { Doujin } from 'nhentai';
 import { Manga, SearchResult } from '../../../src/types';
 
 interface MangasQuery {

@@ -165,7 +165,7 @@ online.get('/doujin', async (req, res) => {
    if (!manga) {
       throw new errors.NotFound('Manga not found');
    }
-   var isOffline = await db.find({ id: manga.id });
+   var isOffline = await db.findOne({ id: manga.id });
    res.json({ ...manga, availableOffline: Boolean(isOffline) });
 });
 

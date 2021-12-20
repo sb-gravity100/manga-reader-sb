@@ -9,7 +9,9 @@ type DoujinProps = {
 };
 
 const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur }) => {
-   var thumbnail = `/api/fetch?url=${n.thumbnail.url}`;
+   var thumbnail = n.thumbnail.url;
+   if (thumbnail.match(/https?/i))
+      thumbnail = `/api/fetch?url=${n.thumbnail.url}`;
    var tagName = n.tags.all.find(
       (e) => e.type.match(/language/i) && !e.name.match(/translated/i)
    )?.name as string;
@@ -42,7 +44,7 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur }) => {
                placement="auto"
                overlay={<Tooltip>{n.titles.pretty}</Tooltip>}
             >
-               <Link className="stretched-link" to={'/manga/' + n.id}>
+               <Link className="stretched-link" to={'/online/' + n.id}>
                   <Card.Title
                      style={{ fontSize: '13px' }}
                      className="text-center text-truncate"
