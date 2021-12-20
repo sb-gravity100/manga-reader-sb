@@ -9391,6 +9391,11 @@ react-is@^17.0.1, react-is@^17.0.2:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-libpixel@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-libpixel/-/react-libpixel-1.0.1.tgz#ec0ab025422c4cdf3b8f73548bcfa530448b9664"
+  integrity sha512-Qnwcpj1sKBnJ8JbM7mLjttxLaB0xU2M2gJCH6y26qKBO9CKDUOG6zdRETj14FIejuXbM/RZehKn9oNnL2VuriA==
+
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"

@@ -1,6 +1,4 @@
-import { ChangeEventHandler, Dispatch, SetStateAction } from 'react';
 import { Manga, MangaData } from '../../../src/types';
-import { useSearchQuery } from '../slices/MangaApi';
 
 export interface MangaHeaderProps {
    manga?: Manga;
@@ -43,4 +41,14 @@ export function getSearchParams(p: URLSearchParams) {
       keys[k] = v;
    });
    return keys;
+}
+
+export const Locales = {
+   JAPANESE: '/japan_logo.svg',
+   CHINESE: '/china_logo.svg',
+   ENGLISH: '/us_logo.svg',
+};
+
+export function getLocale(name: string) {
+   return (Locales as any)[name.toUpperCase()];
 }

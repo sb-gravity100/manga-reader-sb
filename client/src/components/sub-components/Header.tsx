@@ -58,9 +58,9 @@ const Header: React.FC = () => {
                <Navbar.Brand>
                   <img
                      alt=""
-                     src="/kono_dio_da.png"
+                     src="/favicon.png"
                      height="60"
-                     className="d-inline-block align-top bg-light"
+                     className="d-inline-block align-top"
                   />
                </Navbar.Brand>
             </Link>

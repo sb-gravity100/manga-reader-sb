@@ -10,6 +10,7 @@ import path from 'path';
 import { useAllMangasQuery } from '../slices/MangaApi';
 import { LoadingMangas } from './sub-components/Loading';
 import PaginationComponent from './sub-components/Navigation';
+import DoujinCard from './sub-components/DoujinCard';
 
 const Reader: FC = () => {
    const blur = useToggle(true);
@@ -38,42 +39,7 @@ const Reader: FC = () => {
          <div className="d-flex flex-wrap gap-2 justify-content-between">
             {mangas.isSuccess && !mangas.isFetching ? (
                mangas.data?.doujins.map((n) => {
-                  var cover = n.cover.url;
-                  return (
-                     <Card
-                        key={n.id}
-                        className="bg-secondary"
-                        style={{ width: '12rem' }}
-                     >
-                        <Card.Img
-                           variant="top"
-                           height="200"
-                           src={cover}
-                           style={{
-                              filter: blur[0] ? 'blur(2px)' : undefined,
-                              overflow: 'hidden',
-                           }}
-                        />
-                        <Card.Body className="pb-0 pt-1">
-                           <OverlayTrigger
-                              placement="auto"
-                              overlay={<Tooltip>{n.titles.pretty}</Tooltip>}
-                           >
-                              <Link
-                                 className="stretched-link"
-                                 to={'/manga/' + n.id}
-                              >
-                                 <Card.Title
-                                    style={{ fontSize: '13px' }}
-                                    className="text-center text-truncate"
-                                 >
-                                    {n.titles.pretty}
-                                 </Card.Title>
-                              </Link>
-                           </OverlayTrigger>
-                        </Card.Body>
-                     </Card>
-                  );
+                  return <DoujinCard key={n.id} doujin={n} blur={blur} />;
                })
             ) : (
                <LoadingMangas />

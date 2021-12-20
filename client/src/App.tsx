@@ -5,6 +5,9 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Main from './components/Main';
 import Manga from './components/Manga';
 import Online from './components/Online';
+import DoujinPage from './components/online/Doujin';
+import Header from './components/online/Header';
+import SearchPage from './components/online/SearchPage';
 import NotFound from './components/sub-components/404';
 import './stylesheets/App.scss';
 
@@ -51,7 +54,25 @@ const App = () => {
                }
             />
          </Route>
-         <Route path="/online" element={<Online />} />
+         <Route path="/online" caseSensitive element={<Online />}></Route>
+         <Route
+            path="/online/search"
+            element={
+               <>
+                  <Header />
+                  <SearchPage />
+               </>
+            }
+         />
+         <Route
+            path="/online/:id"
+            element={
+               <>
+                  <Header />
+                  <DoujinPage />
+               </>
+            }
+         />
          <Route path="*" element={<NotFound />} />
       </Routes>
    );

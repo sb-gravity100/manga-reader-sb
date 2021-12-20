@@ -1,10 +1,17 @@
 @import '~bootstrap/scss/functions';
 
+$imperial-red: rgba(230, 57, 70, 1);
+$honeydew: rgba(241, 250, 238, 1);
+$powder-blue: rgba(168, 218, 220, 1);
+$celadon-blue: rgba(69, 123, 157, 1);
+$prussian-blue: rgba(29, 53, 87, 1);
+
 $dark: #051923;
-$secondary: #263c41;
-$light: #f8f2dc;
-$bg-color: #d9d9d9;
-$primary: #4ecdc4;
+$secondary: rgba(69, 123, 157, 1);
+$light: rgba(241, 250, 238, 1);
+$bg-color: rgba(168, 218, 220, 1);
+$primary: rgb(0, 95, 158);
+$info: rgba(29, 53, 87, 1);
 $enable-cssgrid: true;
 $pagination-color: $bg-color;
 $pagination-bg: $dark;
@@ -20,7 +27,7 @@ $pagination-hover-border-color: lighten($secondary, 10);
 $pagination-active-color: $primary;
 $pagination-active-bg: $secondary;
 
-$pagination-disabled-color: darkgray;
+$pagination-disabled-color: $info;
 $pagination-disabled-bg: lighten($secondary, 10);
 $pagination-disabled-border-color: lighten($secondary, 10);
 

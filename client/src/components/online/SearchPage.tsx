@@ -3,29 +3,34 @@ import {
    Button,
    Card,
    Container,
+   Form,
+   FormControl,
    OverlayTrigger,
    Tooltip,
 } from 'react-bootstrap';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useGetHomepageQuery } from '../../slices/HentaiApi';
+import { useSearchQuery } from '../../slices/HentaiApi';
 import { LoadingMangas } from '../sub-components/Loading';
 import PaginationComponent from '../sub-components/Navigation';
 import { SortMethods } from 'nhentai/lib/constants';
 import _ from 'lodash';
 import { getSearchParams } from '../props';
+import { useRef } from 'react';
 import { useToggle } from 'react-use';
 import DoujinCard from '../sub-components/DoujinCard';
 
-const Homepage: React.FC = (props) => {
+const SearchPage: React.FC = (props) => {
    const blur = useToggle(true);
+   const searchRef = useRef<HTMLInputElement>();
    const Sorts = _.toPairs(SortMethods);
    const [params, next] = useSearchParams(
       new URLSearchParams({
          page: '1',
          sort: '',
+         q: '',
       })
    );
-   const doujins = useGetHomepageQuery(getSearchParams(params));
+   const doujins = useSearchQuery(getSearchParams(params));
    var PageComp = () => (
       <PaginationComponent
          refresh={() => {
@@ -47,6 +52,23 @@ const Homepage: React.FC = (props) => {
 
    return (
       <Container className="d-flex flex-column gap-3 py-2">
+         <Form
+            onSubmit={(e) => {
+               e.preventDefault();
+               next({
+                  ...getSearchParams(params),
+                  q: searchRef.current?.value,
+               });
+            }}
+         >
+            <FormControl
+               type="search"
+               placeholder="Search"
+               aria-label="Search"
+               autoComplete="none"
+               ref={searchRef as any}
+            />
+         </Form>
          <PageComp />
          <div className="d-flex justify-content-center gap-2">
             {Sorts.map((e) => (
@@ -73,6 +95,20 @@ const Homepage: React.FC = (props) => {
                doujins.data?.doujins.map((n) => {
                   return <DoujinCard key={n.id} doujin={n} blur={blur} />;
                })
+            ) : doujins.isError ? (
+               <>
+                  <div className="h-100 d-flex align-items-center justify-content-center flex-column mx-auto my-5">
+                     <h1>Search something...</h1>
+                     <Button
+                        className="w-100"
+                        onClick={() => {
+                           searchRef.current?.focus();
+                        }}
+                     >
+                        Search
+                     </Button>
+                  </div>
+               </>
             ) : (
                <LoadingMangas num={10} />
             )}
@@ -82,4 +118,4 @@ const Homepage: React.FC = (props) => {
    );
 };
 
-export default Homepage;
+export default SearchPage;

@@ -15,9 +15,9 @@ const Header: React.FC = () => {
                <Navbar.Brand>
                   <img
                      alt=""
-                     src="/kono_dio_da.png"
+                     src="/favicon.png"
                      height="60"
-                     className="d-inline-block align-top bg-light"
+                     className="d-inline-block align-top"
                   />
                </Navbar.Brand>
             </Link>
@@ -25,6 +25,9 @@ const Header: React.FC = () => {
             <Navbar.Collapse id="nav" className="justify-content-md-end py-2">
                <Link className="nav-link" to="/">
                   Go Offline
+               </Link>
+               <Link className="nav-link" to="/online/search">
+                  Search
                </Link>
             </Navbar.Collapse>
          </Container>
