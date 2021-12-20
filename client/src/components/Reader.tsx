@@ -35,7 +35,14 @@ const Reader: FC = () => {
          <div className="d-flex flex-wrap gap-2 justify-content-center">
             {mangas.isSuccess && !mangas.isFetching ? (
                mangas.data?.doujins.map((n) => {
-                  return <DoujinCard key={n.id} doujin={n} blur={blur} />;
+                  return (
+                     <DoujinCard
+                        refetch={mangas.refetch}
+                        key={n.id}
+                        doujin={n}
+                        blur={blur}
+                     />
+                  );
                })
             ) : (
                <LoadingMangas />

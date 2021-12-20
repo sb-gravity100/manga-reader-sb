@@ -94,7 +94,14 @@ const SearchPage: React.FC = (props) => {
          <div className="d-flex flex-wrap gap-4 justify-content-center">
             {doujins.isSuccess && !doujins.isFetching ? (
                doujins.data?.doujins.map((n) => {
-                  return <DoujinCard key={n.id} doujin={n} blur={blur} />;
+                  return (
+                     <DoujinCard
+                        refetch={doujins.refetch}
+                        key={n.id}
+                        doujin={n}
+                        blur={blur}
+                     />
+                  );
                })
             ) : doujins.isError ? (
                <>

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type Download = {
    id: any;
+   doujinID: any;
    isSuccess: boolean;
    isError: boolean;
    timeAdded: number;
@@ -31,7 +32,8 @@ const Slice = createSlice({
    reducers: {
       add(state, action: PayloadAction<number>) {
          var res = {
-            id: action.payload,
+            id: `${state.results.length}_${Date.now()}`,
+            doujinID: action.payload,
             timeAdded: Date.now(),
          } as Download;
          state.results.push(res);
@@ -41,6 +43,12 @@ const Slice = createSlice({
          if (res > -1) {
             state.results[res].isError = true;
             state.results[res].isSuccess = false;
+         }
+      },
+      remove(state, action: PayloadAction<number>) {
+         var res = state.results.findIndex((e) => e.id === action.payload);
+         if (res > -1) {
+            state.results.splice(res, 1);
          }
       },
       completed(state, action: PayloadAction<number>) {
@@ -72,4 +80,5 @@ const Slice = createSlice({
 });
 
 export default Slice;
-export const { saveHistory, add, completed, error, pushToast } = Slice.actions;
+export const { saveHistory, add, completed, error, pushToast, remove } =
+   Slice.actions;

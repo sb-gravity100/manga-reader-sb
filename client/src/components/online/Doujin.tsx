@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useToggle } from 'react-use';
 import { Manga } from '../../../../src/types';
 import { pushToast } from '../../slices/DownloadSlice';
+import * as dl from '../../slices/DownloadSlice';
 import { useGetDoujinQuery } from '../../slices/HentaiApi';
 import {
    useLazyRemoveMangaQuery,
@@ -43,6 +44,7 @@ const TagButton: React.FC<{ type: string; doujin?: Manga }> = ({
                         className="btn btn-outline-secondary py-1 px-2"
                         href={e.url}
                         target="_blank"
+                        rel="noreferrer"
                      >
                         <span className="fst-italic me-2">{e.name}</span>
                         <Badge bg="secondary">{e.count}</Badge>
@@ -80,27 +82,40 @@ const DoujinPage: React.FC = (props) => {
    };
 
    useEffect(() => {
-      if (saved.isSuccess) {
-         dispatch(
-            pushToast({
-               header: 'Doujin Corner',
-               message: `Successfully added ${doujin.data?.titles.pretty}!`,
-               delay: 3000,
-            })
-         );
-         doujin.refetch();
+      if (doujin.isSuccess) {
+         document.title = doujin.data.titles.pretty;
       }
-      if (removed.isSuccess) {
-         dispatch(
-            pushToast({
-               header: 'Doujin Corner',
-               message: `Successfully removed ${doujin.data?.titles.pretty}!`,
-               delay: 3000,
-            })
-         );
-         doujin.refetch();
+   }, [doujin]);
+
+   useEffect(() => {
+      if (doujin.isSuccess) {
+         if (saved.isSuccess) {
+            dispatch(
+               pushToast({
+                  header: 'Doujin Corner',
+                  message: `Successfully added ${doujin.data?.titles.pretty}!`,
+                  delay: 3000,
+               })
+            );
+            doujin.refetch();
+            dispatch(dl.completed(doujin.data?.id));
+         }
+         if (saved.isError) {
+            dispatch(dl.error(doujin.data?.id));
+         }
+         if (removed.isSuccess) {
+            dispatch(
+               pushToast({
+                  header: 'Doujin Corner',
+                  message: `Successfully removed ${doujin.data?.titles.pretty}!`,
+                  delay: 3000,
+               })
+            );
+            dispatch(dl.remove(doujin.data?.id));
+            doujin.refetch();
+         }
       }
-   }, [removed, saved, dispatch, doujin.data?.titles.pretty]);
+   }, [removed, saved, dispatch, doujin]);
    return (
       <Container className="w-75 py-4 bg-secondary bg-opacity-50 shadow rounded-2 my-3">
          {doujin.isSuccess && (
@@ -135,6 +150,7 @@ const DoujinPage: React.FC = (props) => {
                                        delay: 3000,
                                     })
                                  );
+                                 dispatch(dl.add(doujin.data.id));
                               }
                            }}
                            className="me-2"

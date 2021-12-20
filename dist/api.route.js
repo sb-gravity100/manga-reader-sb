@@ -174,15 +174,14 @@ online.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         throw new http_errors_1.default.Forbidden('No Input');
     }
     var search = yield doujin.api.search(q, page, sort);
-    Object.defineProperty(search, 'doujins', {
-        value: search.doujins.map((e) => __awaiter(void 0, void 0, void 0, function* () {
-            const exist = yield database_1.default.findOne({
-                id: e.id,
-            });
-            e['availableOffline'] = !!exist;
-            return e;
-        })),
-    });
+    var djs = yield Promise.all(search.doujins.map((e) => __awaiter(void 0, void 0, void 0, function* () {
+        const exist = yield database_1.default.findOne({
+            id: e.id,
+        });
+        e['availableOffline'] = !!exist;
+        return e;
+    })));
+    search['doujins'] = djs;
     res.json(search);
 }));
 online.get('/doujin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import { useEffect } from 'react';
 import { Card, Image, Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { AnyIfEmpty, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useToggle } from 'react-use';
 import { Manga } from '../../../../src/types';
 import { pushToast } from '../../slices/DownloadSlice';
+import * as dl from '../../slices/DownloadSlice';
 import { useGetDoujinQuery } from '../../slices/HentaiApi';
 import {
    useLazySaveMangaQuery,
@@ -16,9 +17,10 @@ import { getLocale } from '../props';
 type DoujinProps = {
    doujin: Manga;
    blur: any;
+   refetch: any;
 };
 
-const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur }) => {
+const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
    var [isOver, setOver] = useToggle(false);
    var thumbnail = n.thumbnail?.url;
    if (thumbnail?.match(/https?/i))
@@ -48,23 +50,28 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur }) => {
          dispatch(
             pushToast({
                header: 'Doujin Corner',
-               message: `Successfully added ${n?.titles.pretty}!`,
+               message: `Successfully added ${n.titles.pretty}!`,
                delay: 3000,
             })
          );
+         dispatch(dl.completed(n.id));
+         // refetch();
       }
-   }, [saved, dispatch, n?.titles.pretty]);
-   useEffect(() => {
+      if (saved.isError) {
+         dispatch(dl.error(n.id));
+      }
       if (removed.isSuccess) {
          dispatch(
             pushToast({
                header: 'Doujin Corner',
-               message: `Successfully removed ${n?.titles.pretty}!`,
+               message: `Successfully removed ${n.titles.pretty}!`,
                delay: 3000,
             })
          );
+         dispatch(dl.remove(n.id));
+         // refetch();
       }
-   }, [removed, dispatch, n?.titles.pretty]);
+   }, [removed, saved, dispatch, n]);
    return (
       <Card
          className="bg-secondary position-relative"
@@ -112,6 +119,7 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur }) => {
                            delay: 3000,
                         })
                      );
+                     dispatch(dl.add(n.id));
                   }
                }}
                className="me-2 p-1"

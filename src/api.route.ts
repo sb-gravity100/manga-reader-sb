@@ -156,15 +156,16 @@ online.get('/search', async (req, res) => {
       page as string,
       sort as any
    );
-   Object.defineProperty(search, 'doujins', {
-      value: search.doujins.map(async (e) => {
+   var djs = await Promise.all(
+      search.doujins.map(async (e) => {
          const exist = await db.findOne({
             id: e.id,
          });
          e['availableOffline'] = !!exist;
          return e;
-      }),
-   });
+      })
+   );
+   search['doujins' as any] = djs;
    res.json(search);
 });
 
