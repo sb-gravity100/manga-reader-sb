@@ -54,19 +54,9 @@ const Slice = createSlice({
       completed(state, action: PayloadAction<number>) {
          var res = state.results.findIndex((e) => e.id === action.payload);
          if (res > -1) {
-            state.results[res].isError = true;
-            state.results[res].isSuccess = false;
+            state.results[res].isError = false;
+            state.results[res].isSuccess = true;
          }
-      },
-      saveHistory(state) {
-         var hist = localStorage.getItem('doujin-download-history');
-         if (hist) {
-            state.results = state.results.concat(JSON.parse(hist));
-         }
-         localStorage.setItem(
-            'doujin-download-history',
-            JSON.stringify(state.results)
-         );
       },
       pushToast(state, action: PayloadAction<Omit<Toast, 'id' | 'createdAt'>>) {
          var t = {
@@ -80,5 +70,4 @@ const Slice = createSlice({
 });
 
 export default Slice;
-export const { saveHistory, add, completed, error, pushToast, remove } =
-   Slice.actions;
+export const { add, completed, error, pushToast, remove } = Slice.actions;

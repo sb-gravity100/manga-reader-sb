@@ -5,6 +5,24 @@ import { useSearchQuery } from '../../slices/MangaApi';
 
 const Header: React.FC = () => {
    const [value, setSearch] = useState('');
+   const [links] = useState([
+      {
+         to: '/online',
+         text: 'Homepage',
+      },
+      {
+         to: '/online/downloads',
+         text: 'Downloads',
+      },
+      {
+         to: '/',
+         text: 'Go Offline',
+      },
+      {
+         to: '/online/search',
+         text: 'Search',
+      },
+   ]);
    const search = useSearchQuery(value);
    // console.log(search);
 
@@ -23,12 +41,13 @@ const Header: React.FC = () => {
             </Link>
             <Navbar.Toggle className="bg-light" aria-controls="nav" />
             <Navbar.Collapse id="nav" className="justify-content-md-end py-2">
-               <Link className="nav-link" to="/">
-                  Go Offline
-               </Link>
-               <Link className="nav-link" to="/online/search">
-                  Search
-               </Link>
+               {links
+                  .filter((e) => e.to !== window.location.pathname)
+                  .map((e) => (
+                     <Link key={e.to} className="nav-link" to={e.to}>
+                        {e.text}
+                     </Link>
+                  ))}
             </Navbar.Collapse>
          </Container>
       </Navbar>
