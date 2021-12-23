@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom';
 import { Manga } from '../../../../src/types';
 import { useSearchQuery } from '../../slices/MangaApi';
 import _ from 'lodash';
+import { useToggle } from 'react-use';
 
 interface PSearch {
    item: Manga;
@@ -62,6 +63,8 @@ const SearchResult: React.FC<PSearch> = (props) => {
 
 const Header: React.FC = () => {
    const [value, setSearch] = useState('');
+   const [thumb, setThumb] = useToggle(false);
+   const [all, setAll] = useToggle(false);
    const [searchBy, setSearchBy] = useState('title');
    const searchVals = useMemo(
       () => ['artist', 'tag', 'language', 'category', 'parody', 'title'],
@@ -92,14 +95,40 @@ const Header: React.FC = () => {
                   Online Mode
                </Link>
                <Nav.Link
-                  onClick={() => window.fetch('/api/refresh?type=thumb')}
-                  href="#"
+                  onClick={() => {
+                     if (!thumb) {
+                        setThumb(true);
+                        window
+                           .fetch('/api/refresh?type=thumb')
+                           .then(() => setThumb(false))
+                           .catch(() => setThumb(false));
+                     }
+                  }}
+                  className="nav-link"
+                  style={
+                     {
+                        pointerEvents: thumb && 'none',
+                     } as any
+                  }
                >
                   Reload Covers
                </Nav.Link>
                <Nav.Link
-                  onClick={() => window.fetch('/api/refresh?type=all')}
-                  href="#"
+                  onClick={() => {
+                     if (!all) {
+                        setAll(true);
+                        window
+                           .fetch('/api/refresh?type=all')
+                           .then(() => setAll(false))
+                           .catch(() => setAll(false));
+                     }
+                  }}
+                  className="nav-link"
+                  style={
+                     {
+                        pointerEvents: all && 'none',
+                     } as any
+                  }
                >
                   Reload Mangas
                </Nav.Link>
