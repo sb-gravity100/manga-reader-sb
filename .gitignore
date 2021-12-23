@@ -7,5 +7,5 @@ reader.log
 data.db
 .env
 yarn.lock
-/gallery
+gallery/
 *.nedb
