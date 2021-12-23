@@ -134,7 +134,12 @@ route.get('/doujin', (req, res) => __awaiter(void 0, void 0, void 0, function* (
 route.get('/refresh', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if ('all' in req.query) {
         var mangas = yield database_1.default.find({});
-        var results = yield Promise.all(mangas.map((e) => doujin.write(e.id)));
+        var results = [];
+        for (var i = mangas.length - 1; i >= 0; i--) {
+            var e = mangas[i];
+            var w = yield doujin.write(e.id);
+            results.push(w);
+        }
         console.log('Refreshed All');
         return res.send(results);
     }

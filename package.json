@@ -21,7 +21,7 @@
       "queue": "^6.0.2"
    },
    "scripts": {
-      "start": "node ./dist/server.js",
+      "start": "nodemon ./dist/server.js",
       "start:dev": "nodemon ./dist/server.js"
    },
    "keywords": [],
@@ -32,8 +32,6 @@
          "package.json",
          "node_modules/",
          "package-lock.json",
-         "DATA.json",
-         "session.json",
          "test.js",
          "client/"
       ],

@@ -70,8 +70,8 @@ boot()
     app.use((0, compression_1.default)());
     app.use('/gallery', express_1.default.static(DJ_PATH));
     app.use(express_1.default.static(ASSETS_PATH));
-    app.get('/(*/)?', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
     app.use('/api', api_route_1.default);
+    app.get('/*?', (_req, res) => res.sendFile((0, path_1.join)(ASSETS_PATH, 'index.html')));
     app.use((_req, _res, next) => next((0, http_errors_1.default)(404)));
     app.use((err, _req, res, _next) => {
         var error = {};

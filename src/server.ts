@@ -64,16 +64,13 @@ boot()
          })
       );
       app.use(compression());
-
       app.use('/gallery', express.static(DJ_PATH));
-
       app.use(express.static(ASSETS_PATH));
-
-      app.get('/(*/)?', (_req, res) =>
+      app.use('/api', ApiRoute);
+      app.get('/*?', (_req, res) =>
          res.sendFile(join(ASSETS_PATH, 'index.html'))
       );
 
-      app.use('/api', ApiRoute);
       app.use((_req, _res, next) => next(createError(404)));
       app.use(
          (
