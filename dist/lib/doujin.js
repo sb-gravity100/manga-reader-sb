@@ -37,6 +37,9 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const del_1 = __importDefault(require("del"));
 const database_1 = __importDefault(require("../database"));
+const rax = __importStar(require("retry-axios"));
+const axios_1 = __importDefault(require("axios"));
+const interceptorId = rax.attach();
 exports.api = new nhentai.API();
 var doujinPath = path_1.default.join(process.cwd(), process.env.DJ_PATH || 'gallery');
 function write(id) {
@@ -48,19 +51,24 @@ function write(id) {
                 recursive: true,
             });
             var fetchCovers = () => __awaiter(this, void 0, void 0, function* () {
-                var a, b;
-                try {
-                    a = yield res.thumbnail.fetch();
-                    b = yield res.cover.fetch();
-                }
-                catch (e) {
-                    a = yield res.thumbnail.fetch();
-                    b = yield res.cover.fetch();
-                }
+                var a = yield axios_1.default.get(res.thumbnail.url, {
+                    raxConfig: {
+                        backoffType: 'exponential',
+                        retry: 5,
+                    },
+                    responseType: 'arraybuffer',
+                });
+                var b = yield axios_1.default.get(res.cover.url, {
+                    raxConfig: {
+                        backoffType: 'exponential',
+                        retry: 5,
+                    },
+                    responseType: 'arraybuffer',
+                });
                 var filenameA = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res.thumbnail.url));
                 var filenameB = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res === null || res === void 0 ? void 0 : res.cover.url));
-                yield fs_1.default.promises.writeFile(filenameA, a);
-                yield fs_1.default.promises.writeFile(filenameB, b);
+                yield fs_1.default.promises.writeFile(filenameA, a.data);
+                yield fs_1.default.promises.writeFile(filenameB, b.data);
             });
             res === null || res === void 0 ? void 0 : res.pages.forEach((e) => {
                 var filename = path_1.default.join(doujinPath, res.id.toString(), `${e.pageNumber}.${e.extension}`);

@@ -3,7 +3,10 @@ import path from 'path';
 import fs from 'fs';
 import del from 'del';
 import db2 from '../database';
-import axios from 'axios'
+import * as rax from 'retry-axios';
+import axios from 'axios';
+
+const interceptorId = rax.attach();
 
 export var api = new nhentai.API();
 var doujinPath = path.join(process.cwd(), process.env.DJ_PATH || 'gallery');
@@ -19,14 +22,20 @@ export async function write(id) {
          }
       );
       var fetchCovers = async () => {
-            var a: Buffer, b: Buffer
-            try {
-               a = await res.thumbnail.fetch();
-               b = await res.cover.fetch();
-            } catch (e) {
-               a = await res.thumbnail.fetch();
-               b = await res.cover.fetch();
-            }
+         var a = await axios.get<ArrayBuffer>(res.thumbnail.url, {
+            raxConfig: {
+               backoffType: 'exponential',
+               retry: 5,
+            },
+            responseType: 'arraybuffer',
+         });
+         var b = await axios.get<ArrayBuffer>(res.cover.url, {
+            raxConfig: {
+               backoffType: 'exponential',
+               retry: 5,
+            },
+            responseType: 'arraybuffer',
+         });
          var filenameA = path.join(
             doujinPath,
             res.id.toString(),
@@ -37,8 +46,8 @@ export async function write(id) {
             res.id.toString(),
             path.basename(res?.cover.url as string)
          );
-         await fs.promises.writeFile(filenameA, a);
-         await fs.promises.writeFile(filenameB, b);
+         await fs.promises.writeFile(filenameA, a.data);
+         await fs.promises.writeFile(filenameB, b.data);
       };
       res?.pages.forEach((e) => {
          var filename = path.join(
@@ -56,7 +65,7 @@ export async function write(id) {
       await Promise.all(promiseMap);
       return res;
    } catch (e) {
-      console.log(e)
+      console.log(e);
    }
 }
 
@@ -72,7 +81,7 @@ export async function add(id) {
       await db2.insert({
          ...res,
          pages: res.pages.map((e: any) => {
-            e.originalUrl = e.url
+            e.originalUrl = e.url;
             e.url = `/gallery/${res.id}/${e.pageNumber}.${e.extension}`;
             return e;
          }),

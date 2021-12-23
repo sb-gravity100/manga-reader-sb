@@ -21,9 +21,7 @@ var searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
 
 route.get('/fetch', async (req, res) => {
    if (req.query.url) {
-      var resp = await axios.get(req.query.url as string, {
-         responseType: 'arraybuffer',
-      });
+      var resp = await axios.get(req.query.url as string);
       res.setHeader('content-type', resp.headers['content-type']);
       res.send(resp.data);
    } else {
@@ -110,11 +108,11 @@ route.get('/doujin', async (req, res) => {
 route.get('/refresh', async (req, res) => {
    if ('all' in req.query) {
       var mangas = await db.find<nhentai.Doujin>({});
-      var results: any[] = []
+      var results: any[] = [];
       for (var i = mangas.length - 1; i >= 0; i--) {
-         var e = mangas[i]
-         var w = await doujin.write(e.id)
-         results.push(w)
+         var e = mangas[i];
+         var w = await doujin.write(e.id);
+         results.push(w);
       }
       console.log('Refreshed All');
       return res.send(results);

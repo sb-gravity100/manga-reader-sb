@@ -48,9 +48,7 @@ route.use('/onlineapi', online);
 var searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
 route.get('/fetch', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.query.url) {
-        var resp = yield axios_1.default.get(req.query.url, {
-            responseType: 'arraybuffer',
-        });
+        var resp = yield axios_1.default.get(req.query.url);
         res.setHeader('content-type', resp.headers['content-type']);
         res.send(resp.data);
     }
