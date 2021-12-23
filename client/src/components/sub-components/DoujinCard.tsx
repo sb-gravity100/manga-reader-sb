@@ -84,7 +84,7 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
             alt={tagName}
             className="position-absolute top-0 start-0"
             style={{
-               zIndex: 9999,
+               zIndex: 5000,
             }}
          />
          <Card.Img
@@ -96,7 +96,7 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
             }}
          />
          <div
-            style={{ zIndex: 9999 }}
+            // style={{ zIndex: 9999 }}
             className="position-absolute top-0 end-0"
          >
             <Button

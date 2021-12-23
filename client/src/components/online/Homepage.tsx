@@ -15,10 +15,11 @@ import _ from 'lodash';
 import { getSearchParams } from '../props';
 import { useToggle } from 'react-use';
 import DoujinCard from '../sub-components/DoujinCard';
+import { useMemo } from 'react';
 
 const Homepage: React.FC = (props) => {
    const blur = useToggle(true);
-   const Sorts = _.toPairs(SortMethods);
+   const Sorts = useMemo(() => _.toPairs(SortMethods), []);
    const [params, next] = useSearchParams(
       new URLSearchParams({
          page: '1',

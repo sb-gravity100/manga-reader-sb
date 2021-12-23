@@ -1,28 +1,31 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Navbar, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSearchQuery } from '../../slices/MangaApi';
 
 const Header: React.FC = () => {
    const [value, setSearch] = useState('');
-   const [links] = useState([
-      {
-         to: '/online',
-         text: 'Homepage',
-      },
-      {
-         to: '/online/downloads',
-         text: 'Downloads',
-      },
-      {
-         to: '/',
-         text: 'Go Offline',
-      },
-      {
-         to: '/online/search',
-         text: 'Search',
-      },
-   ]);
+   const links = useMemo(
+      () => [
+         {
+            to: '/online',
+            text: 'Homepage',
+         },
+         {
+            to: '/online/downloads',
+            text: 'Downloads',
+         },
+         {
+            to: '/',
+            text: 'Go Offline',
+         },
+         {
+            to: '/online/search',
+            text: 'Search',
+         },
+      ],
+      []
+   );
    const search = useSearchQuery(value);
    // console.log(search);
 

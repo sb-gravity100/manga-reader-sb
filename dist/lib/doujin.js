@@ -31,7 +31,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.remove = exports.add = exports.write = exports.api = void 0;
+exports.remove = exports.add = exports.write = exports.fetchThumbs = exports.api = void 0;
 const nhentai = __importStar(require("nhentai"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
@@ -40,35 +40,49 @@ const database_1 = __importDefault(require("../database"));
 const rax = __importStar(require("retry-axios"));
 const axios_1 = __importDefault(require("axios"));
 const interceptorId = rax.attach();
+nhentai.Image.prototype.fetch = function () {
+    return axios_1.default
+        .get(this.url, {
+        raxConfig: {
+            backoffType: 'exponential',
+            retry: 100,
+        },
+        responseType: 'arraybuffer',
+    })
+        .then((e) => e.data);
+};
+nhentai.API.prototype.fetch = function (path) {
+    return axios_1.default
+        .get(nhentai.API_URL + path, {
+        raxConfig: {
+            backoffType: 'exponential',
+            retry: 100,
+        },
+        responseType: 'json',
+    })
+        .then((e) => e.data);
+};
 exports.api = new nhentai.API();
 var doujinPath = path_1.default.join(process.cwd(), process.env.DJ_PATH || 'gallery');
+function fetchThumbs(res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var a = yield res.thumbnail.fetch();
+        var b = yield res.cover.fetch();
+        var filenameA = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res.thumbnail.url));
+        var filenameB = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res === null || res === void 0 ? void 0 : res.cover.url));
+        yield fs_1.default.promises.writeFile(filenameA, a);
+        yield fs_1.default.promises.writeFile(filenameB, b);
+    });
+}
+exports.fetchThumbs = fetchThumbs;
 function write(id) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             var res = (yield exports.api.fetchDoujin(id));
             var promiseMap = [];
             yield fs_1.default.promises.mkdir(path_1.default.join(doujinPath, res === null || res === void 0 ? void 0 : res.id.toString()), {
                 recursive: true,
-            });
-            var fetchCovers = () => __awaiter(this, void 0, void 0, function* () {
-                var a = yield axios_1.default.get(res.thumbnail.url, {
-                    raxConfig: {
-                        backoffType: 'exponential',
-                        retry: 5,
-                    },
-                    responseType: 'arraybuffer',
-                });
-                var b = yield axios_1.default.get(res.cover.url, {
-                    raxConfig: {
-                        backoffType: 'exponential',
-                        retry: 5,
-                    },
-                    responseType: 'arraybuffer',
-                });
-                var filenameA = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res.thumbnail.url));
-                var filenameB = path_1.default.join(doujinPath, res.id.toString(), path_1.default.basename(res === null || res === void 0 ? void 0 : res.cover.url));
-                yield fs_1.default.promises.writeFile(filenameA, a.data);
-                yield fs_1.default.promises.writeFile(filenameB, b.data);
             });
             res === null || res === void 0 ? void 0 : res.pages.forEach((e) => {
                 var filename = path_1.default.join(doujinPath, res.id.toString(), `${e.pageNumber}.${e.extension}`);
@@ -78,12 +92,12 @@ function write(id) {
                 });
                 promiseMap.push(done());
             });
-            yield fetchCovers();
+            yield fetchThumbs(res);
             yield Promise.all(promiseMap);
             return res;
         }
         catch (e) {
-            console.log(e);
+            console.log((_a = e === null || e === void 0 ? void 0 : e.response) === null || _a === void 0 ? void 0 : _a.status);
         }
     });
 }

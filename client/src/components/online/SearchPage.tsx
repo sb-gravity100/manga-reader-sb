@@ -15,14 +15,14 @@ import PaginationComponent from '../sub-components/Navigation';
 import { SortMethods } from 'nhentai/lib/constants';
 import _ from 'lodash';
 import { getSearchParams } from '../props';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useToggle } from 'react-use';
 import DoujinCard from '../sub-components/DoujinCard';
 
 const SearchPage: React.FC = (props) => {
    const blur = useToggle(true);
    const searchRef = useRef<HTMLInputElement>();
-   const Sorts = _.toPairs(SortMethods);
+   const Sorts = useMemo(() => _.toPairs(SortMethods), []);
    const [params, next] = useSearchParams(
       new URLSearchParams({
          page: '1',

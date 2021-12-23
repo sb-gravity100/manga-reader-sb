@@ -8,8 +8,49 @@ import axios from 'axios';
 
 const interceptorId = rax.attach();
 
+nhentai.Image.prototype.fetch = function () {
+   return axios
+      .get(this.url, {
+         raxConfig: {
+            backoffType: 'exponential',
+            retry: 100,
+         },
+         responseType: 'arraybuffer',
+      })
+      .then((e) => e.data);
+};
+
+(nhentai.API.prototype as any).fetch = function (path) {
+   return axios
+      .get(nhentai.API_URL + path, {
+         raxConfig: {
+            backoffType: 'exponential',
+            retry: 100,
+         },
+         responseType: 'json',
+      })
+      .then((e) => e.data);
+};
+
 export var api = new nhentai.API();
 var doujinPath = path.join(process.cwd(), process.env.DJ_PATH || 'gallery');
+
+export async function fetchThumbs(res: nhentai.Doujin) {
+   var a = await res.thumbnail.fetch();
+   var b = await res.cover.fetch();
+   var filenameA = path.join(
+      doujinPath,
+      res.id.toString(),
+      path.basename(res.thumbnail.url as string)
+   );
+   var filenameB = path.join(
+      doujinPath,
+      res.id.toString(),
+      path.basename(res?.cover.url as string)
+   );
+   await fs.promises.writeFile(filenameA, a);
+   await fs.promises.writeFile(filenameB, b);
+}
 
 export async function write(id) {
    try {
@@ -21,34 +62,6 @@ export async function write(id) {
             recursive: true,
          }
       );
-      var fetchCovers = async () => {
-         var a = await axios.get<ArrayBuffer>(res.thumbnail.url, {
-            raxConfig: {
-               backoffType: 'exponential',
-               retry: 5,
-            },
-            responseType: 'arraybuffer',
-         });
-         var b = await axios.get<ArrayBuffer>(res.cover.url, {
-            raxConfig: {
-               backoffType: 'exponential',
-               retry: 5,
-            },
-            responseType: 'arraybuffer',
-         });
-         var filenameA = path.join(
-            doujinPath,
-            res.id.toString(),
-            path.basename(res.thumbnail.url as string)
-         );
-         var filenameB = path.join(
-            doujinPath,
-            res.id.toString(),
-            path.basename(res?.cover.url as string)
-         );
-         await fs.promises.writeFile(filenameA, a.data);
-         await fs.promises.writeFile(filenameB, b.data);
-      };
       res?.pages.forEach((e) => {
          var filename = path.join(
             doujinPath,
@@ -61,11 +74,11 @@ export async function write(id) {
          };
          promiseMap.push(done());
       });
-      await fetchCovers();
+      await fetchThumbs(res);
       await Promise.all(promiseMap);
       return res;
-   } catch (e) {
-      console.log(e);
+   } catch (e: any) {
+      console.log(e?.response?.status);
    }
 }
 

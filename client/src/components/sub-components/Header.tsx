@@ -1,5 +1,4 @@
-import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
    Button,
    Container,
@@ -12,11 +11,15 @@ import {
    Image,
    Spinner,
    Nav,
+   Dropdown,
+   SplitButton,
+   Badge,
 } from 'react-bootstrap';
 import path from 'path';
 import { Link } from 'react-router-dom';
 import { Manga } from '../../../../src/types';
 import { useSearchQuery } from '../../slices/MangaApi';
+import _ from 'lodash';
 
 interface PSearch {
    item: Manga;
@@ -29,7 +32,7 @@ const SearchResult: React.FC<PSearch> = (props) => {
    return (
       <ListGroup.Item
          style={{ height: '90px' }}
-         className="d-flex bg-secondary position-relative"
+         className="d-flex bg-secondary bg-opacity-50 position-relative"
       >
          <Image
             className="flex-shrink-0 me-2 rounded"
@@ -40,7 +43,18 @@ const SearchResult: React.FC<PSearch> = (props) => {
             className="d-inline-block text-truncate stretched-link"
             to={`/manga/${props.item.id}`}
          >
-            {props.item.titles.pretty}
+            <div>{props.item.titles.pretty}</div>
+            <div className="d-flex flex-wrap">
+               {_.take(
+                  props.item.tags.all.filter((e) => e.type === 'tag'),
+                  5
+               ).map((e) => (
+                  <Badge>{e.name}</Badge>
+               ))}
+               {props.item.tags.all.length > 5 && (
+                  <Badge>...{props.item.tags.all.length - 5} more</Badge>
+               )}
+            </div>
          </Link>
       </ListGroup.Item>
    );
@@ -48,7 +62,15 @@ const SearchResult: React.FC<PSearch> = (props) => {
 
 const Header: React.FC = () => {
    const [value, setSearch] = useState('');
-   const search = useSearchQuery(value);
+   const [searchBy, setSearchBy] = useState('title');
+   const searchVals = useMemo(
+      () => ['artist', 'tag', 'language', 'category', 'parody', 'title'],
+      []
+   );
+   const search = useSearchQuery({
+      q: value,
+      by: searchBy as any,
+   });
    // console.log(search);
 
    return (
@@ -69,26 +91,63 @@ const Header: React.FC = () => {
                <Link className="nav-link" to="/online">
                   Online Mode
                </Link>
+               <Nav.Link
+                  onClick={() => window.fetch('/api/refresh?type=thumb')}
+                  href="#"
+               >
+                  Reload Covers
+               </Nav.Link>
+               <Nav.Link
+                  onClick={() => window.fetch('/api/refresh?type=all')}
+                  href="#"
+               >
+                  Reload Mangas
+               </Nav.Link>
                <Form className="position-relative">
-                  <FormControl
-                     type="search"
-                     placeholder="Search"
-                     className="me-2"
-                     aria-label="Search"
-                     autoComplete="none"
-                     value={value}
-                     onChange={(e) => setSearch(e.target.value)}
-                  />
+                  <InputGroup>
+                     <FormControl
+                        type="search"
+                        placeholder="Search"
+                        className="me-2"
+                        aria-label="Search"
+                        autoComplete="none"
+                        value={value}
+                        onChange={(e) => setSearch(e.target.value)}
+                     />
+                     <SplitButton
+                        variant="outline-secondary"
+                        title={searchBy}
+                        id="segmented-button-dropdown-2"
+                        align="end"
+                        style={{
+                           zIndex: 9999,
+                        }}
+                     >
+                        {searchVals
+                           .filter((e) => e !== searchBy)
+                           .map((e) => (
+                              <Dropdown.Item
+                                 onClick={() => setSearchBy(e)}
+                                 href="#"
+                              >
+                                 {e}
+                              </Dropdown.Item>
+                           ))}
+                     </SplitButton>
+                  </InputGroup>
                   <Card
-                     className="position-absolute top-100 end-0 rounded mt-2"
+                     className="position-absolute top-100 end-0 rounded mt-2 bg-opacity-0"
                      style={{
                         width: '450px',
                         maxHeight: '400px',
-                        zIndex: 9999,
+                        zIndex: 9000,
                         display: !value ? 'none' : undefined,
                      }}
                   >
-                     <ListGroup className="overflow-auto" variant="flush">
+                     <ListGroup
+                        className="overflow-auto bg-opacity-0"
+                        variant="flush"
+                     >
                         {search.isFetching && (
                            <ListGroup.Item className="d-flex align-items-center justify-content-center bg-secondary position-relative">
                               <Spinner animation="border" role="status">

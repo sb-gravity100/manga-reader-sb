@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import db from './database';
 import _ from 'lodash';
-import nhentai from 'nhentai';
+import nhentai, { Doujin } from 'nhentai';
 import * as doujin from './lib/doujin';
 import errors from 'http-errors';
 import Queue from 'queue';
@@ -17,11 +17,13 @@ var q = new Queue({
 export default route;
 route.use('/onlineapi', online);
 
-var searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
+export var searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
 
 route.get('/fetch', async (req, res) => {
    if (req.query.url) {
-      var resp = await axios.get(req.query.url as string);
+      var resp = await axios.get(req.query.url as string, {
+         responseType: 'arraybuffer',
+      });
       res.setHeader('content-type', resp.headers['content-type']);
       res.send(resp.data);
    } else {
@@ -106,16 +108,24 @@ route.get('/doujin', async (req, res) => {
 });
 
 route.get('/refresh', async (req, res) => {
-   if ('all' in req.query) {
+   if ('all' === req.query.type) {
       var mangas = await db.find<nhentai.Doujin>({});
-      var results: any[] = [];
       for (var i = mangas.length - 1; i >= 0; i--) {
          var e = mangas[i];
          var w = await doujin.write(e.id);
-         results.push(w);
       }
       console.log('Refreshed All');
-      return res.send(results);
+      // return res.send(results);
+   }
+   if ('thumb' === req.query.type) {
+      console.log('Refreshed Thumbs');
+      var mangas = await db.find<nhentai.Doujin>({});
+      for (var i = mangas.length - 1; i >= 0; i--) {
+         var e = mangas[i];
+         await doujin.fetchThumbs(new Doujin(e.raw));
+      }
+      console.log('Refreshed All');
+      // return res.send(results);
    }
    await doujin.write(req.query.id);
    console.log('Refreshed: ', req.query.id);
@@ -188,5 +198,14 @@ online.get('/doujin', async (req, res) => {
 online.get('/homepage', async (req, res) => {
    var { page, sort } = req.query;
    var search = await doujin.api.fetchHomepage(page as string, sort as any);
+   search['doujins' as any] = await Promise.all(
+      search.doujins.map(async (e) => {
+         const exist = await db.findOne({
+            id: e.id,
+         });
+         e['availableOffline'] = !!exist;
+         return e;
+      })
+   );
    res.json(search);
 });

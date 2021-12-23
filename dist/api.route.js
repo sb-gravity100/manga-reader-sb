@@ -31,8 +31,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.searchByValues = void 0;
 const express_1 = require("express");
 const database_1 = __importDefault(require("./database"));
+const nhentai_1 = require("nhentai");
 const doujin = __importStar(require("./lib/doujin"));
 const http_errors_1 = __importDefault(require("http-errors"));
 const queue_1 = __importDefault(require("queue"));
@@ -45,10 +47,12 @@ var q = new queue_1.default({
 });
 exports.default = route;
 route.use('/onlineapi', online);
-var searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
+exports.searchByValues = ['artist', 'tag', 'language', 'category', 'parody'];
 route.get('/fetch', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.query.url) {
-        var resp = yield axios_1.default.get(req.query.url);
+        var resp = yield axios_1.default.get(req.query.url, {
+            responseType: 'arraybuffer',
+        });
         res.setHeader('content-type', resp.headers['content-type']);
         res.send(resp.data);
     }
@@ -64,7 +68,7 @@ route.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         throw new http_errors_1.default.Forbidden('No Input');
     }
     var reg = new RegExp(query, 'ig');
-    if (by && searchByValues.includes(by.toLowerCase())) {
+    if (by && exports.searchByValues.includes(by.toLowerCase())) {
         result = yield database_1.default.find({
             'tags.all': {
                 $elemMatch: {
@@ -130,16 +134,24 @@ route.get('/doujin', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 route.get('/refresh', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if ('all' in req.query) {
+    if ('all' === req.query.type) {
         var mangas = yield database_1.default.find({});
-        var results = [];
         for (var i = mangas.length - 1; i >= 0; i--) {
             var e = mangas[i];
             var w = yield doujin.write(e.id);
-            results.push(w);
         }
         console.log('Refreshed All');
-        return res.send(results);
+        // return res.send(results);
+    }
+    if ('thumb' === req.query.type) {
+        console.log('Refreshed Thumbs');
+        var mangas = yield database_1.default.find({});
+        for (var i = mangas.length - 1; i >= 0; i--) {
+            var e = mangas[i];
+            yield doujin.fetchThumbs(new nhentai_1.Doujin(e.raw));
+        }
+        console.log('Refreshed All');
+        // return res.send(results);
     }
     yield doujin.write(req.query.id);
     console.log('Refreshed: ', req.query.id);
@@ -202,6 +214,13 @@ online.get('/doujin', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 online.get('/homepage', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var { page, sort } = req.query;
     var search = yield doujin.api.fetchHomepage(page, sort);
+    search['doujins'] = yield Promise.all(search.doujins.map((e) => __awaiter(void 0, void 0, void 0, function* () {
+        const exist = yield database_1.default.findOne({
+            id: e.id,
+        });
+        e['availableOffline'] = !!exist;
+        return e;
+    })));
     res.json(search);
 }));
 //# sourceMappingURL=api.route.js.map
