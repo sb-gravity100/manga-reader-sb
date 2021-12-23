@@ -65,7 +65,7 @@ const PaginationComponent: FC<PPage> = ({
                }}
                className="me-3"
             >
-               {blur.slice()[0] ? <MdBlurOn /> : <MdBlurOff />}
+               {!blur.slice()[0] ? <MdBlurOn /> : <MdBlurOff />}
             </Pagination.Item>
          )}
          <Pagination.First
