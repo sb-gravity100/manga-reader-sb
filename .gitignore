@@ -8,3 +8,4 @@ data.db
 .env
 yarn.lock
 gallery/
+manga_data.nedb
