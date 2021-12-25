@@ -31,7 +31,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.remove = exports.add = exports.write = exports.fetchThumbs = exports.api = void 0;
+exports.tags = exports.remove = exports.add = exports.write = exports.fetchThumbs = exports.api = void 0;
 const nhentai = __importStar(require("nhentai"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
@@ -39,6 +39,7 @@ const del_1 = __importDefault(require("del"));
 const database_1 = __importDefault(require("../database"));
 const rax = __importStar(require("retry-axios"));
 const axios_1 = __importDefault(require("axios"));
+const node_html_parser_1 = require("node-html-parser");
 const interceptorId = rax.attach();
 nhentai.Image.prototype.fetch = function () {
     return axios_1.default
@@ -138,4 +139,41 @@ function remove(id) {
     });
 }
 exports.remove = remove;
+function tags() {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        var res = yield axios_1.default.get('https://nhentai.net/tags/?page=1');
+        var results = [];
+        var doc = (0, node_html_parser_1.parse)(res.data);
+        var last = Number(new URL((_a = doc.querySelector('a.last')) === null || _a === void 0 ? void 0 : _a.getAttribute('href'), 'https://nhentai.net').searchParams.get('page'));
+        var tags = Array.from(doc.querySelectorAll('#tag-container .tag')).map((e) => {
+            var _a, _b, _c;
+            return new nhentai.Tag({
+                name: (_a = e === null || e === void 0 ? void 0 : e.querySelector('.name')) === null || _a === void 0 ? void 0 : _a.textContent.trim(),
+                count: Number((_b = e === null || e === void 0 ? void 0 : e.querySelector('.count')) === null || _b === void 0 ? void 0 : _b.textContent.trim()),
+                id: Number((_c = e === null || e === void 0 ? void 0 : e.getAttribute('class')) === null || _c === void 0 ? void 0 : _c.replace(/tag|\s+|-/gi, '')),
+                type: 'artist',
+                url: e === null || e === void 0 ? void 0 : e.getAttribute('href'),
+            });
+        });
+        results = results.concat(tags);
+        for (let i = 2; i < last - 1; i++) {
+            var res = yield axios_1.default.get(`https://nhentai.net/tags/?page=${i}`);
+            var doc = (0, node_html_parser_1.parse)(res.data);
+            var tags = Array.from(doc.querySelectorAll('#tag-container .tag')).map((e) => {
+                var _a, _b, _c;
+                return new nhentai.Tag({
+                    name: (_a = e === null || e === void 0 ? void 0 : e.querySelector('.name')) === null || _a === void 0 ? void 0 : _a.textContent.trim(),
+                    count: Number((_b = e === null || e === void 0 ? void 0 : e.querySelector('.count')) === null || _b === void 0 ? void 0 : _b.textContent.trim().replace('K', '000')),
+                    id: Number((_c = e === null || e === void 0 ? void 0 : e.getAttribute('class')) === null || _c === void 0 ? void 0 : _c.replace(/tag|\s+|-/gi, '')),
+                    type: 'tag',
+                    url: e === null || e === void 0 ? void 0 : e.getAttribute('href'),
+                });
+            });
+            results = results.concat(tags);
+        }
+        return results;
+    });
+}
+exports.tags = tags;
 //# sourceMappingURL=doujin.js.map

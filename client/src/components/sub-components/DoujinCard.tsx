@@ -96,7 +96,7 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
             }}
          />
          <div
-            // style={{ zIndex: 9999 }}
+            style={{ zIndex: 5000 }}
             className="position-absolute top-0 end-0"
          >
             <Button

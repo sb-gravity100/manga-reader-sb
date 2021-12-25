@@ -34,6 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.searchByValues = void 0;
 const express_1 = require("express");
 const database_1 = __importDefault(require("./database"));
+const db2 = __importStar(require("./database"));
 const nhentai_1 = require("nhentai");
 const doujin = __importStar(require("./lib/doujin"));
 const http_errors_1 = __importDefault(require("http-errors"));
@@ -183,8 +184,19 @@ route.get('/remove', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         throw new http_errors_1.default.NotFound(_res);
     }
 }));
+online.get('/tags', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var { q } = req.query;
+    var tags = yield db2.tags.find({}, { _id: 0 });
+    if (q) {
+        var reg = new RegExp(q, 'ig');
+        res.json(tags.filter((e) => reg.test(e.name)).splice(0, 10));
+    }
+    else {
+        res.json(tags);
+    }
+}));
 online.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var { q, page, sort } = req.query;
+    var { q, page, sort, byTag } = req.query;
     if (!q) {
         throw new http_errors_1.default.Forbidden('No Input');
     }

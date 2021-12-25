@@ -1,9 +1,15 @@
-import Datastore from "nedb-promises";
+import Datastore from 'nedb-promises';
 
 const db = Datastore.create({
-  // inMemoryOnly: true,
-  timestampData: true,
-  filename: "manga_data.nedb",
+   // inMemoryOnly: true,
+   timestampData: true,
+   filename: 'manga_data.nedb',
+});
+
+export const tags = Datastore.create({
+   inMemoryOnly: true,
+   //  timestampData: true,
+   //  filename: 'artists_data.nedb',
 });
 
 export default db;

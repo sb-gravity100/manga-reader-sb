@@ -5,6 +5,7 @@ import del from 'del';
 import db2 from '../database';
 import * as rax from 'retry-axios';
 import axios from 'axios';
+import { parse } from 'node-html-parser';
 
 const interceptorId = rax.attach();
 
@@ -122,4 +123,48 @@ export async function remove(id) {
       return false;
    }
    return Number(id);
+}
+
+export async function tags() {
+   var res = await axios.get('https://nhentai.net/tags/?page=1');
+   var results: any[] = [];
+   var doc = parse(res.data);
+   var last = Number(
+      new URL(
+         doc.querySelector('a.last')?.getAttribute('href') as string,
+         'https://nhentai.net'
+      ).searchParams.get('page')
+   );
+   var tags = Array.from(doc.querySelectorAll('#tag-container .tag')).map(
+      (e) =>
+         new nhentai.Tag({
+            name: e?.querySelector('.name')?.textContent.trim() as string,
+            count: Number(e?.querySelector('.count')?.textContent.trim()),
+            id: Number(e?.getAttribute('class')?.replace(/tag|\s+|-/gi, '')),
+            type: 'artist',
+            url: e?.getAttribute('href') as string,
+         })
+   );
+   results = results.concat(tags);
+   for (let i = 2; i < last - 1; i++) {
+      var res = await axios.get(`https://nhentai.net/tags/?page=${i}`);
+      var doc = parse(res.data);
+      var tags = Array.from(doc.querySelectorAll('#tag-container .tag')).map(
+         (e) =>
+            new nhentai.Tag({
+               name: e?.querySelector('.name')?.textContent.trim() as string,
+               count: Number(
+                  e
+                     ?.querySelector('.count')
+                     ?.textContent.trim()
+                     .replace('K', '000')
+               ),
+               id: Number(e?.getAttribute('class')?.replace(/tag|\s+|-/gi, '')),
+               type: 'tag',
+               url: e?.getAttribute('href') as string,
+            })
+      );
+      results = results.concat(tags);
+   }
+   return results as typeof tags;
 }

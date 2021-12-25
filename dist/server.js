@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -22,6 +41,8 @@ const morgan_1 = __importDefault(require("morgan"));
 const compression_1 = __importDefault(require("compression"));
 // import _ from "lodash";
 const database_1 = __importDefault(require("./database"));
+const db = __importStar(require("./database"));
+const doujin = __importStar(require("./lib/doujin"));
 const api_route_1 = __importDefault(require("./api.route"));
 console.log(process.cwd());
 var { NODE_ENV, PORT = 7800, DJ_PATH = 'gallery' } = process.env;
@@ -34,6 +55,7 @@ var debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
 var isGitpod = /gitpod/i.test(process.env.USER);
 var boot = () => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     // console.log(isGitpod);
     var app = (0, express_1.default)();
     yield database_1.default.load();
@@ -41,6 +63,8 @@ var boot = () => __awaiter(void 0, void 0, void 0, function* () {
         fieldName: 'id',
         unique: true,
     });
+    yield ((_a = db.tags) === null || _a === void 0 ? void 0 : _a.load());
+    yield ((_b = db.tags) === null || _b === void 0 ? void 0 : _b.insert(yield doujin.tags()));
     // var mangaData = await dirSync();
     // await db.insert(mangaData);
     // debug('Database ready!');

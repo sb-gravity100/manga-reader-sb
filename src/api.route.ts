@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import db from './database';
+import * as db2 from './database';
 import _ from 'lodash';
-import nhentai, { Doujin } from 'nhentai';
+import nhentai, { Doujin, Tag } from 'nhentai';
 import * as doujin from './lib/doujin';
 import errors from 'http-errors';
 import Queue from 'queue';
@@ -159,8 +160,19 @@ route.get('/remove', async (req, res) => {
    }
 });
 
+online.get('/tags', async (req, res) => {
+   var { q } = req.query;
+   var tags = await db2.tags.find<Tag>({}, { _id: 0 });
+   if (q) {
+      var reg = new RegExp(q as string, 'ig');
+      res.json(tags.filter((e) => reg.test(e.name)).splice(0, 10));
+   } else {
+      res.json(tags);
+   }
+});
+
 online.get('/search', async (req, res) => {
-   var { q, page, sort } = req.query;
+   var { q, page, sort, byTag } = req.query;
    if (!q) {
       throw new errors.Forbidden('No Input');
    }
