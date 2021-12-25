@@ -1,12 +1,9 @@
-import { Doujin } from 'nhentai';
 import {
    Button,
-   Card,
    Container,
    Form,
    FormControl,
-   OverlayTrigger,
-   Tooltip,
+   InputGroup,
 } from 'react-bootstrap';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useSearchQuery } from '../../slices/HentaiApi';
@@ -27,7 +24,7 @@ const SearchPage: React.FC = (props) => {
       new URLSearchParams({
          page: '1',
          sort: '',
-         q: '',
+         q: '*',
       })
    );
    const doujins = useSearchQuery(getSearchParams(params));
@@ -53,7 +50,6 @@ const SearchPage: React.FC = (props) => {
    return (
       <Container className="d-flex flex-column gap-3 py-2">
          <Form
-            className="container"
             onSubmit={(e) => {
                e.preventDefault();
                next({
@@ -67,8 +63,19 @@ const SearchPage: React.FC = (props) => {
                placeholder="Search"
                aria-label="Search"
                autoComplete="none"
+               // name="q"
                ref={searchRef as any}
             />
+            {/* <InputGroup className="mt-2">
+               <InputGroup.Text>Tag</InputGroup.Text>
+               <FormControl
+                  type="text"
+                  placeholder="Search by tag here..."
+                  name="tag"
+                  aria-label="Tag"
+                  autoComplete="none"
+               />
+            </InputGroup> */}
          </Form>
          <PageComp />
          <div className="d-flex justify-content-center gap-2">

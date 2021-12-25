@@ -103,19 +103,21 @@ const DoujinPage: React.FC = (props) => {
          if (saved.isError) {
             dispatch(dl.error(doujin.data?.id));
          }
-         if (removed.isSuccess) {
-            dispatch(
-               pushToast({
-                  header: 'Doujin Corner',
-                  message: `Successfully removed ${doujin.data?.titles.pretty}!`,
-                  delay: 3000,
-               })
-            );
-            dispatch(dl.remove(doujin.data?.id));
-            doujin.refetch();
-         }
       }
-   }, [removed, saved, dispatch, doujin]);
+   }, [saved, dispatch, doujin]);
+   useEffect(() => {
+      if (removed.isSuccess) {
+         dispatch(
+            pushToast({
+               header: 'Doujin Corner',
+               message: `Successfully removed ${doujin.data?.titles.pretty}!`,
+               delay: 3000,
+            })
+         );
+         dispatch(dl.remove(doujin.data?.id));
+         doujin.refetch();
+      }
+   }, [removed, dispatch, doujin]);
    return (
       <Container className="w-75 py-4 bg-secondary bg-opacity-50 shadow rounded-2 my-3">
          {doujin.isSuccess && (

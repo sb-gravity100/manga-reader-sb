@@ -8,6 +8,8 @@ import logger from 'morgan';
 import compression from 'compression';
 // import _ from "lodash";
 import db2 from './database';
+import * as db from './database';
+import * as doujin from './lib/doujin';
 import ApiRoute from './api.route';
 import { Debugger } from 'debug';
 console.log(process.cwd());
@@ -31,6 +33,8 @@ var boot = async () => {
       fieldName: 'id',
       unique: true,
    });
+   await db.tags?.load();
+   await db.tags?.insert(await doujin.tags());
    // var mangaData = await dirSync();
    // await db.insert(mangaData);
    // debug('Database ready!');

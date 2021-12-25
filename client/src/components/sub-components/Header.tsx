@@ -154,8 +154,9 @@ const Header: React.FC = () => {
                      >
                         {searchVals
                            .filter((e) => e !== searchBy)
-                           .map((e) => (
+                           .map((e, i) => (
                               <Dropdown.Item
+                                 key={i}
                                  onClick={() => setSearchBy(e)}
                                  href="#"
                               >
