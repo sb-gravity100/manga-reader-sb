@@ -3,6 +3,7 @@ node_modules
 *.sublime-workspace
 
 *.db
+*.nedb
 reader.log
 data.db
 .env
