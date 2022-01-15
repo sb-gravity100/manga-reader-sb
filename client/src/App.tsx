@@ -6,7 +6,6 @@ import Main from './components/Main';
 import Manga from './components/Manga';
 import Online from './components/Online';
 import DoujinPage from './components/online/Doujin';
-import DownloadPage from './components/online/Downloads';
 import Header from './components/online/Header';
 import SearchPage from './components/online/SearchPage';
 import NotFound from './components/sub-components/404';
@@ -72,15 +71,6 @@ const App = () => {
                   <>
                      <Header />
                      <DoujinPage />
-                  </>
-               }
-            />
-            <Route
-               path="/online/downloads"
-               element={
-                  <>
-                     <Header />
-                     <DownloadPage />
                   </>
                }
             />

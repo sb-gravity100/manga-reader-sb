@@ -1,12 +1,18 @@
-import { useEffect } from 'react';
-import { Badge, Button, Col, Container, Image, Row } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import {
+   Badge,
+   Button,
+   Col,
+   Container,
+   Image,
+   Row,
+   Spinner,
+} from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 import { useToggle } from 'react-use';
 import { Manga } from '../../../../src/types';
-import { pushToast } from '../../slices/DownloadSlice';
-import * as dl from '../../slices/DownloadSlice';
 import { useGetDoujinQuery } from '../../slices/HentaiApi';
 import {
    useLazyRemoveMangaQuery,
@@ -59,7 +65,7 @@ const TagButton: React.FC<{ type: string; doujin?: Manga }> = ({
 const DoujinPage: React.FC = (props) => {
    const { id } = useParams();
    const doujin = useGetDoujinQuery(id as string);
-   const dispatch = useDispatch();
+   const [offline, setOffline] = useState<boolean>();
    const [saveManga, saved] = useLazySaveMangaQuery({
       refetchOnFocus: false,
       refetchOnReconnect: false,
@@ -82,44 +88,31 @@ const DoujinPage: React.FC = (props) => {
    };
 
    useEffect(() => {
-      if (doujin.isSuccess) {
-         document.title = doujin.data.titles.pretty;
+      if (saved.isSuccess && doujin.isSuccess) {
+         setOffline(true);
       }
-   }, [doujin]);
+   }, [saved, doujin]);
+   useEffect(() => {
+      if (removed.isSuccess && doujin.isSuccess) {
+         setOffline(false);
+      }
+   }, [removed, doujin]);
 
    useEffect(() => {
       if (doujin.isSuccess) {
-         if (saved.isSuccess) {
-            dispatch(
-               pushToast({
-                  header: 'Doujin Corner',
-                  message: `Successfully added ${doujin.data?.titles.pretty}!`,
-                  delay: 3000,
-               })
-            );
-            doujin.refetch();
-            dispatch(dl.completed(doujin.data?.id));
-         }
-         if (saved.isError) {
-            dispatch(dl.error(doujin.data?.id));
-         }
+         document.title = doujin.data.titles.pretty;
+         setOffline(doujin.data.availableOffline);
       }
-   }, [saved, dispatch, doujin]);
-   useEffect(() => {
-      if (removed.isSuccess) {
-         dispatch(
-            pushToast({
-               header: 'Doujin Corner',
-               message: `Successfully removed ${doujin.data?.titles.pretty}!`,
-               delay: 3000,
-            })
-         );
-         dispatch(dl.remove(doujin.data?.id));
-         doujin.refetch();
-      }
-   }, [removed, dispatch, doujin]);
+   }, [doujin]);
    return (
       <Container className="w-75 py-4 bg-secondary bg-opacity-50 shadow rounded-2 my-3">
+         {doujin.isFetching && (
+            <Spinner
+               variant="primary"
+               animation="border"
+               role="status"
+            ></Spinner>
+         )}
          {doujin.isSuccess && (
             <Row className="text-light">
                <Col xs={5}>
@@ -134,33 +127,16 @@ const DoujinPage: React.FC = (props) => {
                      <div className="position-absolute top-0 start-0">
                         <Button
                            onClick={() => {
-                              if (doujin.data?.availableOffline) {
+                              if (offline) {
                                  removeManga(doujin.data.id.toString(), false);
-                                 dispatch(
-                                    pushToast({
-                                       header: 'Doujin Corner',
-                                       message: `Removing ${doujin.data?.titles.pretty}`,
-                                       delay: 3000,
-                                    })
-                                 );
                               } else {
                                  saveManga(doujin.data.id.toString(), false);
-                                 dispatch(
-                                    pushToast({
-                                       header: 'Doujin Corner',
-                                       message: `Downloading ${doujin.data?.titles.pretty}`,
-                                       delay: 3000,
-                                    })
-                                 );
-                                 dispatch(dl.add(doujin.data.id));
                               }
                            }}
                            className="me-2"
                            variant="primary"
                         >
-                           {doujin.data?.availableOffline
-                              ? 'Delete'
-                              : 'Download'}
+                           {offline ? 'Delete' : 'Download'}
                         </Button>
                         <Link
                            className="btn btn-danger"

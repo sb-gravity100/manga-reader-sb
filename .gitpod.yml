@@ -3,7 +3,8 @@ tasks:
         yarn
         yarn start:dev
      name: Server
-
+   - command: tsc -w
+     name: Typescript
    - name: Client
      command: |
         cd client

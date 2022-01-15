@@ -55,7 +55,7 @@ var debug = NODE_ENV === 'development' ? require('debug')('RD') : console.log;
 debug('Starting...');
 var isGitpod = /gitpod/i.test(process.env.USER);
 var boot = () => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a;
     // console.log(isGitpod);
     var app = (0, express_1.default)();
     yield database_1.default.load();
@@ -64,7 +64,6 @@ var boot = () => __awaiter(void 0, void 0, void 0, function* () {
         unique: true,
     });
     yield ((_a = db.tags) === null || _a === void 0 ? void 0 : _a.load());
-    yield ((_b = db.tags) === null || _b === void 0 ? void 0 : _b.insert(yield doujin.tags()));
     // var mangaData = await dirSync();
     // await db.insert(mangaData);
     // debug('Database ready!');
@@ -74,6 +73,10 @@ var boot = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 boot()
     .then((app) => {
+    doujin
+        .tags()
+        .then((e) => db.tags.insert(e))
+        .catch(console.log);
     app.use((0, cors_1.default)());
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: false }));

@@ -34,7 +34,6 @@ var boot = async () => {
       unique: true,
    });
    await db.tags?.load();
-   await db.tags?.insert(await doujin.tags());
    // var mangaData = await dirSync();
    // await db.insert(mangaData);
    // debug('Database ready!');
@@ -48,6 +47,10 @@ var boot = async () => {
 
 boot()
    .then((app) => {
+      doujin
+         .tags()
+         .then((e) => db.tags.insert(e))
+         .catch(console.log);
       app.use(cors() as any);
       app.use(express.json());
       app.use(express.urlencoded({ extended: false }));

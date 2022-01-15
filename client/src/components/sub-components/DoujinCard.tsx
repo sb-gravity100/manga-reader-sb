@@ -5,9 +5,6 @@ import { AnyIfEmpty, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useToggle } from 'react-use';
 import { Manga } from '../../../../src/types';
-import { pushToast } from '../../slices/DownloadSlice';
-import * as dl from '../../slices/DownloadSlice';
-import { useGetDoujinQuery } from '../../slices/HentaiApi';
 import {
    useLazySaveMangaQuery,
    useLazyRemoveMangaQuery,
@@ -36,7 +33,6 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
    var handleMouseLeave = () => {
       setOver(false);
    };
-   const dispatch = useDispatch();
    const [saveManga, saved] = useLazySaveMangaQuery({
       refetchOnFocus: false,
       refetchOnReconnect: false,
@@ -47,46 +43,31 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
    });
    useEffect(() => {
       if (saved.isSuccess) {
-         dispatch(
-            pushToast({
-               header: 'Doujin Corner',
-               message: `Successfully added ${n.titles.pretty}!`,
-               delay: 3000,
-            })
-         );
-         dispatch(dl.completed(n.id));
-         // refetch();
+         refetch();
       }
-      if (saved.isError) {
-         dispatch(dl.error(n.id));
-      }
+   }, [saved, n, refetch]);
+   useEffect(() => {
       if (removed.isSuccess) {
-         dispatch(
-            pushToast({
-               header: 'Doujin Corner',
-               message: `Successfully removed ${n.titles.pretty}!`,
-               delay: 3000,
-            })
-         );
-         dispatch(dl.remove(n.id));
-         // refetch();
+         refetch();
       }
-   }, [removed, saved, dispatch, n]);
+   }, [removed, n, refetch]);
    return (
       <Card
          className="bg-secondary position-relative"
          style={{ width: '12rem' }}
       >
-         <Image
-            height={20}
-            width={30}
-            src={locale}
-            alt={tagName}
-            className="position-absolute top-0 start-0"
-            style={{
-               zIndex: 5000,
-            }}
-         />
+         {locale && (
+            <Image
+               height={20}
+               width={30}
+               src={locale}
+               alt={tagName}
+               className="position-absolute top-0 start-0"
+               style={{
+                  zIndex: 5000,
+               }}
+            />
+         )}
          <Card.Img
             variant="top"
             height="300"
@@ -103,29 +84,14 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
                onClick={() => {
                   if (n?.availableOffline) {
                      removeManga(n.id.toString(), false);
-                     dispatch(
-                        pushToast({
-                           header: 'Doujin Corner',
-                           message: `Removing ${n?.titles.pretty}`,
-                           delay: 3000,
-                        })
-                     );
                   } else {
                      saveManga(n.id.toString(), false);
-                     dispatch(
-                        pushToast({
-                           header: 'Doujin Corner',
-                           message: `Downloading ${n?.titles.pretty}`,
-                           delay: 3000,
-                        })
-                     );
-                     dispatch(dl.add(n.id));
                   }
                }}
                className="me-2 p-1"
                variant="primary"
             >
-               <small>{n?.availableOffline ? 'Delete' : 'Download'}</small>
+               <small>{n?.availableOffline ? 'Remove' : 'Download'}</small>
             </Button>
             <Link className="btn btn-danger p-1" to={`/manga/${n.id}`}>
                <small>Read</small>

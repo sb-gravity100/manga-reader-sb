@@ -19,18 +19,14 @@ const PaginationComponent: FC<PPage> = ({
    blur,
    current,
 }) => {
+   console.log(current);
    var renderPages = () => {
       var pages: JSX.Element[] = [];
       var start = current;
-      var end = current + 5;
-      start -= 4;
+      var end = current + 10;
       if (end > page?.numPages) {
-         end = page?.numPages;
-         start -= 5 - (page?.numPages - current);
-      }
-      if (start < 0) {
-         start = 0;
-         end += 5 - current - 1;
+         end = page?.numPages + 1;
+         // start -= page?.numPages - current;
       }
       for (let n = start; n < end; n++) {
          pages.push(
@@ -38,14 +34,15 @@ const PaginationComponent: FC<PPage> = ({
                onClick={() =>
                   next(
                      new URLSearchParams({
-                        page: (n + 1) as any,
+                        page: n as any,
                      })
                   )
                }
-               key={n + 1}
-               active={current === n + 1}
+               key={n}
+               active={current === n}
+               disabled={current === n}
             >
-               {n + 1}
+               {n}
             </Pagination.Item>
          );
       }
