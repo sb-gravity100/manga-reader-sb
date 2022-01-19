@@ -6,11 +6,18 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import store from './store';
 import App from './App';
 import './stylesheets/index.scss';
+import { IconContext } from 'react-icons/lib';
 
 ReactDOM.render(
    <Provider store={store}>
       <Router>
-         <App />
+         <IconContext.Provider
+            value={{
+               className: 'r-icon',
+            }}
+         >
+            <App />
+         </IconContext.Provider>
       </Router>
    </Provider>,
    document.querySelector('#container')

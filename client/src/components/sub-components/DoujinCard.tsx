@@ -1,15 +1,16 @@
 import classNames from 'classnames';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Card, Image, Button } from 'react-bootstrap';
-import { AnyIfEmpty, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useToggle } from 'react-use';
 import { Manga } from '../../../../src/types';
+import { FaDownload, FaBookOpen, FaMinus } from 'react-icons/fa';
 import {
    useLazySaveMangaQuery,
    useLazyRemoveMangaQuery,
 } from '../../slices/MangaApi';
 import { getLocale } from '../props';
+import { Badge } from 'react-bootstrap';
 
 type DoujinProps = {
    doujin: Manga;
@@ -25,6 +26,10 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
    var tagName = n.tags?.all?.find(
       (e) => e.type.match(/language/i) && !e.name.match(/translated/i)
    )?.name as string;
+   var tags = useMemo(
+      () => n.tags?.all.filter((e) => e.type === 'tag'),
+      [n.tags?.all]
+   );
    var locale = getLocale(tagName);
 
    var handleMouseEnter = () => {
@@ -53,6 +58,8 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
    }, [removed, n, refetch]);
    return (
       <Card
+         onMouseOver={handleMouseEnter}
+         onMouseOut={handleMouseLeave}
          className="bg-secondary position-relative"
          style={{ width: '12rem' }}
       >
@@ -68,14 +75,16 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
                }}
             />
          )}
-         <Card.Img
-            variant="top"
-            height="300"
-            src={thumbnail}
-            style={{
-               filter: blur[0] ? 'blur(2px)' : undefined,
-            }}
-         />
+         <Link to={'/online/' + n.id}>
+            <Card.Img
+               variant="top"
+               height="300"
+               src={thumbnail}
+               style={{
+                  filter: blur[0] ? 'blur(2px)' : undefined,
+               }}
+            />
+         </Link>
          <div
             style={{ zIndex: 5000 }}
             className="position-absolute top-0 end-0"
@@ -88,33 +97,50 @@ const DoujinCard: React.FC<DoujinProps> = ({ doujin: n, blur, refetch }) => {
                      saveManga(n.id.toString(), false);
                   }
                }}
-               className="me-2 p-1"
+               className="me-2 py-1 px-2"
                variant="primary"
             >
-               <small>{n?.availableOffline ? 'Remove' : 'Download'}</small>
+               {n?.availableOffline ? <FaMinus /> : <FaDownload />}
             </Button>
-            <Link className="btn btn-danger p-1" to={`/manga/${n.id}`}>
-               <small>Read</small>
+            <Link className="btn btn-danger py-1 px-2" to={`/manga/${n.id}`}>
+               <FaBookOpen />
             </Link>
          </div>
-         <Link
-            onMouseOver={handleMouseEnter}
-            onMouseOut={handleMouseLeave}
-            className="stretched-link"
-            to={'/online/' + n.id}
-         >
-            <Card.Body className="pb-0 pt-1 position-absolute start-0 w-100 bg-dark bg-opacity-50 bottom-0">
-               <Card.Title
-                  style={{ fontSize: '16px', transition: '0.2s' }}
-                  className={classNames(
-                     'text-center text-white text-decoration-underline',
-                     !isOver && 'text-truncate'
-                  )}
-               >
-                  {n.titles.pretty}
-               </Card.Title>
-            </Card.Body>
-         </Link>
+         <Card.Body className="pb-0 pt-1 position-absolute start-0 w-100 bg-dark bg-opacity-50 bottom-0">
+            <Card.Title
+               style={{
+                  fontSize: '16px',
+               }}
+               className={classNames(
+                  'text-center text-white text-decoration-underline',
+                  !isOver && 'text-truncate'
+               )}
+            >
+               <Link className="text-light" to={'/online/' + n.id}>
+                  {n.titles.pretty}{' '}
+               </Link>
+               {isOver && (
+                  <div
+                     onMouseOver={handleMouseEnter}
+                     onMouseOut={handleMouseLeave}
+                  >
+                     <div className="mt-1 d-flex flex-wrap align-items-center justify-content-around">
+                        {tags.map((e) => (
+                           <Badge className="bg-opacity-50" bg="dark">
+                              {e.name}
+                           </Badge>
+                        ))}
+                     </div>
+                     <div className="mt-1">
+                        <Badge className="bg-opacity-50" bg="primary">
+                           {n.tags?.all?.find((e) => e.type === 'artist')
+                              ?.name || 'Anonymous'}
+                        </Badge>
+                     </div>
+                  </div>
+               )}
+            </Card.Title>
+         </Card.Body>
       </Card>
    );
 };

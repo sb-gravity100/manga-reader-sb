@@ -12,7 +12,7 @@ import PaginationComponent from '../sub-components/Navigation';
 import { SortMethods } from 'nhentai/lib/constants';
 import _ from 'lodash';
 import { getSearchParams } from '../props';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useToggle } from 'react-use';
 import DoujinCard from '../sub-components/DoujinCard';
 
@@ -63,6 +63,7 @@ const SearchPage: React.FC = (props) => {
                placeholder="Search"
                aria-label="Search"
                autoComplete="none"
+               defaultValue={params.get('q')}
                // name="q"
                ref={searchRef as any}
             />

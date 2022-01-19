@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FaDownload, FaBookOpen, FaMinus } from 'react-icons/fa';
 import {
    Badge,
    Button,
@@ -18,7 +19,6 @@ import {
    useLazyRemoveMangaQuery,
    useLazySaveMangaQuery,
 } from '../../slices/MangaApi';
-import { useDispatch } from '../../store';
 import timeAgo from '../../timeAgo';
 
 const TagButton: React.FC<{ type: string; doujin?: Manga }> = ({
@@ -133,16 +133,16 @@ const DoujinPage: React.FC = (props) => {
                                  saveManga(doujin.data.id.toString(), false);
                               }
                            }}
-                           className="me-2"
+                           className="me-2 p-2"
                            variant="primary"
                         >
-                           {offline ? 'Delete' : 'Download'}
+                           {offline ? <FaMinus /> : <FaDownload />}
                         </Button>
                         <Link
-                           className="btn btn-danger"
+                           className="btn btn-danger p-2"
                            to={`/manga/${doujin.data.id}`}
                         >
-                           Read
+                           <FaBookOpen />
                         </Link>
                      </div>
                   </div>
