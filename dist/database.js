@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tags = void 0;
-const nedb_promises_1 = __importDefault(require("nedb-promises"));
-const db = nedb_promises_1.default.create({
+var nedb_promises_1 = __importDefault(require("nedb-promises"));
+var db = nedb_promises_1.default.create({
     // inMemoryOnly: true,
     timestampData: true,
     filename: 'manga_data.nedb',

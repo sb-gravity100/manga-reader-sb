@@ -25,7 +25,7 @@
    },
    "scripts": {
       "start": "nodemon ./dist/server.js",
-      "start:dev": "nodemon ./dist/server.js"
+      "start:dev": "nodemon ./src/server.ts"
    },
    "keywords": [],
    "author": "",
