@@ -12,6 +12,7 @@ import * as db from './database';
 import * as doujin from './lib/doujin';
 import ApiRoute from './api.route';
 import { Debugger } from 'debug';
+import mongoose from 'mongoose';
 console.log(process.cwd());
 
 var { NODE_ENV, PORT = 7800, DJ_PATH = 'gallery' } = process.env;
@@ -34,9 +35,10 @@ var boot = async () => {
       unique: true,
    });
    await db.tags?.load();
+   await mongoose.connect('mongodb://localhost:27017/main');
    // var mangaData = await dirSync();
    // await db.insert(mangaData);
-   // debug('Database ready!');
+   debug('Database ready!');
 
    await new Promise<void>((res) => app.listen(Number(PORT), res));
 

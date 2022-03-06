@@ -1,12 +1,11 @@
 node_modules
 *.sublime-project
 *.sublime-workspace
-
 *.db
 *.nedb
 reader.log
 data.db
 .env
 yarn.lock
-gallery/
+/gallery
 manga_data.nedb

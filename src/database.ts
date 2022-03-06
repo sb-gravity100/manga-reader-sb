@@ -1,4 +1,5 @@
 import Datastore from 'nedb-promises';
+import { prop, getModelForClass } from '@typegoose/typegoose';
 
 const db = Datastore.create({
    // inMemoryOnly: true,
